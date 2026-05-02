@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const rifts = (await getCollection('rifts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.number - a.data.number
+);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title="Rifts — Pangaea">
+  <h1>Rifts</h1>
+  <p class="meta">Every issue, in reverse-chronological order.</p>
+
+  {rifts.length === 0 && <p class="meta">№ 001 is forming.</p>}
+
+  <ul class="rift-list">
+    {
+      rifts.map((r) => (
+        <li>
+          <span class="num">№ {String(r.data.number).padStart(3, '0')}</span>
+          <span>
+            <a href={`/rifts/${r.slug}/`}>{r.data.title}</a>
+            {r.data.blurb && <span class="blurb">{r.data.blurb}</span>}
+            <span class="date">{fmt(r.data.date)}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

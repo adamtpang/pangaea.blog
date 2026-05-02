@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const DEFAULT_DESCRIPTION =
+  'Pangaea — a weekly catalog of one app, one essay, one song. Curations from the supercontinent of Adam Pang’s curiosities.';
+const { title, description = DEFAULT_DESCRIPTION } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="Pangaea" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="alternate" type="application/rss+xml" title="Pangaea — Rifts" href="/rss.xml" />
+  </head>
+  <body>
+    <header class="site">
+      <a class="brand" href="/">Pangaea<span class="dot">.</span></a>
+      <nav>
+        <a href="/rifts/">Rifts</a>
+        <a href="/essays/">Essays</a>
+        <a href="/about/">About</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site">
+      <span>Pangaea — a catalog of curiosities.</span>
+      <span>
+        by <a href="https://adamtpang.substack.com">Adam Pang</a>
+      </span>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const rifts = (await getCollection('rifts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.number - a.data.number
+);
+const latest = rifts[0];
+const earlier = rifts.slice(1, 6);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title="Pangaea — a catalog of curiosities">
+  <h1>Pangaea</h1>
+  <p class="meta">
+    A weekly rift — one app, one essay, one song. Sometimes a picture, a video, a quote.
+    A supercontinent of curiosities, before they drift apart.
+  </p>
+
+  {
+    latest && (
+      <>
+        <h2>Latest rift</h2>
+        <ul class="rift-list">
+          <li>
+            <span class="num">№ {String(latest.data.number).padStart(3, '0')}</span>
+            <span>
+              <a href={`/rifts/${latest.slug}/`}>{latest.data.title}</a>
+              {latest.data.blurb && <span class="blurb">{latest.data.blurb}</span>}
+              <span class="date">{fmt(latest.data.date)}</span>
+            </span>
+          </li>
+        </ul>
+      </>
+    )
+  }
+
+  {
+    earlier.length > 0 && (
+      <>
+        <h2>Earlier</h2>
+        <ul class="rift-list">
+          {earlier.map((r) => (
+            <li>
+              <span class="num">№ {String(r.data.number).padStart(3, '0')}</span>
+              <span>
+                <a href={`/rifts/${r.slug}/`}>{r.data.title}</a>
+                {r.data.blurb && <span class="blurb">{r.data.blurb}</span>}
+                <span class="date">{fmt(r.data.date)}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p class="meta" style="margin-top:1.5rem;">
+          <a href="/rifts/">All rifts &rarr;</a>
+        </p>
+      </>
+    )
+  }
+
+  {
+    rifts.length === 0 && (
+      <p class="meta">
+        № 001 is forming. Subscribe over at{' '}
+        <a href="https://adamtpang.substack.com">adamtpang.substack.com</a> to get the first rift in
+        your inbox.
+      </p>
+    )
+  }
+</Base>
