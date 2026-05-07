@@ -3,7 +3,11 @@ import Base from '../../layouts/Base.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const epoch = new Date('1971-01-01').valueOf();
+  const posts = await getCollection(
+    'posts',
+    ({ data }) => !data.draft && data.date.valueOf() >= epoch
+  );
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },

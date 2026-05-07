@@ -3,9 +3,10 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
-    (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-  );
+  const epoch = new Date('1971-01-01').valueOf();
+  const posts = (
+    await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch)
+  ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
     title: 'Pangaea',
