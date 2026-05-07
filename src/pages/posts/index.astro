@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title="Posts — Pangaea">
+  <h1>Posts</h1>
+  <p class="meta">Everything, in reverse-chronological order.</p>
+
+  {posts.length === 0 && <p class="meta">Nothing here yet.</p>}
+
+  <ul class="post-list">
+    {
+      posts.map((p) => (
+        <li>
+          <a href={`/posts/${p.slug}/`}>
+            <span class="title">{p.data.title}</span>
+            {p.data.blurb && <span class="blurb">{p.data.blurb}</span>}
+            <span class="date">{fmt(p.data.date)}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

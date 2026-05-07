@@ -1,62 +1,72 @@
 # pangaea.blog
 
-A weekly catalog of one app, one essay, one song — by [Adam Pang](https://adamtpang.substack.com).
+A hub for the spoken & the written word, by [Adam Pang](https://adampang.com). Music, philosophy, business — all of it on one map.
 
-Pangaea is a personal site in the lineage of [sive.rs](https://sive.rs), [tim.blog](https://tim.blog), and [waitbutwhy.com](https://waitbutwhy.com): owned URL, plain text, durable. Each weekly issue is called a **rift**.
+In the lineage of [sive.rs](https://sive.rs), [paulgraham.com](https://paulgraham.com), and Tim Ferriss's *5 Bullet Friday*: owned URL, plain text, durable.
 
 ## Stack
 
-- [Astro](https://astro.build) — static site generator, ships zero JS by default.
-- Markdown-based content collections (`src/content/rifts/`, `src/content/essays/`).
-- Deployed as static HTML to Vercel / Cloudflare Pages.
+- [Astro](https://astro.build) hybrid (mostly static, SSR for `/write` and `/api/write/*`)
+- Markdown + MDX content collections (`src/content/posts/`)
+- Custom embed components (Spotify, YouTube, SoundCloud, Figure, Quote)
+- Deployed to Vercel; domain on Vercel DNS
 
-## Writing a new rift
+## The /write editor
 
-Drop a markdown file in `src/content/rifts/` named like `002-the-rift-title.md`:
+Pangaea has its own backstage at **`pangaea.blog/write`** — password-protected. The flow:
 
-```markdown
+1. Drop a topic / note.
+2. Claude scaffolds a draft (frontmatter + body + suggested embeds with bracketed placeholders).
+3. Polish in the textarea.
+4. Click **Publish** → API commits a new MDX file to this repo → Vercel rebuilds → live in ~30 seconds.
+
+Posts default to `draft: true`. Flip in the file (or via another commit) when you're ready.
+
+### Required env vars (Vercel project)
+
+| Name | Purpose |
+|---|---|
+| `WRITE_PASSWORD` | Gates `/write` and `/api/write/*` via HTTP basic auth |
+| `ANTHROPIC_API_KEY` | Claude API key for the scaffolder |
+| `GITHUB_TOKEN` | Personal access token with `contents: write` on this repo |
+| `GITHUB_OWNER` (optional) | Defaults to `adamtpang` |
+| `GITHUB_REPO` (optional) | Defaults to `pangaea.blog` |
+| `GITHUB_BRANCH` (optional) | Defaults to `main` |
+
+## Writing a post by hand
+
+Drop a file in `src/content/posts/2026-05-09-the-title.mdx`:
+
+```mdx
 ---
-number: 2
-title: The title of this rift
+title: The title
 date: 2026-05-09
-blurb: One line that shows up in the index.
+blurb: One line for the index.
+tags: [philosophy, music]
 draft: false
-app:
-  name: Some App
-  url: https://example.com
-  note: Why it matters.
-essay:
-  title: The essay title
-  author: Some Writer
-  url: https://example.com/essay
-  note: Why you should read it.
-song:
-  title: Track name
-  artist: Artist name
-  url: https://open.spotify.com/track/...
-  note: Why this song this week.
-extra:           # optional: quote, image, video, link
-  kind: quote
-  caption: "Some line worth keeping."
 ---
 
-Body text here, in markdown. Keep it short.
-```
+import { Quote, YouTube, Spotify, SoundCloud, Figure } from '../../components/embeds';
 
-Set `draft: true` to keep a rift hidden from the index and RSS feed until ready.
+Body text in markdown.
+
+<Spotify uri="track/0NeJjNlprGfZpeX2LQuN6c" />
+
+<Quote attribution="Stewart Brand, 1968">
+We are as gods and might as well get good at it.
+</Quote>
+```
 
 ## Local development
 
 ```bash
 npm install
 npm run dev      # http://localhost:4321
-npm run build    # outputs to ./dist
+npm run build    # outputs to .vercel/output/
 npm run preview  # serve the built site
 ```
 
-## Deployment
-
-The `main` branch deploys automatically to Vercel. The custom domain `pangaea.blog` is mapped at the host level.
+To use `/write` locally, create a `.env` with `WRITE_PASSWORD`, `ANTHROPIC_API_KEY`, and `GITHUB_TOKEN`.
 
 ## Content rights
 

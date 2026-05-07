@@ -1,0 +1,190 @@
+---
+import Base from '../layouts/Base.astro';
+export const prerender = false;
+---
+
+<Base title="Write — Pangaea" description="Backstage editor for Pangaea posts.">
+  <div class="write-shell">
+    <h1>
+      <span>Write</span>
+      <span class="backstage">Backstage</span>
+    </h1>
+
+    <p class="meta">
+      Drop a topic. Get a draft. Polish. Publish. Adam-only.
+    </p>
+
+    <form class="write-form" id="scaffold-form">
+      <div>
+        <label for="topic">Topic / note</label>
+        <textarea
+          id="topic"
+          name="topic"
+          rows="3"
+          placeholder="e.g. why i keep returning to stoicism — the line about external/internal control rewires me every time"
+          required></textarea>
+      </div>
+      <div class="write-actions">
+        <button type="submit" class="btn" id="scaffold-btn">Scaffold a draft</button>
+        <span class="write-status" id="scaffold-status"></span>
+      </div>
+    </form>
+
+    <hr id="divider" style="display:none;" />
+
+    <form class="write-form" id="publish-form" style="display:none;">
+      <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required />
+      </div>
+      <div>
+        <label for="slug">Slug (URL)</label>
+        <input type="text" id="slug" name="slug" required />
+      </div>
+      <div>
+        <label for="body">Body (MDX)</label>
+        <textarea
+          id="body"
+          name="body"
+          class="body"
+          spellcheck="true"
+          required></textarea>
+      </div>
+      <div class="write-actions">
+        <button type="submit" class="btn" id="publish-btn">Publish to GitHub → Vercel rebuilds</button>
+        <button type="button" class="btn ghost" id="reset-btn">Discard &amp; start over</button>
+        <span class="write-status" id="publish-status"></span>
+      </div>
+      <div class="write-help">
+        <strong>Embeds you can drop in the body:</strong><br />
+        <code>&lt;Quote attribution="Author"&gt;Pull quote.&lt;/Quote&gt;</code><br />
+        <code>&lt;YouTube id="dQw4w9WgXcQ" /&gt;</code><br />
+        <code>&lt;Spotify uri="track/0NeJjNlprGfZpeX2LQuN6c" /&gt;</code><br />
+        <code>&lt;SoundCloud url="https://soundcloud.com/..." /&gt;</code><br />
+        <code>&lt;Figure src="/images/foo.jpg" alt="..." caption="..." /&gt;</code><br />
+        <br />
+        Posts default to <code>draft: true</code>. Edit the file in the repo or push another commit
+        to flip it to <code>false</code> when you're ready for it to be live.
+      </div>
+    </form>
+  </div>
+</Base>
+
+<script>
+  const $ = <T extends Element = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const scaffoldForm = $<HTMLFormElement>('scaffold-form');
+  const scaffoldBtn = $<HTMLButtonElement>('scaffold-btn');
+  const scaffoldStatus = $('scaffold-status');
+  const topicInput = $<HTMLTextAreaElement>('topic');
+  const publishForm = $<HTMLFormElement>('publish-form');
+  const publishBtn = $<HTMLButtonElement>('publish-btn');
+  const publishStatus = $('publish-status');
+  const titleInput = $<HTMLInputElement>('title');
+  const slugInput = $<HTMLInputElement>('slug');
+  const bodyInput = $<HTMLTextAreaElement>('body');
+  const resetBtn = $<HTMLButtonElement>('reset-btn');
+  const divider = $('divider');
+
+  const setStatus = (el: HTMLElement, msg: string, kind: 'ok' | 'error' | '' = '') => {
+    el.textContent = msg;
+    el.className = `write-status${kind ? ' ' + kind : ''}`;
+  };
+
+  const slugify = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[̀-ͯ]/g, '')
+      .replace(/[‘’']/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 80);
+
+  // Auto-update slug from title when slug field hasn't been manually edited
+  let slugTouched = false;
+  slugInput?.addEventListener('input', () => {
+    slugTouched = true;
+  });
+  titleInput?.addEventListener('input', () => {
+    if (!slugTouched) slugInput.value = slugify(titleInput.value);
+  });
+
+  scaffoldForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const topic = topicInput.value.trim();
+    if (!topic) return;
+    scaffoldBtn.disabled = true;
+    setStatus(scaffoldStatus, 'Scaffolding…');
+
+    try {
+      const res = await fetch('/api/write/scaffold', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ topic }),
+      });
+      if (!res.ok) {
+        const { error } = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(error || 'Scaffold failed');
+      }
+      const { title, slug, body } = await res.json();
+      titleInput.value = title;
+      slugInput.value = slug;
+      bodyInput.value = body;
+      slugTouched = false;
+      divider.style.display = 'block';
+      publishForm.style.display = 'grid';
+      setStatus(scaffoldStatus, 'Drafted. Polish it below.', 'ok');
+      bodyInput.focus();
+      bodyInput.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err: any) {
+      setStatus(scaffoldStatus, err.message, 'error');
+    } finally {
+      scaffoldBtn.disabled = false;
+    }
+  });
+
+  publishForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    publishBtn.disabled = true;
+    setStatus(publishStatus, 'Publishing…');
+
+    try {
+      const res = await fetch('/api/write/publish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          title: titleInput.value,
+          slug: slugInput.value,
+          body: bodyInput.value,
+        }),
+      });
+      if (!res.ok) {
+        const { error } = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(error || 'Publish failed');
+      }
+      const { url, path } = await res.json();
+      setStatus(
+        publishStatus,
+        '',
+        'ok'
+      );
+      publishStatus.innerHTML =
+        `<span class="ok">Committed <code>${path}</code>. Vercel is rebuilding — </span>` +
+        `<a href="${url}" target="_blank" rel="noopener">${url}</a>`;
+    } catch (err: any) {
+      setStatus(publishStatus, err.message, 'error');
+    } finally {
+      publishBtn.disabled = false;
+    }
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    if (!confirm('Discard this draft and start over?')) return;
+    publishForm.reset();
+    publishForm.style.display = 'none';
+    divider.style.display = 'none';
+    setStatus(publishStatus, '');
+    setStatus(scaffoldStatus, '');
+    topicInput.focus();
+  });
+</script>

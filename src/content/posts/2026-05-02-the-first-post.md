@@ -1,0 +1,17 @@
+---
+title: The first post
+date: 2026-05-02
+blurb: A supercontinent forms.
+draft: true
+tags: [meta]
+---
+
+Welcome to Pangaea.
+
+Pangaea is a hub. The plan is simple: write daily, ship daily, world-build relentlessly. Music, philosophy, business — all of it on one map, before the continents drift apart.
+
+Each post is a small thing — a song that's been on repeat, a paragraph that wouldn't leave my head, a tool I'm using, a quote I keep coming back to. Sometimes a longer essay. Sometimes just a photo.
+
+The format is loose. The cadence is not.
+
+Onward.

@@ -1,0 +1,14 @@
+---
+interface Props {
+  /** Full SoundCloud URL, e.g. "https://soundcloud.com/user/track" */
+  url: string;
+  color?: string;
+}
+
+const { url, color = '8a3b1f' } = Astro.props;
+const src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23${color}&inverse=false&auto_play=false&show_user=true`;
+---
+
+<div class="embed embed-soundcloud">
+  <iframe src={src} loading="lazy" scrolling="no" allow="autoplay"></iframe>
+</div>

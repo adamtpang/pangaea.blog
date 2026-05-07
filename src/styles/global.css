@@ -178,99 +178,74 @@ footer.site a:hover {
   color: var(--accent);
 }
 
-/* --- Rift index list --- */
-.rift-list {
+/* --- Homepage hero --- */
+.hero {
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 2rem;
+  border-left: 2px solid var(--accent);
+  padding-left: 1rem;
+}
+
+/* --- Post list --- */
+.post-list {
   list-style: none;
   padding: 0;
-  margin: 1.5rem 0 0;
+  margin: 0;
 }
-.rift-list li {
-  padding: 0.9rem 0;
+.post-list li {
   border-bottom: 1px solid var(--rule);
-  display: grid;
-  grid-template-columns: 4rem 1fr;
-  gap: 0.9rem;
-  align-items: baseline;
+  padding: 0;
 }
-.rift-list .num {
-  font-family: var(--mono);
-  font-size: 0.85rem;
-  color: var(--accent);
-  letter-spacing: 0.02em;
+.post-list li:first-child {
+  border-top: 1px solid var(--rule);
 }
-.rift-list a {
+.post-list a {
+  display: block;
+  padding: 1rem 0;
   text-decoration: none;
   color: var(--ink);
-  font-weight: 500;
 }
-.rift-list a:hover {
+.post-list a:hover .title {
   color: var(--accent);
 }
-.rift-list .blurb {
+.post-list .title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: block;
+  transition: color 0.1s;
+}
+.post-list .blurb {
   display: block;
   color: var(--muted);
   font-size: 0.95rem;
-  margin-top: 0.15rem;
+  margin-top: 0.2rem;
 }
-.rift-list .date {
+.post-list .date {
+  display: block;
   font-family: var(--sans);
   font-size: 0.75rem;
   color: var(--muted);
-  margin-top: 0.15rem;
-  display: block;
+  margin-top: 0.3rem;
+  letter-spacing: 0.04em;
 }
 
-/* --- Rift article --- */
-article.rift header h1 {
+/* --- Post article --- */
+article.post header h1 {
   margin-bottom: 0.25rem;
 }
-article.rift .rift-meta {
+article.post .post-meta {
   font-family: var(--sans);
   font-size: 0.85rem;
   color: var(--muted);
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+  letter-spacing: 0.04em;
 }
-article.rift .rift-meta .num {
-  color: var(--accent);
-  font-family: var(--mono);
-  margin-right: 0.5rem;
-}
-
-.curation {
-  border-top: 1px solid var(--rule);
-  padding-top: 1.25rem;
-  margin-top: 2rem;
-}
-.curation .label {
-  font-family: var(--sans);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--accent);
-  margin-bottom: 0.4rem;
-}
-.curation .pick {
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-}
-.curation .pick a {
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid var(--accent-soft);
-}
-.curation .pick a:hover {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-.curation .by {
-  font-family: var(--sans);
-  font-size: 0.85rem;
+article.post .blurb-line {
   color: var(--muted);
-  margin-bottom: 0.6rem;
-}
-.curation .note {
-  margin-bottom: 0;
+  font-size: 1.05rem;
+  margin-bottom: 1.5rem;
 }
 
 /* --- Prose (markdown body) --- */
@@ -282,6 +257,175 @@ article.rift .rift-meta .num {
   height: auto;
   display: block;
   margin: 1.5rem auto;
+  border-radius: 2px;
+}
+
+/* --- Embeds (used inside MDX) --- */
+.embed {
+  margin: 1.75rem 0;
+}
+.embed iframe {
+  width: 100%;
+  border: 0;
+  display: block;
+}
+.embed-yt {
+  aspect-ratio: 16 / 9;
+}
+.embed-yt iframe {
+  height: 100%;
+}
+.embed-spotify iframe {
+  height: 152px;
+  border-radius: 12px;
+}
+.embed-soundcloud iframe {
+  height: 166px;
+}
+.embed-figure figcaption {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* --- Pull quote --- */
+.pullquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  border-left: 3px solid var(--accent);
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  margin: 2rem 0;
+}
+.pullquote .attribution {
+  display: block;
+  font-style: normal;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+/* --- /write editor --- */
+.write-shell {
+  max-width: 50rem;
+}
+.write-shell h1 {
+  font-size: 1.6rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.write-shell .backstage {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.write-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.write-form label {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.write-form input,
+.write-form textarea {
+  width: 100%;
+  font-family: var(--serif);
+  font-size: 1rem;
+  background: #fffdf8;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.7rem 0.9rem;
+  color: var(--ink);
+  line-height: 1.55;
+  resize: vertical;
+}
+.write-form textarea.body {
+  min-height: 26rem;
+  font-size: 1.02rem;
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.write-form input:focus,
+.write-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+}
+.write-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.btn {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  padding: 0.55rem 1rem;
+  border-radius: 3px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+}
+.btn.ghost:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: transparent;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.write-status {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+.write-status.error {
+  color: var(--accent);
+}
+.write-status.ok {
+  color: #2d6a3a;
+}
+.write-help {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+.write-help code {
+  font-size: 0.78rem;
 }
 
 @media (max-width: 540px) {

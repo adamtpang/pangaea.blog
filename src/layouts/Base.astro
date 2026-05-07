@@ -7,7 +7,7 @@ interface Props {
 }
 
 const DEFAULT_DESCRIPTION =
-  'Pangaea — a weekly catalog of one app, one essay, one song. Curations from the supercontinent of Adam Pang’s curiosities.';
+  'Pangaea — a hub for the spoken & the written word, by Adam Pang. Music, philosophy, business — all of it on one map.';
 const { title, description = DEFAULT_DESCRIPTION } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -27,24 +27,24 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:site_name" content="Pangaea" />
     <meta name="twitter:card" content="summary" />
-    <link rel="alternate" type="application/rss+xml" title="Pangaea — Rifts" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Pangaea" href="/rss.xml" />
   </head>
   <body>
     <header class="site">
       <a class="brand" href="/">Pangaea<span class="dot">.</span></a>
       <nav>
-        <a href="/rifts/">Rifts</a>
-        <a href="/essays/">Essays</a>
+        <a href="/posts/">Posts</a>
         <a href="/about/">About</a>
+        <a href="https://adampang.com/hi">Hi</a>
       </nav>
     </header>
     <main>
       <slot />
     </main>
     <footer class="site">
-      <span>Pangaea — a catalog of curiosities.</span>
+      <span>Pangaea — a hub for the spoken & the written word.</span>
       <span>
-        by <a href="https://adamtpang.substack.com">Adam Pang</a>
+        by <a href="https://adampang.com">Adam Pang</a> · <a href="/rss.xml">RSS</a>
       </span>
     </footer>
   </body>

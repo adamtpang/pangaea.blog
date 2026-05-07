@@ -3,20 +3,20 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  const rifts = (await getCollection('rifts', ({ data }) => !data.draft)).sort(
+  const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
     (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
   );
 
   return rss({
     title: 'Pangaea',
     description:
-      'A weekly catalog of one app, one essay, one song. Curations from the supercontinent of Adam Pang’s curiosities.',
+      'A hub for the spoken & the written word. By Adam Pang. Music, philosophy, business — all of it on one map.',
     site: context.site!,
-    items: rifts.map((rift) => ({
-      title: `№ ${String(rift.data.number).padStart(3, '0')} — ${rift.data.title}`,
-      pubDate: rift.data.date,
-      description: rift.data.blurb ?? '',
-      link: `/rifts/${rift.slug}/`,
+    items: posts.map((post) => ({
+      title: post.data.title,
+      pubDate: post.data.date,
+      description: post.data.blurb ?? '',
+      link: `/posts/${post.slug}/`,
     })),
     customData: '<language>en-us</language>',
   });
