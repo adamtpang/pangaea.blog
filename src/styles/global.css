@@ -1,4 +1,4 @@
-/* Pangaea — quiet, considered, built to last.
+/* Pangaea: quiet, considered, built to last.
    Influences: sive.rs (text-first), Whole Earth Catalog (utilitarian, eclectic),
    geological time (slow, layered). */
 
@@ -313,6 +313,10 @@ article.post .blurb-line {
   font-size: 0.85rem;
   color: var(--muted);
   margin-top: 0.5rem;
+}
+.pullquote .attribution::before {
+  content: "/ ";
+  color: var(--accent-soft);
 }
 
 /* --- /write editor --- */

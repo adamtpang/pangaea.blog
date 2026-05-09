@@ -7,7 +7,7 @@ interface Props {
 }
 
 const DEFAULT_DESCRIPTION =
-  'Pangaea — a hub for the spoken & the written word, by Adam Pang. Music, philosophy, business — all of it on one map.';
+  'Pangaea: a hub for the spoken & the written word, by Adam Pang. Music, philosophy, business, all of it on one map.';
 const { title, description = DEFAULT_DESCRIPTION } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -35,6 +35,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <a class="brand" href="/">Pangaea<span class="dot">.</span></a>
       <nav>
         <a href="/posts/">Posts</a>
+        <a href="/graph/">Graph</a>
         <a href="/podcast/">Podcast</a>
         <a href="/about/">About</a>
         <a href="https://adampang.com/hi">Hi</a>
@@ -44,7 +45,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <footer class="site">
-      <span>Pangaea — a hub for the spoken & the written word.</span>
+      <span>Pangaea · a hub for the spoken &amp; the written word.</span>
       <span>
         by <a href="https://adampang.com">Adam Pang</a> · <a href="/rss.xml">RSS</a>
       </span>

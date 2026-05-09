@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 export const prerender = false;
 ---
 
-<Base title="Write — Pangaea" description="Backstage editor for Pangaea posts.">
+<Base title="Write · Pangaea" description="Backstage editor for Pangaea posts.">
   <div class="write-shell">
     <h1>
       <span>Write</span>
@@ -21,7 +21,7 @@ export const prerender = false;
           id="topic"
           name="topic"
           rows="3"
-          placeholder="e.g. why i keep returning to stoicism — the line about external/internal control rewires me every time"
+          placeholder="e.g. why i keep returning to stoicism. the line about external/internal control rewires me every time"
           required></textarea>
       </div>
       <div class="write-actions">
@@ -51,7 +51,7 @@ export const prerender = false;
           required></textarea>
       </div>
       <div class="write-actions">
-        <button type="submit" class="btn" id="publish-btn">Publish to GitHub → Vercel rebuilds</button>
+        <button type="submit" class="btn" id="publish-btn">Publish &rarr; Vercel rebuilds</button>
         <button type="button" class="btn ghost" id="reset-btn">Discard &amp; start over</button>
         <span class="write-status" id="publish-status"></span>
       </div>
@@ -171,7 +171,7 @@ export const prerender = false;
         'ok'
       );
       publishStatus.innerHTML =
-        `<span class="ok">Committed <code>${path}</code>. Vercel is rebuilding — </span>` +
+        `<span class="ok">Committed <code>${path}</code>. Vercel is rebuilding... </span>` +
         `<a href="${url}" target="_blank" rel="noopener">${url}</a>`;
     } catch (err: any) {
       setStatus(publishStatus, err.message, 'error');

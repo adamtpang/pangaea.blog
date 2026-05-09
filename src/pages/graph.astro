@@ -1,0 +1,248 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+// Build a graph of posts + the wiki-links between them.
+// [[Post Title]] in any post body becomes an edge.
+const epoch = new Date('1971-01-01').valueOf();
+const posts = await getCollection(
+  'posts',
+  ({ data }) => !data.draft && data.date.valueOf() >= epoch
+);
+
+const slugify = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+const slugSet = new Set(posts.map((p) => p.slug));
+
+const nodes = posts.map((p) => ({
+  id: p.slug,
+  label: p.data.title,
+}));
+
+const edges: { from: string; to: string }[] = [];
+for (const p of posts) {
+  const wikiLinks = p.body.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g);
+  for (const match of wikiLinks) {
+    const target = slugify(match[1]);
+    if (slugSet.has(target) && target !== p.slug) {
+      edges.push({ from: p.slug, to: target });
+    }
+  }
+}
+
+const data = { nodes, edges };
+const enoughForGraph = nodes.length >= 2;
+---
+
+<Base
+  title="Graph · Pangaea"
+  description="An Obsidian-style network of Pangaea posts and the links between them."
+>
+  <h1>Graph</h1>
+  <p class="meta">
+    The connective tissue. Each node is a post; each line is a <code>[[wiki-link]]</code> from one
+    post to another. As the catalog grows, the shape of the worldview shows up here.
+  </p>
+
+  {!enoughForGraph && (
+    <p class="meta">
+      The graph wakes up at <strong>2+ posts</strong>. Currently {nodes.length}. Keep writing.
+    </p>
+  )}
+
+  {enoughForGraph && (
+    <>
+      <div id="graph-canvas" data-graph={JSON.stringify(data)}></div>
+      <p class="meta" style="margin-top:1rem;">
+        Drag nodes. Click to open a post. Reference other posts in your writing with{' '}
+        <code>[[The Other Post Title]]</code>.
+      </p>
+    </>
+  )}
+
+  {!enoughForGraph && nodes.length > 0 && (
+    <ul class="post-list" style="margin-top:2rem;">
+      {nodes.map((n) => (
+        <li>
+          <a href={`/posts/${n.id}/`}>
+            <span class="title">{n.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</Base>
+
+<style>
+  #graph-canvas {
+    width: 100%;
+    height: 60vh;
+    min-height: 28rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: #fffdf8;
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+</style>
+
+{enoughForGraph && (
+  <script>
+    // Lightweight force-directed graph. No deps. Vanilla canvas + verlet integration.
+    type Node = { id: string; label: string; x: number; y: number; vx: number; vy: number };
+    type Edge = { from: string; to: string };
+
+    const el = document.getElementById('graph-canvas') as HTMLDivElement;
+    const raw = el?.dataset.graph;
+    if (el && raw) {
+      const data = JSON.parse(raw) as { nodes: { id: string; label: string }[]; edges: Edge[] };
+      const canvas = document.createElement('canvas');
+      el.appendChild(canvas);
+      const ctx = canvas.getContext('2d')!;
+      let dpr = window.devicePixelRatio || 1;
+
+      function resize() {
+        const r = el.getBoundingClientRect();
+        canvas.width = r.width * dpr;
+        canvas.height = r.height * dpr;
+        canvas.style.width = r.width + 'px';
+        canvas.style.height = r.height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const W = () => el.clientWidth;
+      const H = () => el.clientHeight;
+
+      const nodes: Node[] = data.nodes.map((n, i) => ({
+        ...n,
+        x: W() / 2 + Math.cos((i / data.nodes.length) * Math.PI * 2) * 80,
+        y: H() / 2 + Math.sin((i / data.nodes.length) * Math.PI * 2) * 80,
+        vx: 0,
+        vy: 0,
+      }));
+      const idMap = new Map(nodes.map((n) => [n.id, n]));
+      const edges = data.edges
+        .map((e) => ({ a: idMap.get(e.from), b: idMap.get(e.to) }))
+        .filter((e) => e.a && e.b) as { a: Node; b: Node }[];
+
+      let dragging: Node | null = null;
+      canvas.addEventListener('pointerdown', (e) => {
+        const r = canvas.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        for (const n of nodes) {
+          if ((x - n.x) ** 2 + (y - n.y) ** 2 < 18 ** 2) {
+            dragging = n;
+            return;
+          }
+        }
+      });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const r = canvas.getBoundingClientRect();
+        dragging.x = e.clientX - r.left;
+        dragging.y = e.clientY - r.top;
+        dragging.vx = 0;
+        dragging.vy = 0;
+      });
+      canvas.addEventListener('pointerup', () => {
+        dragging = null;
+      });
+      canvas.addEventListener('click', (e) => {
+        if (dragging) return;
+        const r = canvas.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        for (const n of nodes) {
+          if ((x - n.x) ** 2 + (y - n.y) ** 2 < 18 ** 2) {
+            window.location.href = `/posts/${n.id}/`;
+            return;
+          }
+        }
+      });
+
+      function step() {
+        const cx = W() / 2,
+          cy = H() / 2;
+        for (const n of nodes) {
+          if (n === dragging) continue;
+          // gravity to center
+          n.vx += (cx - n.x) * 0.0015;
+          n.vy += (cy - n.y) * 0.0015;
+          // repulsion between nodes
+          for (const m of nodes) {
+            if (m === n) continue;
+            const dx = n.x - m.x;
+            const dy = n.y - m.y;
+            const d2 = dx * dx + dy * dy + 0.01;
+            const f = 1200 / d2;
+            n.vx += (dx / Math.sqrt(d2)) * f * 0.01;
+            n.vy += (dy / Math.sqrt(d2)) * f * 0.01;
+          }
+        }
+        // edge spring
+        for (const e of edges) {
+          const dx = e.b.x - e.a.x;
+          const dy = e.b.y - e.a.y;
+          const d = Math.sqrt(dx * dx + dy * dy) + 0.01;
+          const target = 120;
+          const k = 0.04;
+          const fx = ((d - target) * k * dx) / d;
+          const fy = ((d - target) * k * dy) / d;
+          if (e.a !== dragging) {
+            e.a.vx += fx;
+            e.a.vy += fy;
+          }
+          if (e.b !== dragging) {
+            e.b.vx -= fx;
+            e.b.vy -= fy;
+          }
+        }
+        for (const n of nodes) {
+          if (n === dragging) continue;
+          n.vx *= 0.85;
+          n.vy *= 0.85;
+          n.x += n.vx;
+          n.y += n.vy;
+          n.x = Math.max(20, Math.min(W() - 20, n.x));
+          n.y = Math.max(20, Math.min(H() - 20, n.y));
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W(), H());
+        // edges
+        ctx.strokeStyle = '#b8896c';
+        ctx.lineWidth = 1;
+        for (const e of edges) {
+          ctx.beginPath();
+          ctx.moveTo(e.a.x, e.a.y);
+          ctx.lineTo(e.b.x, e.b.y);
+          ctx.stroke();
+        }
+        // nodes
+        for (const n of nodes) {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 7, 0, Math.PI * 2);
+          ctx.fillStyle = '#8a3b1f';
+          ctx.fill();
+          ctx.fillStyle = '#1a1a1a';
+          ctx.font = '12px Iowan Old Style, Charter, Georgia, serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(n.label, n.x, n.y + 22);
+        }
+      }
+
+      function loop() {
+        step();
+        draw();
+        requestAnimationFrame(loop);
+      }
+      loop();
+    }
+  </script>
+)}

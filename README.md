@@ -1,6 +1,6 @@
 # pangaea.blog
 
-A hub for the spoken & the written word, by [Adam Pang](https://adampang.com). Music, philosophy, business — all of it on one map.
+A hub for the spoken & the written word, by [Adam Pang](https://adampang.com). Music, philosophy, business: all of it on one map.
 
 In the lineage of [sive.rs](https://sive.rs), [paulgraham.com](https://paulgraham.com), and Tim Ferriss's *5 Bullet Friday*: owned URL, plain text, durable.
 
@@ -13,7 +13,7 @@ In the lineage of [sive.rs](https://sive.rs), [paulgraham.com](https://paulgraha
 
 ## The /write editor
 
-Pangaea has its own backstage at **`pangaea.blog/write`** — password-protected. The flow:
+Pangaea has its own backstage at **`pangaea.blog/write`** (password-protected). The flow:
 
 1. Drop a topic / note.
 2. Claude scaffolds a draft (frontmatter + body + suggested embeds with bracketed placeholders).

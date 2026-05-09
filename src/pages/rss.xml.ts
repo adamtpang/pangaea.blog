@@ -11,7 +11,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: 'Pangaea',
     description:
-      'A hub for the spoken & the written word. By Adam Pang. Music, philosophy, business — all of it on one map.',
+      'A hub for the spoken & the written word. By Adam Pang. Music, philosophy, business: all of it on one map.',
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,

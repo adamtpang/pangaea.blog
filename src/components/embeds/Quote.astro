@@ -8,5 +8,5 @@ const { attribution } = Astro.props;
 
 <blockquote class="pullquote">
   <slot />
-  {attribution && <span class="attribution">— {attribution}</span>}
+  {attribution && <cite class="attribution">{attribution}</cite>}
 </blockquote>

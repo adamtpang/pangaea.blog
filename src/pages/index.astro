@@ -13,14 +13,14 @@ const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
-<Base title="Pangaea — a hub for the spoken & the written word">
+<Base title="Pangaea · a hub for the spoken & the written word">
   <p class="hero">
-    A hub for the spoken & the written word, by <a href="https://adampang.com">Adam Pang</a>. Music,
-    philosophy, business — all of it on one map, before the continents drift apart.
+    A hub for the spoken &amp; the written word, by <a href="https://adampang.com">Adam Pang</a>. Music,
+    philosophy, business: all of it on one map, before the continents drift apart.
   </p>
 
   {recent.length === 0 && (
-    <p class="meta">No posts yet — the supercontinent is still forming.</p>
+    <p class="meta">No posts yet. The supercontinent is still forming.</p>
   )}
 
   {recent.length > 0 && (
