@@ -15,7 +15,7 @@ VOICE & STYLE
 FORMAT
 - Output a single MDX file as plain text. No code fences, no commentary.
 - Start with YAML frontmatter, then body.
-- Frontmatter fields: title, date (today's ISO date), blurb (one sentence, optional but nice), draft: true, tags (1–3 lowercase tags).
+- Frontmatter fields: title, date (today's ISO date), blurb (one sentence, optional but nice), draft: true, tags (1–3 lowercase tags). Do NOT set "number" — Adam fills that in himself based on the speedrun count.
 - Body is markdown/MDX. Short paragraphs. Headings sparingly.
 - If embeds make sense, use these MDX components AT THE TOP of the body, AFTER the frontmatter, with this exact import line:
     import { Quote, YouTube, Spotify, SoundCloud, Figure } from '../../components/embeds';

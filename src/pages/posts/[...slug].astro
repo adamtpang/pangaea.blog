@@ -30,7 +30,12 @@ const fmt = (d: Date) =>
   <article class="post">
     <header>
       <h1>{data.title}</h1>
-      <p class="post-meta">{fmt(data.date)}</p>
+      <p class="post-meta">
+        {data.number !== undefined && (
+          <span class="num">№ {String(data.number).padStart(3, '0')}</span>
+        )}
+        {fmt(data.date)}
+      </p>
     </header>
 
     {data.blurb && <p class="prose blurb-line"><em>{data.blurb}</em></p>}

@@ -242,6 +242,12 @@ article.post .post-meta {
   margin-bottom: 2rem;
   letter-spacing: 0.04em;
 }
+article.post .post-meta .num {
+  font-family: var(--mono);
+  color: var(--accent);
+  margin-right: 0.6rem;
+  letter-spacing: 0.05em;
+}
 article.post .blurb-line {
   color: var(--muted);
   font-size: 1.05rem;

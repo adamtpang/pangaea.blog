@@ -32,3 +32,7 @@ Thumbs.db
 .claude/worktrees/
 .claude/settings.local.json
 .claude/settings.local.json*
+
+# Local-only working files synced via OneDrive — not part of the public site
+src/content/drafts/
+scripts/
