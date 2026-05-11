@@ -9,20 +9,105 @@ const posts = (
 
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+// --- Cadence math: weekly minimum, daily ideal. ---
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const latest = posts[0]?.data.date;
+const daysSinceLast = latest
+  ? Math.floor((today.valueOf() - latest.valueOf()) / 86400000)
+  : null;
+
+// Pangaea ships on Fridays. Calculate the next Friday from today.
+const dayOfWeek = today.getDay(); // 0=Sun, 5=Fri
+const daysToFriday = (5 - dayOfWeek + 7) % 7 || 7;
+const nextFriday = new Date(today.valueOf() + daysToFriday * 86400000);
+const nextDueLabel = nextFriday.toLocaleDateString('en-US', {
+  weekday: 'long',
+  month: 'short',
+  day: 'numeric',
+});
+
+// Posts in the last 7 days (this week's streak).
+const weekAgo = today.valueOf() - 7 * 86400000;
+const thisWeek = posts.filter((p) => p.data.date.valueOf() >= weekAgo).length;
+const thisYear = posts.filter((p) => p.data.date.getFullYear() === today.getFullYear()).length;
+const remaining = Math.max(0, 1000 - posts.length);
+
+// All unique tags (for the filter row)
+const allTags = Array.from(
+  new Set(posts.flatMap((p) => p.data.tags ?? []))
+).sort();
 ---
 
 <Base title="Posts · Pangaea">
   <h1>Posts</h1>
-  <p class="meta">Everything, in reverse-chronological order.</p>
+
+  {posts.length > 0 && (
+    <div class="cadence">
+      <div class="cadence-row">
+        <span><strong>{posts.length}</strong> / 1,000 posts</span>
+        <span>·</span>
+        <span><strong>{thisYear}</strong> this year</span>
+        <span>·</span>
+        <span><strong>{thisWeek}</strong> this week</span>
+        <span>·</span>
+        <span>
+          last post <strong>{daysSinceLast === 0 ? 'today' : daysSinceLast === 1 ? 'yesterday' : `${daysSinceLast} days ago`}</strong>
+        </span>
+      </div>
+      <div class="cadence-row meta">
+        Cadence: weekly minimum, daily ideal. Next ship date by <strong>{nextDueLabel}</strong>.
+        {remaining > 0 && <span> {remaining.toLocaleString()} to go.</span>}
+      </div>
+    </div>
+  )}
 
   {posts.length === 0 && <p class="meta">Nothing here yet.</p>}
 
-  <ul class="post-list">
+  {posts.length > 0 && (
+    <div class="posts-controls">
+      <input
+        type="search"
+        id="posts-search"
+        placeholder="Search title, blurb, or tag..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <select id="posts-sort">
+        <option value="date-desc">Newest first</option>
+        <option value="date-asc">Oldest first</option>
+        <option value="title-asc">Title A to Z</option>
+        <option value="title-desc">Title Z to A</option>
+      </select>
+    </div>
+  )}
+
+  {allTags.length > 0 && (
+    <div class="posts-tags" id="posts-tags">
+      <button class="tag active" data-tag="">all</button>
+      {allTags.map((t) => (
+        <button class="tag" data-tag={t}>{t}</button>
+      ))}
+    </div>
+  )}
+
+  <ul class="post-list" id="posts-list">
     {
       posts.map((p) => (
-        <li>
+        <li
+          data-title={p.data.title.toLowerCase()}
+          data-blurb={(p.data.blurb ?? '').toLowerCase()}
+          data-tags={(p.data.tags ?? []).join(' ').toLowerCase()}
+          data-date={p.data.date.toISOString()}
+        >
           <a href={`/posts/${p.slug}/`}>
-            <span class="title">{p.data.title}</span>
+            <span class="title">
+              {p.data.number !== undefined && (
+                <span class="num">№ {String(p.data.number).padStart(3, '0')}</span>
+              )}
+              {p.data.title}
+            </span>
             {p.data.blurb && <span class="blurb">{p.data.blurb}</span>}
             <span class="date">{fmt(p.data.date)}</span>
           </a>
@@ -30,4 +115,89 @@ const fmt = (d: Date) =>
       ))
     }
   </ul>
+
+  <p class="meta no-results" id="posts-empty" style="display:none;">
+    Nothing matches. Try a different word, or clear the filter.
+  </p>
 </Base>
+
+<script>
+  const list = document.getElementById('posts-list') as HTMLUListElement | null;
+  const search = document.getElementById('posts-search') as HTMLInputElement | null;
+  const sort = document.getElementById('posts-sort') as HTMLSelectElement | null;
+  const tags = document.getElementById('posts-tags') as HTMLDivElement | null;
+  const empty = document.getElementById('posts-empty') as HTMLParagraphElement | null;
+
+  if (list) {
+    const items = Array.from(list.children) as HTMLLIElement[];
+    let activeTag = '';
+    let query = '';
+    let sortMode = 'date-desc';
+
+    function render() {
+      const q = query.trim().toLowerCase();
+      let visible = 0;
+
+      // Filter
+      for (const li of items) {
+        const title = li.dataset.title ?? '';
+        const blurb = li.dataset.blurb ?? '';
+        const tagStr = li.dataset.tags ?? '';
+        const matchQ = !q || title.includes(q) || blurb.includes(q) || tagStr.includes(q);
+        const matchTag = !activeTag || tagStr.split(' ').includes(activeTag);
+        if (matchQ && matchTag) {
+          li.style.display = '';
+          visible++;
+        } else {
+          li.style.display = 'none';
+        }
+      }
+      if (empty) empty.style.display = visible === 0 ? '' : 'none';
+
+      // Sort
+      const visibleItems = items.filter((li) => li.style.display !== 'none');
+      visibleItems.sort((a, b) => {
+        const ad = a.dataset.date ?? '';
+        const bd = b.dataset.date ?? '';
+        const at = a.dataset.title ?? '';
+        const bt = b.dataset.title ?? '';
+        switch (sortMode) {
+          case 'date-asc':
+            return ad.localeCompare(bd);
+          case 'title-asc':
+            return at.localeCompare(bt);
+          case 'title-desc':
+            return bt.localeCompare(at);
+          default:
+            return bd.localeCompare(ad);
+        }
+      });
+      for (const li of visibleItems) list.appendChild(li);
+    }
+
+    search?.addEventListener('input', () => {
+      query = search.value;
+      render();
+    });
+    sort?.addEventListener('change', () => {
+      sortMode = sort.value;
+      render();
+    });
+    tags?.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (!t.matches('.tag')) return;
+      activeTag = t.dataset.tag ?? '';
+      tags.querySelectorAll('.tag').forEach((b) => b.classList.remove('active'));
+      t.classList.add('active');
+      render();
+    });
+
+    // Keyboard shortcut: "/" focuses search
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
+        e.preventDefault();
+        search?.focus();
+      }
+    });
+  }
+</script>

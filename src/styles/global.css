@@ -188,6 +188,97 @@ footer.site a:hover {
   padding-left: 1rem;
 }
 
+/* --- Cadence widget (top of /posts) --- */
+.cadence {
+  background: rgba(138, 59, 31, 0.04);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0 2rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+.cadence-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: baseline;
+}
+.cadence-row.meta {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: 0.4rem;
+}
+.cadence strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* --- Posts page controls (search + sort) --- */
+.posts-controls {
+  display: flex;
+  gap: 0.6rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+.posts-controls input[type="search"] {
+  flex: 1;
+  min-width: 12rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  background: #fffdf8;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.55rem 0.8rem;
+  color: var(--ink);
+}
+.posts-controls input[type="search"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+}
+.posts-controls select {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  background: #fffdf8;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 0.55rem 0.8rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* --- Tag chips --- */
+.posts-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0 0 1.5rem;
+}
+.posts-tags .tag {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.posts-tags .tag:hover {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+}
+.posts-tags .tag.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
 /* --- Post list --- */
 .post-list {
   list-style: none;
@@ -215,6 +306,14 @@ footer.site a:hover {
   font-size: 1.05rem;
   display: block;
   transition: color 0.1s;
+}
+.post-list .title .num {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  margin-right: 0.5rem;
+  font-weight: 500;
 }
 .post-list .blurb {
   display: block;
