@@ -54,6 +54,21 @@ The `/posts` page has client-side search + sort + tag filtering, all in vanilla 
 
 `/posts` shows a live cadence header: total posts, this-year count, this-week count, days since last, next-Friday ship deadline, and remaining-to-1,000 countdown. Weekly cadence is the floor.
 
+## Screenshot essays for social (`/share/[slug]`)
+
+Every published post auto-generates a tall, screenshot-optimized view at `/share/{slug}/`. The view is a 1080px-wide framed page with Pangaea masthead, big serif title, blurb, full body (including embeds), and a colophon footer. To post on X / IG: visit the share URL, screenshot the framed area (Cmd+Shift+4 / Win+Shift+S), upload. No image-generation deps, no Figma required.
+
+A "Screenshot for X / IG →" link is wired into every post detail page. The share view inherits a self-contained stylesheet (not Base.astro) so it can be designed for the screenshot context independently.
+
+## Figma path (stub, waiting on file URL)
+
+The /write editor can be extended to ALSO generate a Figma frame in Adam's `screenshotessays` Figma file in parallel with the MDX commit. Requirements before wiring this up:
+1. The Figma file URL (or fileKey) for the screenshotessays project.
+2. An Editor seat on the Figma team (current seat shows as "View" tier on `team::1495631974460049950`, which blocks Plugin API writes).
+3. A template frame in that file with named children (title, body, footer) so the integration can fill them in.
+
+When those exist, add a `FIGMA_FILE_KEY` env var, a `FIGMA_TEMPLATE_NODE_ID` env var, and a `/api/write/figma` endpoint that calls `use_figma` to clone the template and fill text layers from the scaffolded MDX.
+
 ## Voice & punctuation
 
 - Terse, considered, eclectic. Whole Earth Catalog energy. Sive.rs brevity. 150 to 400 words is the target for a typical post.
