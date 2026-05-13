@@ -1,30 +1,108 @@
 ---
 import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { YouTube } from '../components/embeds';
+
+const episodes = (await getCollection('episodes', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
 <Base
   title="Podcast · Pangaea"
-  description="The Pangaea podcast: the spoken word side of the hub. Coming soon."
+  description="The Pangaea podcast: the spoken word side of the hub."
 >
   <h1>Podcast</h1>
-  <p class="meta">The spoken word side of Pangaea. Coming soon.</p>
 
-  <p>
-    Pangaea is a hub for the spoken and the written word. The written half lives at <a href="/posts/">/posts</a>.
-    The spoken half (long-form conversations, audio essays, things best heard rather than read)
-    will land here.
-  </p>
+  {episodes.length === 0 && (
+    <>
+      <p class="meta">The spoken word side of Pangaea. Coming soon.</p>
+      <p>
+        Pangaea is a hub for the spoken and the written word. The written half lives at{' '}
+        <a href="/posts/">/posts</a>. The spoken half (long-form conversations, audio essays, things
+        best heard rather than read) will land here as it ships, each with a YouTube embed and show
+        notes.
+      </p>
+      <p>
+        No episodes yet. If you want a ping when the first one ships, drop a note via{' '}
+        <a href="https://adampang.com/hi">adampang.com/hi</a>.
+      </p>
+      <hr />
+      <p class="meta">
+        In the meantime: <a href="/posts/">read the posts</a> &middot;{' '}
+        <a href="https://soundcloud.com/adamtpang">music on SoundCloud</a>.
+      </p>
+    </>
+  )}
 
-  <p>
-    No episodes yet. When the first one ships, this page becomes a feed: new on top, RSS available, embedded
-    players for each episode. If you want a ping when it launches, drop a note via{' '}
-    <a href="https://adampang.com/hi">adampang.com/hi</a>.
-  </p>
-
-  <hr />
-
-  <p class="meta">
-    In the meantime: <a href="/posts/">read the posts</a> &middot;{' '}
-    <a href="https://soundcloud.com/adamtpang">music on SoundCloud</a>.
-  </p>
+  {episodes.length > 0 && (
+    <>
+      <p class="meta">The spoken word side of Pangaea. {episodes.length} episode{episodes.length === 1 ? '' : 's'}.</p>
+      <div class="episode-list">
+        {episodes.map((ep) => (
+          <article class="episode">
+            <h2>
+              <a href={`/podcast/${ep.slug}/`}>
+                {ep.data.episode !== undefined && (
+                  <span class="ep-num">Ep. {ep.data.episode}</span>
+                )}
+                {ep.data.title}
+              </a>
+            </h2>
+            <p class="ep-meta">
+              {fmt(ep.data.date)}
+              {ep.data.guest && <span> &middot; with {ep.data.guest}</span>}
+            </p>
+            {ep.data.blurb && <p class="ep-blurb">{ep.data.blurb}</p>}
+            {ep.data.youtube && <YouTube id={ep.data.youtube} title={ep.data.title} />}
+            <p class="meta"><a href={`/podcast/${ep.slug}/`}>Show notes &rarr;</a></p>
+          </article>
+        ))}
+      </div>
+    </>
+  )}
 </Base>
+
+<style>
+  .episode-list {
+    margin-top: 2rem;
+  }
+  .episode {
+    border-top: 1px solid var(--rule);
+    padding: 1.75rem 0;
+  }
+  .episode h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.4rem;
+  }
+  .episode h2 a {
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .episode h2 a:hover {
+    color: var(--accent);
+  }
+  .episode .ep-num {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-right: 0.6rem;
+    vertical-align: 0.1em;
+  }
+  .episode .ep-meta {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin: 0 0 0.6rem;
+  }
+  .episode .ep-blurb {
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin: 0 0 1rem;
+  }
+</style>

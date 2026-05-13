@@ -4,7 +4,7 @@ This repo is Adam's personal blog at https://pangaea.blog. Astro hybrid site (mo
 
 ## The mission
 
-1,000 high-quality essays. Weekly cadence (Fridays) at minimum, daily ideal. Each post is multi-modal worldbuilding: a written spine plus song, image, video, quote, or tool embeds when they belong.
+1,000 high-quality essays. Weekly cadence (Fridays) at minimum, daily ideal. Each post is multi-modal worldbuilding: a written spine plus song, image, video, quote, or tool embeds when they belong. Pangaea is a hub for the spoken AND the written word: `/posts` is the writing, `/podcast` is the spoken side (YouTube-hosted episodes).
 
 ## Adding a post
 
@@ -54,6 +54,10 @@ The `/posts` page has client-side search + sort + tag filtering, all in vanilla 
 
 `/posts` shows a live cadence header: total posts, this-year count, this-week count, days since last, next-Friday ship deadline, and remaining-to-1,000 countdown. Weekly cadence is the floor.
 
+## Podcast (`/podcast`)
+
+Episodes are markdown/MDX files in `src/content/episodes/` (schema in `src/content/config.ts`). Fields: `title`, `date` (required); `episode` (number), `youtube` (video ID), `blurb`, `guest`, `tags`, `draft` (optional, defaults true). The `youtube` ID drives the auto-embed on the `/podcast` list and on the episode page at `/podcast/{slug}/`; the body is show notes (topics, links, timestamps) and can use `<YouTube id="..." />` for clips referenced in the conversation. `/podcast` shows a "coming soon" empty state until at least one episode has `draft: false`.
+
 ## Screenshot essays for social (`/share/[slug]`)
 
 Every published post auto-generates a tall, screenshot-optimized view at `/share/{slug}/`. The view is a 1080px-wide framed page with Pangaea masthead, big serif title, blurb, full body (including embeds), and a colophon footer. To post on X / IG: visit the share URL, screenshot the framed area (Cmd+Shift+4 / Win+Shift+S), upload. No image-generation deps, no Figma required.
@@ -79,6 +83,7 @@ When those exist, add a `FIGMA_FILE_KEY` env var, a `FIGMA_TEMPLATE_NODE_ID` env
 - Brand color: iron-oxide red `#8a3b1f` (var `--accent` in `src/styles/global.css`).
 - Type: serif body (Iowan / Charter / Georgia stack), sans for meta, mono for issue numbers/code.
 - Don't add JavaScript to public pages unless there's a real reason. `/posts` (search), `/graph` (canvas), and `/write` have JS by necessity.
+- Don't render the `episodes` collection anywhere except `/podcast` and `/podcast/[slug]`.
 
 ## Don't do
 

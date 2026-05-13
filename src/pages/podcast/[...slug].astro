@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { YouTube } from '../../components/embeds';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('episodes', ({ data }) => !data.draft);
+  return episodes.map((episode) => ({
+    params: { slug: episode.slug },
+    props: { episode },
+  }));
+}
+
+interface Props {
+  episode: CollectionEntry<'episodes'>;
+}
+
+const { episode } = Astro.props;
+const { Content } = await episode.render();
+const { data } = episode;
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title={`${data.title} · Pangaea Podcast`} description={data.blurb}>
+  <article class="post">
+    <header>
+      <h1>{data.title}</h1>
+      <p class="post-meta">
+        {data.episode !== undefined && <span class="num">Ep. {data.episode}</span>}
+        {fmt(data.date)}
+        {data.guest && <span> · with {data.guest}</span>}
+      </p>
+    </header>
+
+    {data.youtube && (
+      <div class="prose">
+        <YouTube id={data.youtube} title={data.title} />
+      </div>
+    )}
+
+    {data.blurb && <p class="prose blurb-line"><em>{data.blurb}</em></p>}
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <hr />
+    <p class="meta">
+      <a href="/podcast/">&larr; All episodes</a> &nbsp; · &nbsp;
+      <a href="https://adampang.com/hi">Tell me what you think</a>
+    </p>
+  </article>
+</Base>

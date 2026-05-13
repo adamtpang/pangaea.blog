@@ -32,7 +32,26 @@ const inbox = defineCollection({
   }),
 });
 
+// Episodes: the spoken-word side of Pangaea. Each episode is a markdown/MDX
+// file in src/content/episodes/. The `youtube` field (a video ID) drives the
+// auto-embed on the /podcast list and the episode page; the body is show notes
+// (topics, links, timestamps), and can use <YouTube> for clips referenced.
+const episodes = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    episode: z.number().int().nonnegative().optional(),
+    youtube: z.string().optional(), // YouTube video ID, e.g. "dQw4w9WgXcQ"
+    blurb: z.string().optional(),
+    guest: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().default(true),
+  }),
+});
+
 export const collections = {
   posts,
   inbox,
+  episodes,
 };
