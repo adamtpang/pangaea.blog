@@ -78,9 +78,23 @@ When those exist, add a `FIGMA_FILE_KEY` env var, a `FIGMA_TEMPLATE_NODE_ID` env
 - Terse, considered, eclectic. Whole Earth Catalog energy. Sive.rs brevity. 150 to 400 words is the target for a typical post.
 - **No em dashes (—) or en dashes (–).** Use commas, semicolons, colons, periods, or parentheses. Hyphens inside compound words ("first-person") are fine.
 
-## Conventions
+## Design system: "the blue marble"
 
-- Brand color: iron-oxide red `#8a3b1f` (var `--accent` in `src/styles/global.css`).
+Palette is Earth seen from space. Tokens in `src/styles/global.css` `:root` (the `/share` page and `/graph` script keep their own synced copies):
+
+- `--bg #f3f7f6` sea-mist white, `--surface #ffffff` for inset surfaces (sky / space / clouds)
+- `--ink #14201f` abyssal near-black, `--muted #4d635f` slate-teal, `--rule #cad9d3` hairline
+- `--accent #176079` OCEAN blue, `--accent-soft #6a9bad` shallow water
+- `--land #2f6b4f` PANGAEA green, `--land-soft #8fb6a1` lichen
+
+**Usage discipline (do not blur this):**
+- BLUE `--accent` = the ocean: links, focus rings, reading-flow accent bars (hero, pullquote, cadence border).
+- GREEN `--land` = the supercontinent: brand-mark dot, № issue badges, the /share masthead stripe, progress numbers. Identity, never interaction.
+- WHITE = sky/space: backgrounds and breathing room.
+- Headings stay `--ink`. Never color a heading. Color is never the only affordance (links stay underlined). All text tokens clear WCAG AA (~5.6:1+) on `--bg`.
+
+`Dino.astro` is a Pangaea-era sauropodomorph silhouette (fossil-plate, not mascot), used small and low-opacity in the footer. Keep it a watermark; do not make it loud or childish.
+
 - Type: serif body (Iowan / Charter / Georgia stack), sans for meta, mono for issue numbers/code.
 - Don't add JavaScript to public pages unless there's a real reason. `/posts` (search), `/graph` (canvas), and `/write` have JS by necessity.
 - Don't render the `episodes` collection anywhere except `/podcast` and `/podcast/[slug]`.

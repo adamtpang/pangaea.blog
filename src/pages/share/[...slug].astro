@@ -32,12 +32,13 @@ const fmt = (d: Date) =>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>
       :root {
-        --bg: #f6f3ee;
-        --ink: #1a1a1a;
-        --muted: #6b6258;
-        --rule: #d8d2c7;
-        --accent: #8a3b1f;
-        --accent-soft: #b8896c;
+        --bg: #f3f7f6;
+        --ink: #14201f;
+        --muted: #4d635f;
+        --rule: #cad9d3;
+        --accent: #176079;
+        --accent-soft: #6a9bad;
+        --land: #2f6b4f;
         --serif: 'Iowan Old Style', 'Charter', 'Georgia', 'Cambria', serif;
         --sans: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
         --mono: 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;
@@ -49,7 +50,7 @@ const fmt = (d: Date) =>
       body {
         margin: 0;
         padding: 0;
-        background: #2b2722;
+        background: #0e1c20; /* deep space / abyss around the framed essay */
         font-family: var(--serif);
       }
       .share-page {
@@ -71,7 +72,7 @@ const fmt = (d: Date) =>
         left: 0;
         right: 0;
         height: 8px;
-        background: var(--accent);
+        background: var(--land); /* the supercontinent edge */
       }
       .masthead {
         display: flex;
@@ -93,7 +94,7 @@ const fmt = (d: Date) =>
         letter-spacing: 0.01em;
       }
       .masthead .brand .dot {
-        color: var(--accent);
+        color: var(--land);
       }
       .masthead .num {
         font-family: var(--mono);
@@ -225,7 +226,7 @@ const fmt = (d: Date) =>
         padding: 16px 20px;
         font-family: var(--sans);
         font-size: 14px;
-        color: #c9c2b6;
+        color: #93aaa4;
         text-align: center;
       }
       .help a {

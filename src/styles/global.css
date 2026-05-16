@@ -1,14 +1,26 @@
 /* Pangaea: quiet, considered, built to last.
    Influences: sive.rs (text-first), Whole Earth Catalog (utilitarian, eclectic),
-   geological time (slow, layered). */
+   deep time. Palette: "the blue marble" — ocean blue, landmass green,
+   cloud white. Earth seen from space.
+
+   Usage discipline:
+   - WHITE  (--bg / --surface): sky and space. Background, breathing room.
+   - BLUE   (--accent): the ocean. Links, focus, reading-flow accent bars.
+   - GREEN  (--land): the supercontinent. Brand mark, badges, structural
+            stripes, the active state. Identity, not interaction.
+   - Headings stay --ink. Never color a heading. Color is never the only
+     affordance (links are also underlined). All text tokens clear WCAG AA. */
 
 :root {
-  --bg: #f6f3ee;
-  --ink: #1a1a1a;
-  --muted: #6b6258;
-  --rule: #d8d2c7;
-  --accent: #8a3b1f;       /* iron-oxide / tectonic red */
-  --accent-soft: #b8896c;
+  --bg: #f3f7f6;           /* sea-mist white, faint cool tint, calm for long reading */
+  --surface: #ffffff;      /* card / inset surfaces (write inputs, share frame) */
+  --ink: #14201f;          /* abyssal near-black, blue-green undertone (~15:1 on bg) */
+  --muted: #4d635f;        /* desaturated slate-teal meta text (~5.9:1 AA) */
+  --rule: #cad9d3;         /* soft blue-green hairline */
+  --accent: #176079;       /* OCEAN — links, focus, interaction (~6.3:1 AA) */
+  --accent-soft: #6a9bad;  /* shallow water — decorative borders, hovers */
+  --land: #2f6b4f;         /* PANGAEA green — brand, badges, structure (~5.6:1 AA) */
+  --land-soft: #8fb6a1;    /* lichen — decorative green accents */
   --serif: "Iowan Old Style", "Charter", "Georgia", "Cambria", serif;
   --sans: "IBM Plex Sans", "Helvetica Neue", system-ui, sans-serif;
   --mono: "IBM Plex Mono", "Menlo", "Consolas", monospace;
@@ -141,7 +153,7 @@ header.site .brand {
   color: var(--ink);
 }
 header.site .brand .dot {
-  color: var(--accent);
+  color: var(--land); /* the supercontinent: identity, not a link */
 }
 header.site nav {
   font-family: var(--sans);
@@ -170,6 +182,11 @@ footer.site {
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+footer.site .footer-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 footer.site a {
   color: var(--muted);
   text-decoration: none;
@@ -190,7 +207,7 @@ footer.site a:hover {
 
 /* --- Cadence widget (top of /posts) --- */
 .cadence {
-  background: rgba(138, 59, 31, 0.04);
+  background: rgba(47, 107, 79, 0.05); /* faintest land-green wash */
   border: 1px solid var(--rule);
   border-left: 3px solid var(--accent);
   border-radius: 3px;
@@ -212,7 +229,7 @@ footer.site a:hover {
   margin-top: 0.4rem;
 }
 .cadence strong {
-  color: var(--accent);
+  color: var(--land); /* progress toward 1,000 is identity, not a link */
   font-weight: 600;
 }
 
@@ -228,7 +245,7 @@ footer.site a:hover {
   min-width: 12rem;
   font-family: var(--serif);
   font-size: 1rem;
-  background: #fffdf8;
+  background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: 3px;
   padding: 0.55rem 0.8rem;
@@ -242,7 +259,7 @@ footer.site a:hover {
 .posts-controls select {
   font-family: var(--sans);
   font-size: 0.85rem;
-  background: #fffdf8;
+  background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: 3px;
   padding: 0.55rem 0.8rem;
@@ -310,7 +327,7 @@ footer.site a:hover {
 .post-list .title .num {
   font-family: var(--mono);
   font-size: 0.7rem;
-  color: var(--accent);
+  color: var(--land); /* issue numbers are identity markers */
   letter-spacing: 0.05em;
   margin-right: 0.5rem;
   font-weight: 500;
@@ -343,7 +360,7 @@ article.post .post-meta {
 }
 article.post .post-meta .num {
   font-family: var(--mono);
-  color: var(--accent);
+  color: var(--land); /* issue numbers are identity markers */
   margin-right: 0.6rem;
   letter-spacing: 0.05em;
 }
@@ -455,7 +472,7 @@ article.post .blurb-line {
   width: 100%;
   font-family: var(--serif);
   font-size: 1rem;
-  background: #fffdf8;
+  background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: 3px;
   padding: 0.7rem 0.9rem;
@@ -524,7 +541,7 @@ article.post .blurb-line {
   color: var(--accent);
 }
 .write-status.ok {
-  color: #2d6a3a;
+  color: var(--land);
 }
 .write-help {
   font-family: var(--sans);

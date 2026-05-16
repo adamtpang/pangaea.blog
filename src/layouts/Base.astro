@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Dino from '../components/Dino.astro';
 
 interface Props {
   title: string;
@@ -45,7 +46,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <footer class="site">
-      <span>Pangaea · a hub for the spoken &amp; the written word.</span>
+      <span class="footer-mark">
+        <Dino height={20} />
+        Pangaea · a hub for the spoken &amp; the written word.
+      </span>
       <span>
         by <a href="https://adampang.com">Adam Pang</a> · <a href="/rss.xml">RSS</a>
       </span>

@@ -81,7 +81,7 @@ const enoughForGraph = nodes.length >= 2;
     min-height: 28rem;
     border: 1px solid var(--rule);
     border-radius: 4px;
-    background: #fffdf8;
+    background: var(--surface);
     margin-top: 1.5rem;
     position: relative;
     overflow: hidden;
@@ -215,8 +215,8 @@ const enoughForGraph = nodes.length >= 2;
 
       function draw() {
         ctx.clearRect(0, 0, W(), H());
-        // edges
-        ctx.strokeStyle = '#b8896c';
+        // edges (shallow water between landmasses)
+        ctx.strokeStyle = '#6a9bad';
         ctx.lineWidth = 1;
         for (const e of edges) {
           ctx.beginPath();
@@ -228,9 +228,9 @@ const enoughForGraph = nodes.length >= 2;
         for (const n of nodes) {
           ctx.beginPath();
           ctx.arc(n.x, n.y, 7, 0, Math.PI * 2);
-          ctx.fillStyle = '#8a3b1f';
+          ctx.fillStyle = '#2f6b4f'; /* posts are landmasses */
           ctx.fill();
-          ctx.fillStyle = '#1a1a1a';
+          ctx.fillStyle = '#14201f';
           ctx.font = '12px Iowan Old Style, Charter, Georgia, serif';
           ctx.textAlign = 'center';
           ctx.fillText(n.label, n.x, n.y + 22);

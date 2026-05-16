@@ -1,7 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#f6f3ee"/>
-  <text x="16" y="22" text-anchor="middle"
+  <!-- the planet: ocean -->
+  <rect width="32" height="32" rx="7" fill="#176079"/>
+  <!-- a landmass -->
+  <path d="M5 19 q3 -6 8 -5 q4 1 3 5 q-1 5 -6 5 q-6 0 -5 -5 z" fill="#3f8a63" opacity="0.85"/>
+  <!-- the written word on the world -->
+  <text x="16" y="22.5" text-anchor="middle"
         font-family="Iowan Old Style, Charter, Georgia, serif"
-        font-size="20" font-weight="600" fill="#1a1a1a">P</text>
-  <circle cx="23" cy="22" r="2" fill="#8a3b1f"/>
+        font-size="19" font-weight="600" fill="#f3f7f6">P</text>
+  <circle cx="23.5" cy="22" r="2" fill="#8fb6a1"/>
 </svg>

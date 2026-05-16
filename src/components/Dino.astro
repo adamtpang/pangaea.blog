@@ -1,0 +1,36 @@
+---
+/* A quiet creature from deep time. Pangaea-era sauropodomorph, in profile,
+   as a single fine silhouette. Used small and low-opacity, like a fossil
+   plate stamped in the margin. Not a mascot; a watermark. */
+interface Props {
+  height?: number;
+  color?: string;
+  opacity?: number;
+  title?: string;
+}
+const {
+  height = 22,
+  color = 'var(--land-soft)',
+  opacity = 0.55,
+  title = 'A dinosaur, from when Pangaea was whole',
+} = Astro.props;
+---
+
+<svg
+  viewBox="0 0 140 72"
+  height={height}
+  width={(height * 140) / 72}
+  role="img"
+  aria-label={title}
+  style={`opacity:${opacity};display:block`}
+>
+  <title>{title}</title>
+  <path
+    fill={color}
+    d="M6 54 C18 50 26 48 38 47 C44 38 50 30 60 27 C70 25 78 24 86 21
+       C96 17 104 12 112 9 C120 6 127 6 130 10 C133 13 132 17 127 18
+       C121 19 116 18 112 20 C106 23 100 27 94 31 C90 34 88 38 86 44
+       L86 60 L80 60 L80 44 C76 46 70 47 64 47 L64 60 L58 60 L58 46
+       C44 48 30 50 18 54 L6 54 Z"
+  ></path>
+</svg>
