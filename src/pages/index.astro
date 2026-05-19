@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Globe from '../components/Globe.astro';
 import { getCollection } from 'astro:content';
 
 // Only show posts that are not drafts AND have a real date (not the 1970 sentinel).
@@ -14,27 +15,40 @@ const fmt = (d: Date) =>
 ---
 
 <Base title="Pangaea · a hub for the spoken & the written word">
-  <p class="hero">
-    A hub for the spoken &amp; the written word, by <a href="https://adampang.com">Adam Pang</a>. Music,
-    philosophy, business: all of it on one map, before the continents drift apart.
-  </p>
+  <section class="landing-hero">
+    <Globe size={248} />
+    <h1 class="landing-title">Pangaea</h1>
+    <p class="landing-tagline">
+      A hub for the spoken &amp; the written word, by
+      <a href="https://adampang.com">Adam Pang</a>. Music, philosophy, business:
+      all of it on one map, before the continents drift apart.
+    </p>
+  </section>
 
   {recent.length === 0 && (
     <p class="meta">No posts yet. The supercontinent is still forming.</p>
   )}
 
   {recent.length > 0 && (
-    <ul class="post-list">
-      {recent.map((p) => (
-        <li>
-          <a href={`/posts/${p.slug}/`}>
-            <span class="title">{p.data.title}</span>
-            {p.data.blurb && <span class="blurb">{p.data.blurb}</span>}
-            <span class="date">{fmt(p.data.date)}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <>
+      <h2 class="landing-section">Latest</h2>
+      <ul class="post-list">
+        {recent.map((p) => (
+          <li>
+            <a href={`/posts/${p.slug}/`}>
+              <span class="title">
+                {p.data.number !== undefined && (
+                  <span class="num">№ {String(p.data.number).padStart(3, '0')}</span>
+                )}
+                {p.data.title}
+              </span>
+              {p.data.blurb && <span class="blurb">{p.data.blurb}</span>}
+              <span class="date">{fmt(p.data.date)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
   )}
 
   {posts.length > 12 && (
@@ -43,3 +57,44 @@ const fmt = (d: Date) =>
     </p>
   )}
 </Base>
+
+<style>
+  .landing-hero {
+    text-align: center;
+    padding: 1.5rem 0 2.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .landing-hero :global(.globe) {
+    margin: 0 auto 1.5rem;
+    max-width: 70vw;
+  }
+  .landing-title {
+    font-size: 2.6rem;
+    letter-spacing: 0.01em;
+    margin: 0 0 0.6rem;
+  }
+  .landing-tagline {
+    max-width: 28rem;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 1.08rem;
+    line-height: 1.55;
+  }
+  .landing-tagline a {
+    color: var(--accent);
+  }
+  .landing-section {
+    font-size: 0.82rem;
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin: 0 0 0.25rem;
+  }
+  @media (max-width: 540px) {
+    .landing-title {
+      font-size: 2.1rem;
+    }
+  }
+</style>

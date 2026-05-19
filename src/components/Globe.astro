@@ -1,0 +1,105 @@
+---
+/* The blue marble. A quiet spinning globe: ocean sphere, the Pangaea
+   supercontinent drifting across it, a faint graticule, soft atmosphere.
+   Pure SVG + CSS. No JS. The "rotation" is a clipped landmass band that
+   translates on a long loop. Honors prefers-reduced-motion (sits still). */
+interface Props {
+  size?: number;
+}
+const { size = 240 } = Astro.props;
+const uid = 'g' + Math.random().toString(36).slice(2, 8);
+---
+
+<svg
+  class="globe"
+  viewBox="0 0 240 240"
+  width={size}
+  height={size}
+  role="img"
+  aria-label="Pangaea: the supercontinent on the blue marble"
+>
+  <defs>
+    <radialGradient id={`${uid}-ocean`} cx="38%" cy="34%" r="78%">
+      <stop offset="0%" stop-color="#3f97b3" />
+      <stop offset="55%" stop-color="#1d6c88" />
+      <stop offset="100%" stop-color="#0c3a4b" />
+    </radialGradient>
+    <radialGradient id={`${uid}-glow`} cx="50%" cy="50%" r="50%">
+      <stop offset="78%" stop-color="rgba(106,155,173,0)" />
+      <stop offset="100%" stop-color="rgba(106,155,173,0.35)" />
+    </radialGradient>
+    <clipPath id={`${uid}-clip`}>
+      <circle cx="120" cy="120" r="104" />
+    </clipPath>
+  </defs>
+
+  <!-- atmosphere -->
+  <circle cx="120" cy="120" r="112" fill={`url(#${uid}-glow)`} />
+
+  <!-- ocean -->
+  <circle cx="120" cy="120" r="104" fill={`url(#${uid}-ocean)`} />
+
+  <g clip-path={`url(#${uid}-clip)`}>
+    <!-- the supercontinent, drawn twice so it wraps as it drifts -->
+    <g class="globe-land">
+      <g fill="#2f6b4f">
+        <path
+          d="M30 96 q14 -26 40 -20 q22 5 24 26 q16 -6 30 8 q12 14 -2 30
+             q14 6 10 26 q-6 24 -34 24 q-10 16 -32 12 q-26 -5 -28 -30
+             q-14 -10 -8 -34 q4 -22 28 -42 z"
+        />
+        <path d="M150 150 q12 -8 22 2 q8 10 -4 20 q-16 8 -24 -4 q-4 -12 6 -18 z" />
+        <ellipse cx="92" cy="78" rx="9" ry="6" />
+      </g>
+      <g fill="#2f6b4f" transform="translate(208 0)">
+        <path
+          d="M30 96 q14 -26 40 -20 q22 5 24 26 q16 -6 30 8 q12 14 -2 30
+             q14 6 10 26 q-6 24 -34 24 q-10 16 -32 12 q-26 -5 -28 -30
+             q-14 -10 -8 -34 q4 -22 28 -42 z"
+        />
+        <path d="M150 150 q12 -8 22 2 q8 10 -4 20 q-16 8 -24 -4 q-4 -12 6 -18 z" />
+        <ellipse cx="92" cy="78" rx="9" ry="6" />
+      </g>
+    </g>
+
+    <!-- graticule -->
+    <g
+      fill="none"
+      stroke="rgba(243,247,246,0.22)"
+      stroke-width="1"
+    >
+      <circle cx="120" cy="120" r="104" />
+      <ellipse cx="120" cy="120" rx="34" ry="104" />
+      <ellipse cx="120" cy="120" rx="70" ry="104" />
+      <line x1="16" y1="120" x2="224" y2="120" />
+      <path d="M28 80 q92 -26 184 0" />
+      <path d="M28 160 q92 26 184 0" />
+    </g>
+
+    <!-- specular highlight -->
+    <ellipse cx="86" cy="80" rx="40" ry="30" fill="rgba(243,247,246,0.16)" />
+  </g>
+</svg>
+
+<style>
+  .globe {
+    display: block;
+    filter: drop-shadow(0 18px 40px rgba(12, 58, 75, 0.28));
+  }
+  .globe-land {
+    animation: globe-spin 48s linear infinite;
+  }
+  @keyframes globe-spin {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-208px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .globe-land {
+      animation: none;
+    }
+  }
+</style>
