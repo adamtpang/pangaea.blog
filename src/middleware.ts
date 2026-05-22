@@ -1,43 +1,13 @@
 import { defineMiddleware } from 'astro:middleware';
 
 /**
- * Gate everything under /write and /api/write with HTTP Basic Auth.
- * Set WRITE_PASSWORD on Vercel. Username is ignored; only the password matters.
- * If WRITE_PASSWORD is unset in production, the route is locked closed.
+ * /write is intentionally open for now. The two API endpoints below still
+ * gate themselves on having real API credentials (ANTHROPIC_API_KEY for
+ * scaffold, GITHUB_TOKEN for publish) so an open URL can't actually do
+ * anything destructive without those server-side secrets, but anyone who
+ * finds the URL can scaffold drafts. To re-gate later, set WRITE_PASSWORD
+ * on Vercel and restore the basic-auth block (kept in git history).
  */
-export const onRequest = defineMiddleware(async (context, next) => {
-  const url = new URL(context.request.url);
-  const isProtected = url.pathname === '/write' || url.pathname.startsWith('/api/write');
-  if (!isProtected) {
-    return next();
-  }
-
-  const expected = import.meta.env.WRITE_PASSWORD ?? process.env.WRITE_PASSWORD;
-  if (!expected) {
-    return new Response('Backstage is locked: WRITE_PASSWORD not configured.', {
-      status: 503,
-      headers: { 'content-type': 'text/plain' },
-    });
-  }
-
-  const auth = context.request.headers.get('authorization') ?? '';
-  if (auth.startsWith('Basic ')) {
-    try {
-      const decoded = atob(auth.slice(6));
-      const [, password] = decoded.split(':');
-      if (password === expected) {
-        return next();
-      }
-    } catch {
-      // fall through to challenge
-    }
-  }
-
-  return new Response('Authentication required.', {
-    status: 401,
-    headers: {
-      'www-authenticate': 'Basic realm="Pangaea backstage"',
-      'content-type': 'text/plain',
-    },
-  });
+export const onRequest = defineMiddleware(async (_context, next) => {
+  return next();
 });
