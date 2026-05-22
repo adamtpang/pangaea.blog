@@ -500,6 +500,18 @@ article.post .blurb-line {
   align-items: center;
   margin-top: 0.5rem;
 }
+.write-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+.word-count {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin-left: 0.5rem;
+}
 .btn {
   display: inline-block;
   font-family: var(--sans);

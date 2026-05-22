@@ -11,22 +11,55 @@ export const prerender = false;
     </h1>
 
     <p class="meta">
-      Drop a topic. Get a draft. Polish. Publish.
+      Fill four fields. Click build. Edit if you want. Publish.
     </p>
 
-    <form class="write-form" id="scaffold-form">
+    <form class="write-form" id="post-form">
       <div>
-        <label for="topic">Topic / note</label>
+        <label for="title">Title</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="e.g. Why a thousand"
+          required
+        />
+      </div>
+
+      <div>
+        <label for="cover">Cover image URL (optional)</label>
+        <input
+          type="url"
+          id="cover"
+          name="cover"
+          placeholder="https://... (paste any image URL)"
+        />
+      </div>
+
+      <div>
+        <label for="outline">Outline (one line per beat)</label>
         <textarea
-          id="topic"
-          name="topic"
-          rows="3"
-          placeholder="e.g. why i keep returning to stoicism. the line about external/internal control rewires me every time"
+          id="outline"
+          name="outline"
+          rows="6"
+          placeholder={'The hook. One sentence.\nThe thing. Why it matters.\nThe turn. A specific example or quote.\nThe close.'}
           required></textarea>
       </div>
+
+      <div class="write-row">
+        <div>
+          <label for="goal">Word goal</label>
+          <input type="number" id="goal" name="goal" value="300" min="50" max="2000" step="50" />
+        </div>
+        <div>
+          <label for="slug">Slug</label>
+          <input type="text" id="slug" name="slug" required />
+        </div>
+      </div>
+
       <div class="write-actions">
-        <button type="submit" class="btn" id="scaffold-btn">Scaffold a draft</button>
-        <span class="write-status" id="scaffold-status"></span>
+        <button type="button" class="btn ghost" id="build-btn">Build draft &darr;</button>
+        <span class="write-status" id="build-status"></span>
       </div>
     </form>
 
@@ -34,21 +67,8 @@ export const prerender = false;
 
     <form class="write-form" id="publish-form" style="display:none;">
       <div>
-        <label for="title">Title</label>
-        <input type="text" id="title" name="title" required />
-      </div>
-      <div>
-        <label for="slug">Slug (URL)</label>
-        <input type="text" id="slug" name="slug" required />
-      </div>
-      <div>
-        <label for="body">Body (MDX)</label>
-        <textarea
-          id="body"
-          name="body"
-          class="body"
-          spellcheck="true"
-          required></textarea>
+        <label for="body">Body (MDX) <span id="word-count" class="word-count"></span></label>
+        <textarea id="body" name="body" class="body" spellcheck="true" required></textarea>
       </div>
       <div class="write-actions">
         <button type="submit" class="btn" id="publish-btn">Publish &rarr; Vercel rebuilds</button>
@@ -63,10 +83,9 @@ export const prerender = false;
         <code>&lt;SoundCloud url="https://soundcloud.com/..." /&gt;</code><br />
         <code>&lt;Figure src="/images/foo.jpg" alt="..." caption="..." /&gt;</code><br />
         <br />
-        Posts default to <code>draft: true</code>. Edit the file in the repo or push another commit
-        to flip it to <code>false</code> when you're ready for it to be live.<br /><br />
-        Add <code>number: N</code> in the frontmatter to give a post its issue number
-        (e.g. <code>number: 1</code> for the first numbered one). Speedrun to 1,000.
+        Posts publish with <code>draft: false</code> and go live in ~30s. Edit the file in
+        the repo later to flip <code>draft: true</code> if you want to pull it. Add
+        <code>number: N</code> for an issue badge.
       </div>
     </form>
   </div>
@@ -74,16 +93,18 @@ export const prerender = false;
 
 <script>
   const $ = <T extends Element = HTMLElement>(id: string) => document.getElementById(id) as T;
-  const scaffoldForm = $<HTMLFormElement>('scaffold-form');
-  const scaffoldBtn = $<HTMLButtonElement>('scaffold-btn');
-  const scaffoldStatus = $('scaffold-status');
-  const topicInput = $<HTMLTextAreaElement>('topic');
+  const titleInput = $<HTMLInputElement>('title');
+  const coverInput = $<HTMLInputElement>('cover');
+  const outlineInput = $<HTMLTextAreaElement>('outline');
+  const goalInput = $<HTMLInputElement>('goal');
+  const slugInput = $<HTMLInputElement>('slug');
+  const buildBtn = $<HTMLButtonElement>('build-btn');
+  const buildStatus = $('build-status');
   const publishForm = $<HTMLFormElement>('publish-form');
   const publishBtn = $<HTMLButtonElement>('publish-btn');
   const publishStatus = $('publish-status');
-  const titleInput = $<HTMLInputElement>('title');
-  const slugInput = $<HTMLInputElement>('slug');
   const bodyInput = $<HTMLTextAreaElement>('body');
+  const wordCount = $('word-count');
   const resetBtn = $<HTMLButtonElement>('reset-btn');
   const divider = $('divider');
 
@@ -102,7 +123,14 @@ export const prerender = false;
       .replace(/^-+|-+$/g, '')
       .slice(0, 80);
 
-  // Auto-update slug from title when slug field hasn't been manually edited
+  const todayIso = () => {
+    const d = new Date();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${m}-${day}`;
+  };
+
+  // Slug auto-tracks title until the user edits it manually.
   let slugTouched = false;
   slugInput?.addEventListener('input', () => {
     slugTouched = true;
@@ -111,38 +139,62 @@ export const prerender = false;
     if (!slugTouched) slugInput.value = slugify(titleInput.value);
   });
 
-  scaffoldForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const topic = topicInput.value.trim();
-    if (!topic) return;
-    scaffoldBtn.disabled = true;
-    setStatus(scaffoldStatus, 'Scaffolding…');
+  const updateWords = () => {
+    if (!wordCount || !bodyInput) return;
+    const n = bodyInput.value.trim().split(/\s+/).filter(Boolean).length;
+    const goal = parseInt(goalInput.value, 10) || 0;
+    wordCount.textContent = goal ? `${n} / ${goal} words` : `${n} words`;
+  };
+  bodyInput?.addEventListener('input', updateWords);
 
-    try {
-      const res = await fetch('/api/write/scaffold', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ topic }),
-      });
-      if (!res.ok) {
-        const { error } = await res.json().catch(() => ({ error: res.statusText }));
-        throw new Error(error || 'Scaffold failed');
-      }
-      const { title, slug, body } = await res.json();
-      titleInput.value = title;
-      slugInput.value = slug;
-      bodyInput.value = body;
-      slugTouched = false;
-      divider.style.display = 'block';
-      publishForm.style.display = 'grid';
-      setStatus(scaffoldStatus, 'Drafted. Polish it below.', 'ok');
-      bodyInput.focus();
-      bodyInput.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } catch (err: any) {
-      setStatus(scaffoldStatus, err.message, 'error');
-    } finally {
-      scaffoldBtn.disabled = false;
+  function buildMdx() {
+    const title = titleInput.value.trim();
+    const cover = coverInput.value.trim();
+    const outlineLines = outlineInput.value
+      .split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean);
+    const date = todayIso();
+
+    const fmLines = [
+      '---',
+      `title: ${JSON.stringify(title)}`,
+      `date: ${date}`,
+    ];
+    if (cover) fmLines.push(`cover: ${JSON.stringify(cover)}`);
+    fmLines.push('draft: false', '---', '');
+
+    const importLine =
+      `import { Quote, YouTube, Spotify, SoundCloud, Figure } from '../../components/embeds';\n`;
+
+    const coverBlock = cover
+      ? `<Figure src="${cover}" alt="${title}" />\n\n`
+      : '';
+
+    const body = outlineLines.length
+      ? outlineLines
+          .map((line) => `${line}\n\n[expand: write ~${Math.round((parseInt(goalInput.value, 10) || 300) / Math.max(outlineLines.length, 1))} words here]`)
+          .join('\n\n')
+      : '[your post here]';
+
+    return `${fmLines.join('\n')}${importLine}\n${coverBlock}${body}\n`;
+  }
+
+  buildBtn?.addEventListener('click', () => {
+    const title = titleInput.value.trim();
+    const outline = outlineInput.value.trim();
+    if (!title || !outline) {
+      setStatus(buildStatus, 'Title and outline required.', 'error');
+      return;
     }
+    if (!slugInput.value) slugInput.value = slugify(title);
+    bodyInput.value = buildMdx();
+    divider.style.display = 'block';
+    publishForm.style.display = 'grid';
+    updateWords();
+    setStatus(buildStatus, 'Draft built. Edit + publish below.', 'ok');
+    bodyInput.focus();
+    bodyInput.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   publishForm?.addEventListener('submit', async (e) => {
@@ -165,11 +217,7 @@ export const prerender = false;
         throw new Error(error || 'Publish failed');
       }
       const { url, path } = await res.json();
-      setStatus(
-        publishStatus,
-        '',
-        'ok'
-      );
+      setStatus(publishStatus, '', 'ok');
       publishStatus.innerHTML =
         `<span class="ok">Committed <code>${path}</code>. Vercel is rebuilding... </span>` +
         `<a href="${url}" target="_blank" rel="noopener">${url}</a>`;
@@ -182,11 +230,11 @@ export const prerender = false;
 
   resetBtn?.addEventListener('click', () => {
     if (!confirm('Discard this draft and start over?')) return;
-    publishForm.reset();
+    bodyInput.value = '';
     publishForm.style.display = 'none';
     divider.style.display = 'none';
     setStatus(publishStatus, '');
-    setStatus(scaffoldStatus, '');
-    topicInput.focus();
+    setStatus(buildStatus, '');
+    titleInput.focus();
   });
 </script>
