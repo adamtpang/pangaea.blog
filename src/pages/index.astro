@@ -3,15 +3,28 @@ import Base from '../layouts/Base.astro';
 import Globe from '../components/Globe.astro';
 import { getCollection } from 'astro:content';
 
-// Only show posts that are not drafts AND have a real date (not the 1970 sentinel).
 const epoch = new Date('1971-01-01').valueOf();
+
 const posts = (
   await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch)
 ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const episodes = (await getCollection('episodes', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const vlogs = (await getCollection('vlogs', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const latestPost = posts[0];
+const latestEpisode = episodes[0];
+const latestVlog = vlogs[0];
 const recent = posts.slice(0, 12);
 
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 ---
 
 <Base title="Pangaea · a hub for the spoken & the written word">
@@ -25,13 +38,81 @@ const fmt = (d: Date) =>
     </p>
   </section>
 
-  {recent.length === 0 && (
-    <p class="meta">No posts yet. The supercontinent is still forming.</p>
-  )}
+  <section class="hub-lanes">
+    <div class="hub-lane">
+      <span class="lane-label">Latest read</span>
+      {latestPost ? (
+        <a class="hub-card" href={`/posts/${latestPost.slug}/`}>
+          <h3 class="hub-title">
+            {latestPost.data.number !== undefined && (
+              <span class="num" style="font-family:var(--mono);font-size:0.7rem;color:var(--land);margin-right:0.4rem;letter-spacing:0.05em;">
+                № {String(latestPost.data.number).padStart(3, '0')}
+              </span>
+            )}
+            {latestPost.data.title}
+          </h3>
+          {latestPost.data.blurb && <p class="hub-blurb">{latestPost.data.blurb}</p>}
+          <span class="hub-date">{fmt(latestPost.data.date)}</span>
+        </a>
+      ) : (
+        <p class="hub-empty">No essays yet.</p>
+      )}
+    </div>
+
+    <div class="hub-lane">
+      <span class="lane-label">Latest listen</span>
+      {latestEpisode ? (
+        <a class="hub-card" href={`/podcast/${latestEpisode.slug}/`}>
+          {latestEpisode.data.youtube && (
+            <div class="hub-thumb">
+              <img src={thumb(latestEpisode.data.youtube)} alt={latestEpisode.data.title} loading="lazy" />
+            </div>
+          )}
+          <h3 class="hub-title">
+            {latestEpisode.data.episode !== undefined && (
+              <span class="num" style="font-family:var(--mono);font-size:0.7rem;color:var(--land);margin-right:0.4rem;letter-spacing:0.05em;">
+                Ep. {latestEpisode.data.episode}
+              </span>
+            )}
+            {latestEpisode.data.title}
+          </h3>
+          {latestEpisode.data.blurb && <p class="hub-blurb">{latestEpisode.data.blurb}</p>}
+          <span class="hub-date">{fmt(latestEpisode.data.date)}</span>
+        </a>
+      ) : (
+        <p class="hub-empty">First episode incoming.</p>
+      )}
+    </div>
+
+    <div class="hub-lane">
+      <span class="lane-label">Latest watch</span>
+      {latestVlog ? (
+        <a class="hub-card" href={`/vlog/${latestVlog.slug}/`}>
+          {latestVlog.data.youtube && (
+            <div class="hub-thumb">
+              <img src={thumb(latestVlog.data.youtube)} alt={latestVlog.data.title} loading="lazy" />
+            </div>
+          )}
+          <h3 class="hub-title">
+            {latestVlog.data.vlog !== undefined && (
+              <span class="num" style="font-family:var(--mono);font-size:0.7rem;color:var(--land);margin-right:0.4rem;letter-spacing:0.05em;">
+                Vlog {latestVlog.data.vlog}
+              </span>
+            )}
+            {latestVlog.data.title}
+          </h3>
+          {latestVlog.data.blurb && <p class="hub-blurb">{latestVlog.data.blurb}</p>}
+          <span class="hub-date">{fmt(latestVlog.data.date)}</span>
+        </a>
+      ) : (
+        <p class="hub-empty">First vlog incoming.</p>
+      )}
+    </div>
+  </section>
 
   {recent.length > 0 && (
     <>
-      <h2 class="landing-section">Latest</h2>
+      <h2 class="landing-section">More reads</h2>
       <ul class="post-list">
         {recent.map((p) => (
           <li>
@@ -53,7 +134,7 @@ const fmt = (d: Date) =>
 
   {posts.length > 12 && (
     <p class="meta" style="margin-top:1.5rem;">
-      <a href="/posts/">All posts &rarr;</a>
+      <a href="/posts/">All reads &rarr;</a>
     </p>
   )}
 </Base>

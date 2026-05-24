@@ -50,8 +50,24 @@ const episodes = defineCollection({
   }),
 });
 
+// Vlogs: the watched side of Pangaea. Visual essays + YouTube-hosted videos.
+// Same shape as episodes but a distinct lane in the hub (/vlog).
+const vlogs = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    vlog: z.number().int().nonnegative().optional(),
+    youtube: z.string().optional(),
+    blurb: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().default(true),
+  }),
+});
+
 export const collections = {
   posts,
   inbox,
   episodes,
+  vlogs,
 };

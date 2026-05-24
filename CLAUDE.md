@@ -54,9 +54,25 @@ The `/posts` page has client-side search + sort + tag filtering, all in vanilla 
 
 `/posts` shows a live cadence header: total posts, this-year count, this-week count, days since last, next-Friday ship deadline, and remaining-to-1,000 countdown. Weekly cadence is the floor.
 
+## The three lanes (the media hub)
+
+Pangaea is a media leverage hub with three content lanes, each with its own collection, list page, and detail page. The nav uses verbs (Tetragrammaton-style): **Read** (`/posts`) · **Listen** (`/podcast`) · **Watch** (`/vlog`) · **Graph** (`/graph`). All three lanes use the same MDX + embed kit; URLs and templates differ.
+
+| Lane | Collection | List | Detail | Frontmatter |
+|---|---|---|---|---|
+| Read | `posts` | `/posts/` | `/posts/{slug}/` | title, date, number, blurb, cover, tags, draft |
+| Listen | `episodes` | `/podcast/` | `/podcast/{slug}/` | title, date, episode, youtube, blurb, guest, tags, draft |
+| Watch | `vlogs` | `/vlog/` | `/vlog/{slug}/` | title, date, vlog, youtube, blurb, tags, draft |
+
+For Listen + Watch: the `youtube` field is a video ID like `dQw4w9WgXcQ`. The list pages render YouTube thumbnail cards (lighter than full embeds); the detail page embeds the full player and renders the body as show notes. The homepage shows a 3-lane "Latest read / Latest listen / Latest watch" hub above the post list.
+
 ## Podcast (`/podcast`)
 
-Episodes are markdown/MDX files in `src/content/episodes/` (schema in `src/content/config.ts`). Fields: `title`, `date` (required); `episode` (number), `youtube` (video ID), `blurb`, `guest`, `tags`, `draft` (optional, defaults true). The `youtube` ID drives the auto-embed on the `/podcast` list and on the episode page at `/podcast/{slug}/`; the body is show notes (topics, links, timestamps) and can use `<YouTube id="..." />` for clips referenced in the conversation. `/podcast` shows a "coming soon" empty state until at least one episode has `draft: false`.
+Episodes are markdown/MDX files in `src/content/episodes/`. Empty frontmatter fields must be **omitted entirely**, not left blank (Astro/Zod parses blank values as null and rejects them). `/podcast` shows a "coming soon" empty state until at least one episode has `draft: false`.
+
+## Vlogs (`/vlog`)
+
+Mirrors `/podcast` exactly, with `vlog: N` instead of `episode: N`. Same empty-frontmatter rule. Same YouTube-thumbnail card list, full-embed detail page.
 
 ## Screenshot essays for social (`/share/[slug]`)
 

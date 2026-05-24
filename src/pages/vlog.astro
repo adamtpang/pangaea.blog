@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const vlogs = (await getCollection('vlogs', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const thumb = (id: string) =>
+  `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+---
+
+<Base
+  title="Watch · Pangaea"
+  description="The watched side of Pangaea. Vlogs and visual essays, on YouTube."
+>
+  <h1>Watch</h1>
+
+  {vlogs.length === 0 && (
+    <>
+      <p class="meta">The watched side of Pangaea. Coming soon.</p>
+      <p>
+        Visual essays + vlogs land here, each with the full YouTube embed and notes.
+        If you want a ping when the first one ships, drop a note via{' '}
+        <a href="https://adampang.com/hi">adampang.com/hi</a>.
+      </p>
+    </>
+  )}
+
+  {vlogs.length > 0 && (
+    <>
+      <p class="meta">{vlogs.length} vlog{vlogs.length === 1 ? '' : 's'}.</p>
+      <ul class="media-grid">
+        {vlogs.map((v) => (
+          <li>
+            <a href={`/vlog/${v.slug}/`} class="media-card">
+              {v.data.youtube && (
+                <div class="media-thumb">
+                  <img src={thumb(v.data.youtube)} alt={v.data.title} loading="lazy" />
+                </div>
+              )}
+              <div class="media-body">
+                {v.data.vlog !== undefined && (
+                  <span class="media-num">Vlog {v.data.vlog}</span>
+                )}
+                <h2 class="media-title">{v.data.title}</h2>
+                {v.data.blurb && <p class="media-blurb">{v.data.blurb}</p>}
+                <span class="media-date">{fmt(v.data.date)}</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+</Base>

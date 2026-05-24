@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { YouTube } from '../../components/embeds';
+
+export async function getStaticPaths() {
+  const vlogs = await getCollection('vlogs', ({ data }) => !data.draft);
+  return vlogs.map((v) => ({ params: { slug: v.slug }, props: { vlog: v } }));
+}
+
+interface Props {
+  vlog: CollectionEntry<'vlogs'>;
+}
+
+const { vlog } = Astro.props;
+const { Content } = await vlog.render();
+const { data } = vlog;
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title={`${data.title} · Pangaea`} description={data.blurb}>
+  <article class="post">
+    <header>
+      <h1>{data.title}</h1>
+      <p class="post-meta">
+        {data.vlog !== undefined && <span class="num">Vlog {data.vlog}</span>}
+        {fmt(data.date)}
+      </p>
+    </header>
+
+    {data.youtube && (
+      <div class="prose">
+        <YouTube id={data.youtube} title={data.title} />
+      </div>
+    )}
+
+    {data.blurb && <p class="prose blurb-line"><em>{data.blurb}</em></p>}
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <hr />
+    <p class="meta">
+      <a href="/vlog/">&larr; All vlogs</a> &nbsp; · &nbsp;
+      <a href="https://adampang.com/hi">Tell me what you think</a>
+    </p>
+  </article>
+</Base>
