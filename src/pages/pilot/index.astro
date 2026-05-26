@@ -1,0 +1,56 @@
+---
+import PilotLayout from '../../layouts/PilotLayout.astro';
+import { getCollection } from 'astro:content';
+
+const episodes = (await getCollection('pilot', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.track - b.data.track
+);
+
+// Pull-quote at the bottom of the album page comes from track 1 by default;
+// edit this to point at whichever episode's line you want featured.
+const featured = episodes[0];
+---
+
+<PilotLayout
+  title="Pangaea Pilot · Season 1"
+  description="Five long conversations. Released as Season 1."
+>
+  <h1 class="wordmark"><a href="/">PANGAEA</a></h1>
+
+  <h2 style="text-align:center; margin-top:0; margin-bottom:0.5rem; font-size:1.8rem;">
+    Pilot &middot; Season 1
+  </h2>
+  <p class="album-meta">Recorded November 2025. Released May 2026.</p>
+
+  <img class="album-cover" src="/pilot/cover.svg" alt="Pangaea Pilot Season 1 cover" />
+
+  <ol class="tracklist">
+    {episodes.map((ep) => (
+      <li>
+        <a href={`/pilot/${ep.slug}/`}>
+          <span class="track-num">{String(ep.data.track).padStart(2, '0')}</span>
+          <span class="track-title">{ep.data.title}</span>
+          {ep.data.duration && ep.data.duration !== '00:00' && (
+            <span class="track-guest">{ep.data.duration}</span>
+          )}
+        </a>
+      </li>
+    ))}
+  </ol>
+
+  <div class="liner">
+    <p>
+      [Liner notes for the album as a whole. Three or four sentences. What
+      this season is about. When and where it was recorded. What ties the
+      five conversations together. Quiet, declarative, no marketing. Replace
+      this paragraph.]
+    </p>
+  </div>
+
+  {featured && (
+    <blockquote class="pullquote">
+      <span>&ldquo;{featured.data.signature_quote}&rdquo;</span>
+      <span class="attribution">{featured.data.quote_attribution}</span>
+    </blockquote>
+  )}
+</PilotLayout>

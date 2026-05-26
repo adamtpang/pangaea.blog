@@ -1,0 +1,89 @@
+---
+import PilotLayout from '../../layouts/PilotLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const episodes = await getCollection('pilot', ({ data }) => !data.draft);
+  const sorted = episodes.slice().sort((a, b) => a.data.track - b.data.track);
+  return sorted.map((ep, i) => ({
+    params: { track: ep.slug },
+    props: {
+      ep,
+      prev: i > 0 ? sorted[i - 1] : null,
+      next: i < sorted.length - 1 ? sorted[i + 1] : null,
+    },
+  }));
+}
+
+interface Props {
+  ep: CollectionEntry<'pilot'>;
+  prev: CollectionEntry<'pilot'> | null;
+  next: CollectionEntry<'pilot'> | null;
+}
+
+const { ep, prev, next } = Astro.props;
+const { Content } = await ep.render();
+const { data } = ep;
+const num = String(data.track).padStart(2, '0');
+---
+
+<PilotLayout
+  title={`${num}. ${data.title} · Pangaea Pilot`}
+  description={data.signature_quote}
+>
+  <p class="section-label" style="text-align:center;">
+    <a href="/pilot/" style="text-decoration:none;">Pangaea Pilot &middot; Season 1</a>
+  </p>
+
+  <h1 style="text-align:center; margin-bottom:0.5rem;">
+    {num}. {data.title}
+  </h1>
+
+  {data.duration && data.duration !== '00:00' && (
+    <p class="album-meta">{data.duration}</p>
+  )}
+
+  <div class="audio-shell">
+    {data.audio_url ? (
+      <audio controls preload="metadata" src={data.audio_url}></audio>
+    ) : (
+      <p class="audio-missing">Audio coming soon.</p>
+    )}
+  </div>
+
+  <blockquote class="pullquote">
+    <span>&ldquo;{data.signature_quote}&rdquo;</span>
+    <span class="attribution">{data.quote_attribution}</span>
+  </blockquote>
+
+  <div class="shownotes">
+    <Content />
+  </div>
+
+  {data.chapters && data.chapters.length > 0 && (
+    <>
+      <p class="section-label">Chapters</p>
+      <ol class="chapters">
+        {data.chapters.map((c) => (
+          <li>
+            <span class="chapter-time">{c.timestamp}</span>
+            <span>{c.title}</span>
+          </li>
+        ))}
+      </ol>
+    </>
+  )}
+
+  <nav class="adjacent">
+    {prev ? (
+      <a class="prev" href={`/pilot/${prev.slug}/`}>{String(prev.data.track).padStart(2, '0')}. {prev.data.title}</a>
+    ) : (
+      <span class="spacer"></span>
+    )}
+    {next ? (
+      <a class="next" href={`/pilot/${next.slug}/`}>{String(next.data.track).padStart(2, '0')}. {next.data.title}</a>
+    ) : (
+      <span class="spacer"></span>
+    )}
+  </nav>
+</PilotLayout>

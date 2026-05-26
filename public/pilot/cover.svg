@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480">
+  <!-- Placeholder Pilot Season 1 album cover.
+       Replace with public/pilot/cover.jpg (or .png) when the real artwork lands;
+       update src/pages/pilot/index.astro to reference the new file. -->
+  <rect width="480" height="480" fill="#9e3c1b"/>
+  <text x="240" y="220" text-anchor="middle"
+        font-family="Times New Roman, Times, serif"
+        font-size="38" letter-spacing="8" fill="#ffffff">PANGAEA</text>
+  <line x1="160" y1="248" x2="320" y2="248" stroke="#ffffff" stroke-width="1"/>
+  <text x="240" y="290" text-anchor="middle"
+        font-family="Times New Roman, Times, serif"
+        font-size="22" font-style="italic" fill="#ffffff">Pilot · Season 1</text>
+</svg>

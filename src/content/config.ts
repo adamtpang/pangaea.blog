@@ -65,9 +65,31 @@ const vlogs = defineCollection({
   }),
 });
 
+// Pilot: Pangaea's audio publication, Season 1. Different lane from /podcast
+// (which is the YouTube-embed long-form). Pilot is monastic: serif-only
+// pages at /pilot/{track}, self-hosted MP3 via <audio>, big pull quote per
+// episode, chapter timestamps in frontmatter.
+const pilot = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    track: z.number().int().positive(),
+    guest_name: z.string(),
+    signature_quote: z.string(),
+    quote_attribution: z.string(),
+    duration: z.string().optional(),
+    audio_url: z.string().optional(),
+    chapters: z
+      .array(z.object({ timestamp: z.string(), title: z.string() }))
+      .optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   posts,
   inbox,
   episodes,
   vlogs,
+  pilot,
 };

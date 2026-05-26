@@ -1,0 +1,350 @@
+/* ============================================================
+   Pangaea — monastic publication stylesheet
+   The bareness is the message.
+
+   Used by: src/layouts/PilotLayout.astro
+   Pages: /, /pilot, /pilot/[track]
+
+   Rules:
+   - Serif typography throughout. No sans-serif anywhere.
+   - Pure white background, pure black text.
+   - One accent color: terracotta (#9E3C1B).
+   - Single column, 640px max width, generous whitespace.
+   - 1px hairlines, no shadows, no gradients, no rounded corners.
+   - No icons, no emoji, no animation beyond opacity fades.
+   ============================================================ */
+
+:root {
+  --paper: #ffffff;
+  --ink: #000000;
+  --accent: #9e3c1b;          /* terracotta, the one warm note */
+  --muted: #555555;           /* for timestamps, attribution */
+  --rule: #000000;            /* hairlines are always pure black */
+  --column: 640px;
+  --serif: 'Times New Roman', Times, serif;
+}
+
+/* --- Base typography --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  padding: 4rem 1.5rem 6rem;
+}
+.monastic {
+  max-width: var(--column);
+  margin: 0 auto;
+}
+
+/* --- Headings: serif, no decoration --- */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0;
+  letter-spacing: 0;
+}
+h1 {
+  font-size: 2.4rem;
+  margin: 0 0 1.5rem;
+}
+h2 {
+  font-size: 1.6rem;
+  margin: 2.5rem 0 1rem;
+}
+h3 {
+  font-size: 1.15rem;
+  font-style: italic;
+  margin: 2rem 0 0.5rem;
+}
+p {
+  margin: 0 0 1.1rem;
+}
+
+/* Links: black, underlined; accent on hover. */
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.15s ease;
+}
+a:hover {
+  color: var(--accent);
+}
+
+em,
+i {
+  font-style: italic;
+}
+strong,
+b {
+  font-weight: 700;
+}
+
+/* --- Wordmark (homepage + pilot pages) --- */
+.wordmark {
+  text-align: center;
+  font-size: 3rem;
+  letter-spacing: 0.18em;
+  font-weight: 400;
+  margin: 0 0 3rem;
+}
+.wordmark a {
+  text-decoration: none;
+  color: var(--ink);
+}
+.wordmark a:hover {
+  color: var(--ink); /* wordmark stays black even on hover */
+}
+
+/* --- The about paragraph on the homepage --- */
+.about {
+  text-align: center;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 auto 3.5rem;
+  max-width: 32rem;
+}
+
+/* --- Project list (homepage) --- */
+.projects {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--rule);
+}
+.projects li {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.projects .project-title {
+  font-size: 1.15rem;
+}
+.projects .project-title.coming {
+  color: var(--muted);
+  font-style: italic;
+}
+.projects .project-meta {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* --- Album page (/pilot) --- */
+.album-meta {
+  text-align: center;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0 0 2.5rem;
+}
+.album-cover {
+  display: block;
+  width: 480px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 3rem;
+  border: 1px solid var(--rule);
+}
+
+/* --- Tracklist --- */
+.tracklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 3rem;
+  border-top: 1px solid var(--rule);
+}
+.tracklist li {
+  border-bottom: 1px solid var(--rule);
+}
+.tracklist a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 1.15rem;
+}
+.tracklist a:hover {
+  color: var(--accent);
+}
+.tracklist .track-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  min-width: 2.5em;
+}
+.tracklist .track-title {
+  flex: 1;
+}
+.tracklist .track-guest {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* --- Liner notes (album + episode pages) --- */
+.liner {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  margin: 0 0 3rem;
+}
+
+/* --- The huge pull quote --- */
+.pullquote {
+  font-style: italic;
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  line-height: 1.1;
+  margin: 4rem 0;
+  padding: 0;
+  border: 0;
+  text-align: left;
+}
+.pullquote .attribution {
+  display: block;
+  margin-top: 1.25rem;
+  font-style: normal;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* --- Episode page audio player --- */
+.audio-shell {
+  margin: 2rem 0 3rem;
+}
+audio {
+  width: 100%;
+  display: block;
+}
+.audio-missing {
+  font-style: italic;
+  color: var(--muted);
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  text-align: center;
+}
+
+/* --- Chapter list --- */
+.chapters {
+  list-style: none;
+  counter-reset: chapter;
+  padding: 0;
+  margin: 0 0 3rem;
+  border-top: 1px solid var(--rule);
+}
+.chapters li {
+  display: grid;
+  grid-template-columns: 3rem 5rem 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.chapters li::before {
+  counter-increment: chapter;
+  content: counter(chapter, decimal-leading-zero) ".";
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.chapters .chapter-time {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Show notes (just markdown prose) --- */
+.shownotes {
+  margin: 0 0 3rem;
+}
+.shownotes ul,
+.shownotes ol {
+  padding-left: 1.4rem;
+  margin: 0 0 1.1rem;
+}
+.shownotes li {
+  margin: 0.4rem 0;
+}
+
+/* --- Prev / next --- */
+.adjacent {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 1px solid var(--rule);
+  padding-top: 1.5rem;
+  margin-top: 3rem;
+  font-style: italic;
+  font-size: 0.95rem;
+}
+.adjacent .prev::before {
+  content: '\2190\00a0\00a0';
+}
+.adjacent .next::after {
+  content: '\00a0\00a0\2192';
+}
+.adjacent .spacer {
+  flex: 1;
+}
+
+/* --- Section labels (small caps style without sans) --- */
+.section-label {
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+
+/* --- Small screens --- */
+@media (max-width: 540px) {
+  body {
+    font-size: 18px;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+  .wordmark {
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+  }
+  .album-cover {
+    width: 100%;
+  }
+  .pullquote {
+    margin: 2.5rem 0;
+  }
+  .chapters li {
+    grid-template-columns: 2.25rem 4rem 1fr;
+    gap: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

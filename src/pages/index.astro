@@ -1,181 +1,34 @@
 ---
-import Base from '../layouts/Base.astro';
-import Globe from '../components/Globe.astro';
-import { getCollection } from 'astro:content';
-
-const epoch = new Date('1971-01-01').valueOf();
-
-const posts = (
-  await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch)
-).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-const episodes = (await getCollection('episodes', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
-
-const vlogs = (await getCollection('vlogs', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
-
-const latestPost = posts[0];
-const latestEpisode = episodes[0];
-const latestVlog = vlogs[0];
-const recent = posts.slice(0, 12);
-
-const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+import PilotLayout from '../layouts/PilotLayout.astro';
 ---
 
-<Base title="Pangaea · a hub for the spoken & the written word">
-  <section class="landing-hero">
-    <Globe size={248} />
-    <h1 class="landing-title">Pangaea</h1>
-    <p class="landing-tagline">
-      A hub for the spoken &amp; the written word, by
-      <a href="https://adampang.com">Adam Pang</a>. Music, philosophy, business:
-      all of it on one map, before the continents drift apart.
-    </p>
-  </section>
+<PilotLayout
+  title="Pangaea"
+  description="A publication for long conversations. Released as seasons."
+>
+  <h1 class="wordmark">PANGAEA</h1>
 
-  <section class="hub-lanes">
-    <div class="hub-lane">
-      <span class="lane-label">Latest read</span>
-      {latestPost ? (
-        <a class="hub-card" href={`/posts/${latestPost.slug}/`}>
-          <h3 class="hub-title">
-            {latestPost.data.number !== undefined && (
-              <span class="num" style="font-family:var(--mono);font-size:0.7rem;color:var(--land);margin-right:0.4rem;letter-spacing:0.05em;">
-                № {String(latestPost.data.number).padStart(3, '0')}
-              </span>
-            )}
-            {latestPost.data.title}
-          </h3>
-          {latestPost.data.blurb && <p class="hub-blurb">{latestPost.data.blurb}</p>}
-          <span class="hub-date">{fmt(latestPost.data.date)}</span>
-        </a>
-      ) : (
-        <p class="hub-empty">No essays yet.</p>
-      )}
-    </div>
+  <p class="about">
+    A publication for long conversations on memetics, relationships, and the
+    shape of attention. Released as seasons. Each season a finite world.
+  </p>
 
-    <div class="hub-lane">
-      <span class="lane-label">Latest listen</span>
-      {latestEpisode ? (
-        <a class="hub-card" href={`/podcast/${latestEpisode.slug}/`}>
-          {latestEpisode.data.youtube && (
-            <div class="hub-thumb">
-              <img src={thumb(latestEpisode.data.youtube)} alt={latestEpisode.data.title} loading="lazy" />
-            </div>
-          )}
-          <h3 class="hub-title">
-            {latestEpisode.data.episode !== undefined && (
-              <span class="num" style="font-family:var(--mono);font-size:0.7rem;color:var(--land);margin-right:0.4rem;letter-spacing:0.05em;">
-                Ep. {latestEpisode.data.episode}
-              </span>
-            )}
-            {latestEpisode.data.title}
-          </h3>
-          {latestEpisode.data.blurb && <p class="hub-blurb">{latestEpisode.data.blurb}</p>}
-          <span class="hub-date">{fmt(latestEpisode.data.date)}</span>
-        </a>
-      ) : (
-        <p class="hub-empty">First episode incoming.</p>
-      )}
-    </div>
-
-    <div class="hub-lane">
-      <span class="lane-label">Latest watch</span>
-      {latestVlog ? (
-        <a class="hub-card" href={`/vlog/${latestVlog.slug}/`}>
-          {latestVlog.data.youtube && (
-            <div class="hub-thumb">
-              <img src={thumb(latestVlog.data.youtube)} alt={latestVlog.data.title} loading="lazy" />
-            </div>
-          )}
-          <h3 class="hub-title">
-            {latestVlog.data.vlog !== undefined && (
-              <span class="num" style="font-family:var(--mono);font-size:0.7rem;color:var(--land);margin-right:0.4rem;letter-spacing:0.05em;">
-                Vlog {latestVlog.data.vlog}
-              </span>
-            )}
-            {latestVlog.data.title}
-          </h3>
-          {latestVlog.data.blurb && <p class="hub-blurb">{latestVlog.data.blurb}</p>}
-          <span class="hub-date">{fmt(latestVlog.data.date)}</span>
-        </a>
-      ) : (
-        <p class="hub-empty">First vlog incoming.</p>
-      )}
-    </div>
-  </section>
-
-  {recent.length > 0 && (
-    <>
-      <h2 class="landing-section">More reads</h2>
-      <ul class="post-list">
-        {recent.map((p) => (
-          <li>
-            <a href={`/posts/${p.slug}/`}>
-              <span class="title">
-                {p.data.number !== undefined && (
-                  <span class="num">№ {String(p.data.number).padStart(3, '0')}</span>
-                )}
-                {p.data.title}
-              </span>
-              {p.data.blurb && <span class="blurb">{p.data.blurb}</span>}
-              <span class="date">{fmt(p.data.date)}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </>
-  )}
-
-  {posts.length > 12 && (
-    <p class="meta" style="margin-top:1.5rem;">
-      <a href="/posts/">All reads &rarr;</a>
-    </p>
-  )}
-</Base>
-
-<style>
-  .landing-hero {
-    text-align: center;
-    padding: 1.5rem 0 2.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--rule);
-  }
-  .landing-hero :global(.globe) {
-    margin: 0 auto 1.5rem;
-    max-width: 70vw;
-  }
-  .landing-title {
-    font-size: 2.6rem;
-    letter-spacing: 0.01em;
-    margin: 0 0 0.6rem;
-  }
-  .landing-tagline {
-    max-width: 28rem;
-    margin: 0 auto;
-    color: var(--muted);
-    font-size: 1.08rem;
-    line-height: 1.55;
-  }
-  .landing-tagline a {
-    color: var(--accent);
-  }
-  .landing-section {
-    font-size: 0.82rem;
-    font-family: var(--sans);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--muted);
-    margin: 0 0 0.25rem;
-  }
-  @media (max-width: 540px) {
-    .landing-title {
-      font-size: 2.1rem;
-    }
-  }
-</style>
+  <ul class="projects">
+    <li>
+      <a class="project-title" href="/pilot/">Pangaea Pilot &middot; Season 1</a>
+      <span class="project-meta">May 2026</span>
+    </li>
+    <li>
+      <span class="project-title coming">Almanack</span>
+      <span class="project-meta">forthcoming</span>
+    </li>
+    <li>
+      <span class="project-title coming">Notes</span>
+      <span class="project-meta">forthcoming</span>
+    </li>
+    <li>
+      <span class="project-title coming">Field Notes</span>
+      <span class="project-meta">forthcoming</span>
+    </li>
+  </ul>
+</PilotLayout>

@@ -54,7 +54,22 @@ The `/posts` page has client-side search + sort + tag filtering, all in vanilla 
 
 `/posts` shows a live cadence header: total posts, this-year count, this-week count, days since last, next-Friday ship deadline, and remaining-to-1,000 countdown. Weekly cadence is the floor.
 
-## The three lanes (the media hub)
+## The Pilot publication (`/` and `/pilot`)
+
+Pangaea's homepage and Season 1 are an **audio-first, monastic publication**: pure white background, pure black text, ONE accent (terracotta `#9e3c1b`), serif throughout (Times New Roman), single column max 640px, no nav, no animation, no shadows. Uses `PilotLayout.astro` (not `Base.astro`) and its own stylesheet at `src/styles/pilot.css` (single file, fully commented).
+
+Collection at `src/content/pilot/` with episode frontmatter: `title`, `track`, `guest_name`, `signature_quote`, `quote_attribution`, `duration` (optional), `audio_url` (optional, omit if not yet hosted), `chapters` (array), `draft`.
+
+Pages:
+- `/` — wordmark + about paragraph + project list (Pangaea Pilot + forthcoming Almanack / Notes / Field Notes)
+- `/pilot/` — album page: wordmark, cover (placeholder at `public/pilot/cover.svg`), tracklist, liner notes, big pull quote
+- `/pilot/{track}/` — episode page: title + number, `<audio controls>`, huge pull quote, markdown body (liner + show notes), chapter list from frontmatter, prev/next links
+
+**Empty-frontmatter rule applies here too:** omit `audio_url` entirely if not set (do not leave blank). The schema accepts `.optional()` only when the field is absent.
+
+The hub-style (Base.astro, verb nav, blue/green Earth palette) is now used **only by the older lanes** at `/posts`, `/podcast`, `/vlog`, `/graph`, `/about`. Those URLs still resolve but are not linked from the new homepage.
+
+## The three lanes (the media hub, legacy)
 
 Pangaea is a media leverage hub with three content lanes, each with its own collection, list page, and detail page. The nav uses verbs (Tetragrammaton-style): **Read** (`/posts`) · **Listen** (`/podcast`) · **Watch** (`/vlog`) · **Graph** (`/graph`). All three lanes use the same MDX + embed kit; URLs and templates differ.
 
