@@ -14,6 +14,10 @@ const posts = defineCollection({
     cover: z.string().optional(),
     image: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    // Optional 3-9 key-takeaway bullets that render as a boxed grid at the
+    // bottom of /share/{slug}/ (the screenshot-essay view). Auto-arranged
+    // into 3 columns. Skipped when absent.
+    bullets: z.array(z.string()).optional(),
     draft: z.boolean().default(true),
   }),
 });

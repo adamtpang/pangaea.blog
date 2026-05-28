@@ -91,9 +91,11 @@ Mirrors `/podcast` exactly, with `vlog: N` instead of `episode: N`. Same empty-f
 
 ## Screenshot essays for social (`/share/[slug]`)
 
-Every published post auto-generates a tall, screenshot-optimized view at `/share/{slug}/`. The view is a 1080px-wide framed page with Pangaea masthead, big serif title, blurb, full body (including embeds), and a colophon footer. To post on X / IG: visit the share URL, screenshot the framed area (Cmd+Shift+4 / Win+Shift+S), upload. No image-generation deps, no Figma required.
+Every published post auto-generates a screenshot-optimized view at `/share/{slug}/`. The frame is fixed **1080 × 2160** (canonical 1:2 for X / IG / threads): supercontinent stripe at the top, Pangaea masthead + № + date, big serif headline, italic blurb with ocean-accent rule, full body (including all MDX embeds), optional 3-column takeaway grid (Codia-template style; opt-in via a `bullets:` array in post frontmatter), colophon with `pangaea.blog/posts/{slug}` URL.
 
-A "Screenshot for X / IG →" link is wired into every post detail page. The share view inherits a self-contained stylesheet (not Base.astro) so it can be designed for the screenshot context independently.
+To post on X / IG: visit the share URL, screenshot the frame (Cmd+Shift+4 on Mac · Win+Shift+S on Windows), upload. Append `?guide=1` to the URL to see exactly where the 1080×2160 cut lands so a square-ish screenshot captures a complete frame.
+
+No image-generation deps, no Figma required. A "Screenshot for X / IG →" link is wired into every post detail page. The share view inherits a self-contained stylesheet (not Base.astro) so it can be designed for the screenshot context independently.
 
 ## Figma path (stub, waiting on file URL)
 
