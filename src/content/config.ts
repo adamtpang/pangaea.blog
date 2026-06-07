@@ -82,11 +82,20 @@ const pilot = defineCollection({
     signature_quote: z.string(),
     quote_attribution: z.string(),
     duration: z.string().optional(),
+    // The "time capsule" hook: recorded long ago, released now. The album page
+    // can show "Recorded {recorded_date} · Released {released_date}".
+    recorded_date: z.coerce.date().optional(),
+    released_date: z.coerce.date().optional(),
     audio_url: z.string().optional(),
+    video_url: z.string().optional(),
+    references: z
+      .array(z.object({ label: z.string(), url: z.string() }))
+      .optional(),
     chapters: z
       .array(z.object({ timestamp: z.string(), title: z.string() }))
       .optional(),
-    draft: z.boolean().default(false),
+    // Held episodes (recorded but set aside for a later season) stay draft:true.
+    draft: z.boolean().default(true),
   }),
 });
 
