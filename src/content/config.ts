@@ -18,6 +18,17 @@ const posts = defineCollection({
     // bottom of /share/{slug}/ (the screenshot-essay view). Auto-arranged
     // into 3 columns. Skipped when absent.
     bullets: z.array(z.string()).optional(),
+    // Anchor essays are the hubs everything wiki-links into (the ~12-20 spine
+    // posts). They are the only nodes allowed to grow large in /graph. See
+    // STRUCTURE.md.
+    anchor: z.boolean().default(false),
+    // Maturity (Maggie Appleton's digital-garden move). seedling = thinking out
+    // loud, allowed to be unfinished; this is the license to publish early that
+    // defuses the posting aversion. evergreen is the rare, finished state.
+    status: z.enum(['seedling', 'growing', 'evergreen']).default('evergreen'),
+    // Perpetual-draft date (Gwern). Render "Posted X · Updated Y" so a stream of
+    // small edits compounds and the work reads as alive.
+    updated: z.coerce.date().optional(),
     draft: z.boolean().default(true),
   }),
 });
@@ -99,10 +110,49 @@ const pilot = defineCollection({
   }),
 });
 
+// Songs: one of the three artistry pillars (1,000 essays + 1,000 songs +
+// 1,000 apps). Each song is an entry in src/content/songs/ with a Spotify or
+// SoundCloud link that drives the embed on /songs. The body is optional liner
+// notes. `number` is the odometer toward 1,000.
+const songs = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date().default(new Date('1970-01-01')),
+    number: z.number().int().nonnegative().optional(),
+    spotify: z.string().optional(), // Spotify URI, e.g. "track/XXXXXXXX"
+    soundcloud: z.string().optional(), // full SoundCloud URL
+    blurb: z.string().optional(),
+    cover: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().default(true),
+  }),
+});
+
+// Apps: the third artistry pillar. Each app is an entry in src/content/apps/
+// with a live url, a screenshot (cover), and a one-line thesis. The body is
+// optional build-log notes. `number` is the odometer toward 1,000.
+const apps = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date().default(new Date('1970-01-01')),
+    number: z.number().int().nonnegative().optional(),
+    url: z.string().optional(), // live link
+    blurb: z.string().optional(), // one-line thesis
+    cover: z.string().optional(), // screenshot
+    tags: z.array(z.string()).optional(),
+    status: z.enum(['live', 'wip', 'archived']).default('live'),
+    draft: z.boolean().default(true),
+  }),
+});
+
 export const collections = {
   posts,
   inbox,
   episodes,
   vlogs,
   pilot,
+  songs,
+  apps,
 };

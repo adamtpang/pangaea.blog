@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const apps = (await getCollection('apps', ({ data }) => !data.draft)).sort(
+  (a, b) => (b.data.number ?? 0) - (a.data.number ?? 0)
+);
+const remaining = Math.max(0, 1000 - apps.length);
+---
+
+<Base title="Apps · Pangaea" description="One of the three pillars: a thousand apps.">
+  <h1>Apps</h1>
+
+  <div class="cadence">
+    <div class="cadence-row">
+      <span><strong>{apps.length}</strong> / 1,000 apps</span>
+    </div>
+    <div class="cadence-row meta">
+      One of three pillars: 1,000 essays, 1,000 songs, 1,000 apps.
+      {remaining > 0 && <span> {remaining.toLocaleString()} to go.</span>}
+    </div>
+  </div>
+
+  {apps.length === 0 && (
+    <p class="meta">No apps published yet. (Drafts are queued in the repo.)</p>
+  )}
+
+  <ul class="app-grid">
+    {apps.map((a) => (
+      <li>
+        <a class="app-card" href={a.data.url ?? '#'} target="_blank" rel="noopener">
+          {a.data.cover && (
+            <div class="app-thumb"><img src={a.data.cover} alt={a.data.title} loading="lazy" /></div>
+          )}
+          <div class="app-body">
+            {a.data.number !== undefined && (
+              <span class="app-num">№ {String(a.data.number).padStart(3, '0')}</span>
+            )}
+            <span class="app-title">{a.data.title}</span>
+            {a.data.blurb && <span class="app-blurb">{a.data.blurb}</span>}
+            {a.data.url && <span class="app-url">{a.data.url.replace(/^https?:\/\//, '')}</span>}
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .app-grid {
+    list-style: none; padding: 0; margin: 1.5rem 0 0;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
+  }
+  .app-grid li { margin: 0; }
+  .app-card {
+    display: block; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--rule); border-radius: 4px; overflow: hidden;
+    background: var(--surface); height: 100%;
+  }
+  .app-card:hover .app-title { color: var(--accent); }
+  .app-thumb { aspect-ratio: 16 / 10; background: var(--rule); overflow: hidden; }
+  .app-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .app-body { padding: 0.9rem 1rem 1.1rem; }
+  .app-num { display: block; font-family: var(--mono); font-size: 0.68rem; color: var(--land); letter-spacing: 0.05em; margin-bottom: 0.2rem; }
+  .app-title { font-weight: 600; font-size: 1.05rem; display: block; transition: color 0.1s; }
+  .app-blurb { display: block; color: var(--muted); font-size: 0.95rem; margin-top: 0.25rem; }
+  .app-url { display: block; font-family: var(--mono); font-size: 0.72rem; color: var(--accent); margin-top: 0.5rem; letter-spacing: 0.02em; }
+  @media (max-width: 540px) { .app-grid { grid-template-columns: 1fr; } }
+</style>

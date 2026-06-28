@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { Spotify, SoundCloud } from '../components/embeds';
+
+const songs = (await getCollection('songs', ({ data }) => !data.draft)).sort(
+  (a, b) => (b.data.number ?? 0) - (a.data.number ?? 0)
+);
+const remaining = Math.max(0, 1000 - songs.length);
+---
+
+<Base title="Songs · Pangaea" description="One of the three pillars: a thousand songs.">
+  <h1>Songs</h1>
+
+  <div class="cadence">
+    <div class="cadence-row">
+      <span><strong>{songs.length}</strong> / 1,000 songs</span>
+    </div>
+    <div class="cadence-row meta">
+      One of three pillars: 1,000 essays, 1,000 songs, 1,000 apps.
+      {remaining > 0 && <span> {remaining.toLocaleString()} to go.</span>}
+    </div>
+  </div>
+
+  {songs.length === 0 && (
+    <p class="meta">No songs yet. The first one is on its way.</p>
+  )}
+
+  <ul class="song-list">
+    {songs.map((s) => (
+      <li>
+        <div class="song-head">
+          {s.data.number !== undefined && (
+            <span class="num">№ {String(s.data.number).padStart(3, '0')}</span>
+          )}
+          <span class="song-title">{s.data.title}</span>
+        </div>
+        {s.data.blurb && <p class="song-blurb">{s.data.blurb}</p>}
+        {s.data.spotify && <Spotify uri={s.data.spotify} />}
+        {s.data.soundcloud && <SoundCloud url={s.data.soundcloud} />}
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .song-list { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+  .song-list li { padding: 1.25rem 0; border-bottom: 1px solid var(--rule); }
+  .song-head { display: flex; align-items: baseline; gap: 0.6rem; }
+  .song-head .num { font-family: var(--mono); font-size: 0.72rem; color: var(--land); letter-spacing: 0.05em; }
+  .song-title { font-weight: 600; font-size: 1.1rem; }
+  .song-blurb { color: var(--muted); margin: 0.3rem 0 0.6rem; }
+</style>

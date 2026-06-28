@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const epoch = new Date('1971-01-01').valueOf();
+const posts = await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch);
+
+// Hand-ordered reading path: thesis first, then origin, then the rest. Edit this
+// slug order to curate the guided sequence as the body of work grows (STRUCTURE.md).
+const order = [
+  '2026-05-19-why-a-thousand',
+  '2026-04-15-poor-adams-almanack',
+  '2026-05-08-pangaea-girls',
+];
+
+const bySlug = new Map(posts.map((p) => [p.slug, p]));
+const sequenced = [
+  ...order.map((s) => bySlug.get(s)).filter(Boolean),
+  ...posts
+    .filter((p) => !order.includes(p.slug))
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+];
+
+const ifYouReadOne = bySlug.get('2026-05-19-why-a-thousand') ?? sequenced[0];
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title="Start here · Pangaea" description="A guided way into the writing.">
+  <h1>Start here</h1>
+  <p class="hero">
+    A way in that is not the cold reverse-chronological feed. If you read one
+    thing, read this.
+  </p>
+
+  {ifYouReadOne && (
+    <p class="start-one">
+      <a href={`/posts/${ifYouReadOne.slug}/`}>{ifYouReadOne.data.title}</a>
+      {ifYouReadOne.data.blurb && <span class="start-one-blurb">{ifYouReadOne.data.blurb}</span>}
+    </p>
+  )}
+
+  <h2 class="landing-section" style="margin-top:2.5rem;">The path</h2>
+  {sequenced.length === 0 && <p class="meta">The first essays are on their way.</p>}
+  <ol class="start-path">
+    {sequenced.map((p) => (
+      <li>
+        <a href={`/posts/${p.slug}/`}>{p.data.title}</a>
+        {p.data.blurb && <span class="start-blurb">{p.data.blurb}</span>}
+        <span class="start-date">{fmt(p.data.date)}</span>
+      </li>
+    ))}
+  </ol>
+
+  <p class="meta" style="margin-top:2rem;">
+    Then wander: <a href="/posts/">all essays</a> · <a href="/graph/">the graph</a> ·
+    <a href="/work/">the whole body of work</a>.
+  </p>
+</Base>
+
+<style>
+  .start-one { border-left: 3px solid var(--accent); padding: 0.5rem 0 0.5rem 1rem; margin: 1.5rem 0 0; font-size: 1.15rem; }
+  .start-one a { font-weight: 600; }
+  .start-one-blurb { display: block; color: var(--muted); font-size: 0.95rem; margin-top: 0.25rem; }
+  .start-path { margin: 0.5rem 0 0; padding-left: 1.4rem; }
+  .start-path li { margin: 0.9rem 0; }
+  .start-path a { font-weight: 600; }
+  .start-blurb { display: block; color: var(--muted); font-size: 0.95rem; margin-top: 0.15rem; }
+  .start-date { display: block; font-family: var(--sans); font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; letter-spacing: 0.04em; }
+</style>
