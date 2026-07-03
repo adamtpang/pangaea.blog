@@ -1,0 +1,109 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+// The wall: 1,000 essays + 1,000 songs + 1,000 apps. Every published piece
+// fills a cell. The empty cells are the point — the catalog you can see.
+const essays = (await getCollection('posts', ({ data }) => !data.draft)).length;
+const songs = (await getCollection('songs', ({ data }) => !data.draft)).length;
+const apps = (await getCollection('apps', ({ data }) => !data.draft)).length;
+const total = essays + songs + apps;
+
+const CAP = 1000;
+const GOAL = CAP * 3;
+
+// Cadence math: the weekly catalog is one essay, one song, one app (3/wk).
+const weeksLeft = Math.ceil((GOAL - total) / 3);
+const finishWeekly = new Date();
+finishWeekly.setDate(finishWeekly.getDate() + weeksLeft * 7);
+const weeksLeftDaily = Math.ceil((GOAL - total) / 21); // one of each per day
+const finishDaily = new Date();
+finishDaily.setDate(finishDaily.getDate() + weeksLeftDaily * 7);
+
+const pillars = [
+  { name: 'Essays', count: essays, href: '/posts', cls: 'p-essay' },
+  { name: 'Songs', count: songs, href: '/songs', cls: 'p-song' },
+  { name: 'Apps', count: apps, href: '/apps', cls: 'p-app' },
+];
+---
+
+<Base
+  title="1,000 · Pangaea"
+  description="The wall: 1,000 essays, 1,000 songs, 1,000 apps. A life's catalog, one cell at a time."
+>
+  <h1>The thousand</h1>
+
+  <div class="cadence">
+    <div class="cadence-row">
+      <span><strong>{total.toLocaleString()}</strong> / {GOAL.toLocaleString()} pieces</span>
+    </div>
+    <div class="cadence-row meta">
+      Three pillars, a thousand each. One essay, one song, one app per week
+      finishes the wall around {finishWeekly.getFullYear()}. One of each per
+      day: {finishDaily.getFullYear()}. Either way, this is the work of a life
+      — that is the feature, not the bug.
+    </div>
+  </div>
+
+  {pillars.map((p) => (
+    <section class="pillar">
+      <div class="pillar-head">
+        <a href={p.href} class="pillar-name">{p.name}</a>
+        <span class="pillar-count">
+          № {String(p.count).padStart(3, '0')} / 1,000
+        </span>
+      </div>
+      <div class="wall" aria-label={`${p.count} of 1,000 ${p.name.toLowerCase()} published`}>
+        {Array.from({ length: CAP }, (_, i) => (
+          <i class={i < p.count ? `on ${p.cls}` : ''}></i>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <p class="meta closing">
+    Filled cells are published. Empty cells are the rest of the life's work,
+    already reserved. Add a piece via <a href="/write">/write</a> and it claims
+    the next cell on deploy.
+  </p>
+</Base>
+
+<style>
+  .pillar { margin: 2.25rem 0; }
+  .pillar-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+  }
+  .pillar-name {
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .pillar-count {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .wall {
+    display: grid;
+    grid-template-columns: repeat(50, 1fr);
+    gap: 2px;
+  }
+  .wall i {
+    aspect-ratio: 1;
+    border-radius: 1px;
+    background: var(--rule);
+    opacity: 0.45;
+  }
+  .wall i.on { opacity: 1; }
+  .wall i.p-essay { background: var(--accent); }
+  .wall i.p-song { background: var(--land); }
+  .wall i.p-app { background: var(--ink); }
+  .closing { margin-top: 2.5rem; }
+  @media (max-width: 600px) {
+    .wall { grid-template-columns: repeat(25, 1fr); }
+  }
+</style>
