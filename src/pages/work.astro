@@ -3,54 +3,109 @@ import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
 const epoch = new Date('1971-01-01').valueOf();
-const essays = (await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch)).length;
-const songs = (await getCollection('songs', ({ data }) => !data.draft)).length;
-const apps = (await getCollection('apps', ({ data }) => !data.draft)).length;
+
+const postItems = await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch);
+const songItems = await getCollection('songs', ({ data }) => !data.draft);
+const appItems = await getCollection('apps', ({ data }) => !data.draft);
+
+// Build a number -> {href, label} map per pillar so a filled cell links to the work.
+function mapByNumber(items: any[], hrefFor: (i: any) => string) {
+  const m = new Map<number, { href: string; label: string }>();
+  let fallback = 0;
+  for (const it of items.sort((a, b) => (a.data.number ?? 1e9) - (b.data.number ?? 1e9))) {
+    const n = it.data.number ?? fallback;
+    m.set(n, { href: hrefFor(it), label: it.data.title });
+    fallback = Math.max(fallback, n) + 1;
+  }
+  return m;
+}
+
+const essays = mapByNumber(postItems, (i) => `/posts/${i.slug}/`);
+const songs = mapByNumber(songItems, () => '/songs/');
+const apps = mapByNumber(appItems, (i) => i.data.url ?? '/apps/');
 
 const pillars = [
-  { label: 'Essays', count: essays, href: '/posts/', line: 'The written word. One claim, plainly said.' },
-  { label: 'Songs', count: songs, href: '/songs/', line: 'The felt word. What would not fit in language.' },
-  { label: 'Apps', count: apps, href: '/apps/', line: 'The built word. Ideas you can use.' },
+  { key: 'essays', label: 'Essays', href: '/posts/', map: essays, line: 'The written word.' },
+  { key: 'songs', label: 'Songs', href: '/songs/', map: songs, line: 'The felt word.' },
+  { key: 'apps', label: 'Apps', href: '/apps/', map: apps, line: 'The built word.' },
 ];
-const total = essays + songs + apps;
+
+const SLOTS = 1000;
+const total = essays.size + songs.size + apps.size;
+const cells = Array.from({ length: SLOTS }, (_, n) => n);
 ---
 
-<Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 songs, 1,000 apps.">
+<Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 songs, 1,000 apps. 3,000 pieces, made in public.">
   <h1>The Work</h1>
   <p class="hero">
-    One body of work, three pillars: a thousand essays, a thousand songs, a
-    thousand apps. Made in public, owned forever, compounding toward
+    One body of work, three pillars, three thousand pieces: a thousand essays, a
+    thousand songs, a thousand apps. Made in public, owned forever. Every slot
+    below is a piece waiting to exist; the lit ones are done. Toward
     <strong>{total.toLocaleString()} / 3,000</strong>.
   </p>
 
-  <div class="pillars">
-    {pillars.map((p) => (
-      <a class="pillar" href={p.href}>
-        <span class="pillar-count">{p.count}<span class="pillar-of"> / 1,000</span></span>
-        <span class="pillar-label">{p.label}</span>
+  {pillars.map((p) => (
+    <section class="pillar-block" data-pillar={p.key}>
+      <div class="pillar-head">
+        <a class="pillar-name" href={p.href}>{p.label}</a>
+        <span class="pillar-tally">{p.map.size} <span class="of">/ 1,000</span></span>
         <span class="pillar-line">{p.line}</span>
-      </a>
-    ))}
-  </div>
+      </div>
+      <div class={`slots slots-${p.key}`}>
+        {cells.map((n) => {
+          const hit = p.map.get(n);
+          return hit ? (
+            <a
+              class="slot filled"
+              href={hit.href}
+              title={`№ ${String(n).padStart(3, '0')} — ${hit.label}`}
+            ></a>
+          ) : (
+            <span class="slot empty" title={`№ ${String(n).padStart(3, '0')} — open`}></span>
+          );
+        })}
+      </div>
+    </section>
+  ))}
 
-  <p class="meta" style="margin-top:2rem;">
-    Also here: <a href="/podcast/">the podcast</a>, <a href="/vlog/">the vlogs</a>,
-    and <a href="/graph/">the graph</a> that ties the essays together.
-    New here? <a href="/start/">Start here</a>.
+  <p class="meta" style="margin-top:2.5rem;">
+    New here? <a href="/start/">Start here</a>. Also: <a href="/podcast/">the podcast</a>,
+    <a href="/vlog/">the vlogs</a>, <a href="/graph/">the graph</a>.
   </p>
 </Base>
 
 <style>
-  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 2rem 0 0; }
-  .pillar {
-    display: flex; flex-direction: column; gap: 0.35rem;
-    text-decoration: none; color: var(--ink);
-    border-top: 2px solid var(--land); padding: 1rem 0 1.25rem;
+  .pillar-block { margin: 2.5rem 0 0; }
+  .pillar-head {
+    display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap;
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.5rem; margin-bottom: 0.9rem;
   }
-  .pillar:hover .pillar-label { color: var(--accent); }
-  .pillar-count { font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--land); font-weight: 600; }
-  .pillar-of { font-size: 0.95rem; color: var(--muted); font-weight: 400; }
-  .pillar-label { font-weight: 600; font-size: 1.1rem; transition: color 0.1s; }
-  .pillar-line { color: var(--muted); font-size: 0.9rem; line-height: 1.45; }
-  @media (max-width: 540px) { .pillars { grid-template-columns: 1fr; gap: 0.5rem; } }
+  .pillar-name { font-size: 1.3rem; font-weight: 600; text-decoration: none; color: var(--ink); }
+  .pillar-name:hover { color: var(--accent); }
+  .pillar-tally { font-family: var(--mono); font-size: 1.1rem; color: var(--accent); }
+  .pillar-tally .of { color: var(--muted); font-size: 0.8rem; }
+  .pillar-line { color: var(--muted); font-size: 0.9rem; margin-left: auto; }
+
+  /* The 1,000-slot grid: a field of the whole body of work. Blue by depth. */
+  .slots {
+    display: grid;
+    grid-template-columns: repeat(50, 1fr);
+    gap: 2px;
+  }
+  .slot {
+    aspect-ratio: 1;
+    border-radius: 1px;
+    background: rgba(20, 32, 31, 0.05); /* faint empty slot */
+  }
+  .slot.filled { cursor: pointer; transition: transform 0.08s, filter 0.08s; }
+  .slot.filled:hover { transform: scale(1.6); filter: brightness(1.15); position: relative; z-index: 2; }
+  /* Ocean depths, one blue per pillar */
+  .slots-essays .slot.filled { background: #0c3a4b; }
+  .slots-songs .slot.filled { background: #176079; }
+  .slots-apps .slot.filled { background: #3f97b3; }
+
+  @media (max-width: 640px) {
+    .slots { grid-template-columns: repeat(30, 1fr); }
+    .pillar-line { margin-left: 0; width: 100%; }
+  }
 </style>
