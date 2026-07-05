@@ -1,0 +1,19 @@
+# Pangaea (pangaea.blog)
+
+> A hub for the spoken and the written word by Adam Pang: essays, a podcast, and an audio-first publication, all on one owned URL.
+
+Pangaea is Adam Pang's personal publication, in the lineage of sive.rs, paulgraham.com, and Tim Ferriss's 5 Bullet Friday: an owned URL, plain durable text, multi-modal worldbuilding. Each post is a written spine with song, image, video, quote, or tool embeds when they genuinely belong. The homepage and Season 1 are the Pangaea Pilot, an audio-first monastic publication (serif, white on black, one terracotta accent).
+
+The writing lane lives at /posts (searchable, wiki-linked, with a force-directed graph view). The spoken side runs through the Pilot podcast and /podcast. It is built with Astro (hybrid: mostly static, SSR for a password-gated /write editor where Claude scaffolds drafts that commit straight to the repo), deployed on Vercel. The git repo is the CMS.
+
+## Key links
+- [Home](https://pangaea.blog/): the Pangaea Pilot wordmark, about, and project list.
+- [Pilot](https://pangaea.blog/pilot/): the audio-first Season 1 album page: tracklist, liner notes, pull quote.
+- [Posts](https://pangaea.blog/posts/): the essays index with client-side search, sort, and tag filtering.
+- [Graph](https://pangaea.blog/graph/): a force-directed network of all posts and their wiki-links.
+- [Podcast](https://pangaea.blog/podcast/): the spoken lane, YouTube-hosted episodes.
+- [About](https://pangaea.blog/about/): who is behind Pangaea and why.
+
+## About
+- Part of adam.inc, the internet portfolio of Adam Pangelinan (Anchor Marianas LLC).
+- Builder: https://adampang.com
