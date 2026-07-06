@@ -237,4 +237,68 @@ export const prerender = false;
     setStatus(buildStatus, '');
     titleInput.focus();
   });
+
+  // ---- Inbound handoff from 300words.app (the capture surface) --------------
+  // 300words opens /write?from=300words&title=…&seed=<the day's writing>. The
+  // day's writing IS the draft: we assemble a seedling post body from it,
+  // prefill the publish form, and let Adam title + review + ship. Publishing
+  // commits it as draft:true (flip to false in the body to go live) so nothing
+  // dictated ever auto-appears on the public blog.
+  (function prefillFromCapture() {
+    const params = new URLSearchParams(window.location.search);
+    const seed = (params.get('seed') || params.get('body') || '').trim();
+    const rawTitle = (params.get('title') || '').trim();
+    if (!seed && !rawTitle) return;
+
+    // House rule: no em/en dashes in Pangaea copy. Normalise anything the
+    // dictation or paste dragged in.
+    const stripDashes = (s: string) =>
+      s.replace(/\s*[—–]\s*/g, ', ').replace(/[—–]/g, ', ');
+
+    const prose = stripDashes(seed);
+
+    // Title: use the provided one, else the first sentence / ~9 words of prose.
+    let title = rawTitle;
+    if (!title && prose) {
+      const firstLine = prose.split(/\n/)[0] || '';
+      title = firstLine.split(/[.!?]/)[0].split(/\s+/).slice(0, 9).join(' ');
+    }
+    if (title) {
+      titleInput.value = title;
+      slugInput.value = slugify(title);
+      slugTouched = true;
+    }
+
+    if (!prose) {
+      titleInput.focus();
+      return;
+    }
+
+    const fm = [
+      '---',
+      `title: ${JSON.stringify(title || 'Untitled')}`,
+      `date: ${todayIso()}`,
+      'status: seedling',
+      'draft: true',
+      '---',
+    ].join('\n');
+    const importLine =
+      `import { Quote, YouTube, Spotify, SoundCloud, Figure } from '../../components/embeds';`;
+    bodyInput.value = `${fm}\n${importLine}\n\n${prose}\n`;
+
+    divider.style.display = 'block';
+    publishForm.style.display = 'grid';
+    updateWords();
+
+    const n = prose.split(/\s+/).filter(Boolean).length;
+    const src = params.get('from') === '300words' ? '300words' : 'your capture';
+    setStatus(
+      buildStatus,
+      `Seedling from ${src} (${n} words). Give it a claim-title, trim, then Publish. Commits as draft:true — change to false in the body to go live.`,
+      'ok'
+    );
+    bodyInput.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    titleInput.focus();
+    titleInput.select();
+  })();
 </script>
