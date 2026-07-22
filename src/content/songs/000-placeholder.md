@@ -1,7 +1,7 @@
 ---
 title: First song
-number: 0
 spotify: track/REPLACE_WITH_SPOTIFY_ID
+blurb: 'SUPERSEDED template stub, real songs now exist. Safe to delete.'
 draft: true
 ---
 

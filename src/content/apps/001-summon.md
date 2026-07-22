@@ -1,10 +1,10 @@
 ---
 title: Summon
-number: 1
+number: 0
 url: https://summon.guide
 blurb: Chat with legendary founders.
 status: live
-draft: true
+draft: false
 ---
 
 Build-log notes (optional). Recovered from adampang.com. Review, add a cover

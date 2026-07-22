@@ -14,8 +14,13 @@ idea to published №. Work the queue top-down: promote a seed from
 | Nearly-ready essays (almanack era, ~700 words each) | 10 | `src/content/inbox/` |
 | Topic seeds (raw shorthand, recovered from git history) | 123 | `src/content/inbox/` |
 | Thesis seeds (recovered from adampang.com) | 7 | `src/content/inbox/` |
-| **Total accounted** | **145** | **14.5% of 1,000** |
-| Open slots | 855 | future capture |
+| Farcaster casts (your own voice, sorted by theme) | 97 | `SEEDS-FARCASTER.md` |
+| Obsidian "write about" essay seeds | 9 | `SEEDS-OBSIDIAN.md` |
+| **Total accounted (essays)** | **251** | **25.1% of 1,000** |
+| Open slots | 749 | future capture |
+
+Adjacent pillars now seeded too: **31 song projects** (Ableton, on disk) and
+**~8 app ideas** (Obsidian), both listed in `SEEDS-OBSIDIAN.md`.
 
 ## Tier 1 — nearly ready (promote these first)
 
@@ -55,12 +60,28 @@ what · who · why · wisdom · work · writing · youtube
 A topic can seed MANY essays (one claim each), so this tier alone is
 plausibly 300+ essays, not 123.
 
-## Blocked sources (would add 100-500 more seeds — need Adam)
+## Captured
 
-- **X archive**: request at x.com/settings → Download an archive → drop the .zip here
-- **Farcaster**: need the FID or exact handle (`adamtpang` 404s on the public API)
-- **Obsidian inbox/outbox**: enable the Local REST API plugin
-- **Google Keep**: Takeout export
+- **Farcaster**: DONE. 97 casts pulled from the public Pinata hub (FID 875739),
+  sorted by theme in `SEEDS-FARCASTER.md`. Six recurring convictions surfaced as
+  anchor-essay candidates.
+- **Obsidian**: DONE. Local REST API is live. Harvested the "write about" essay
+  seeds from the `✍️ pangaea.blog` board + app ideas from `💡 Ideas`. See
+  `SEEDS-OBSIDIAN.md`.
+- **Ableton**: DONE. 31 song projects found on disk, titles in `SEEDS-OBSIDIAN.md`.
+- **Google Keep**: FOUND. `Downloads/takeout-...zip`, 2,100 notes (the "100s
+  Project" system). ~1,000 untitled notes still need content-level mining.
+
+## Blocked / still on Adam
+
+- **X archive**: not on disk (no `twitter-*.zip`). Request at x.com/settings →
+  Your account → Download an archive; drop the .zip here. Highest remaining yield.
+- **Google Keep deep-mine**: ~1,000 untitled timestamp notes need reading, not
+  just titles. Say the word and I'll sweep them for essay lines.
+- **SoundCloud**: track titles for the songs pillar (export steps in chat).
+- **Voice notes**: need the audio files (path) to transcribe.
+- **Security**: 41 Keep notes hold plaintext passwords / API keys in Downloads.
+  Rotate any still-live keys.
 
 ## The math
 

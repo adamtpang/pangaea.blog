@@ -1,10 +1,10 @@
 ---
 title: Book Movie
-number: 4
+number: 3
 url: https://book.movie
 blurb: Bookshelf social.
 status: live
-draft: true
+draft: false
 ---
 
 Recovered from adampang.com. Review, add a cover screenshot, flip draft:false.
