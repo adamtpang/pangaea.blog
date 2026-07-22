@@ -7,7 +7,7 @@ derived from a real seed of yours, not a topic word. Work top down; the daily
 **Rule:** a queue entry is a CLAIM, not a subject. "Money" is not an essay.
 "Companies Are Fictions" is.
 
-**Honest count:** 182 claims below. The remaining slots to 1,000 fill from the
+**Honest count:** 192 claims below. The remaining slots to 1,000 fill from the
 ~1,000 unmined Keep notes, the X archive, and from living. Do not pad this file
 to 1,000. A queue you trust beats a queue that is full.
 
@@ -17,7 +17,7 @@ to 1,000. A queue you trust beats a queue that is full.
 
 Promote from `src/content/inbox/`. Re-title by the claim, strip em dashes, date it, ship.
 
-003. Academia Is a Credential Cartel
+003. Permission Was The Product *(drafted, sharpened from "Academia Is a Credential Cartel")*
 004. Acceleration Is a Moral Position
 005. Accountability Is a Gift You Ask For
 006. Addiction Is Misrouted Wanting
@@ -235,6 +235,19 @@ Promote from `src/content/inbox/`. Re-title by the claim, strip em dashes, date 
 182. Run Or Futsal, But Something
 183. Fitness Is Not Vanity
 184. Insecurity Is Information
+
+## RUN 14 · Decisions and self-command (from the Identity & Growth board)
+
+185. Optionality Is Not A Virtue · when it is avoidance, it is just fear with a nice name
+186. Two Way Doors · decide fast on anything reversible, cap it at ten minutes
+187. Idea Guy, Action Guy
+188. Single Digit · I worked at triple and double digit companies, now I want a company of one
+189. Keep The Business Dead Simple
+190. The Clean Close · the nightly protocol that makes tomorrow decide itself
+191. Write Tomorrow's One Thing Before Bed
+192. Close Old Loops Before Opening New Ones
+193. Be Reliable · do what you said, it is the whole reputation
+194. Zoom Out And Post More · the civilizational pulse argument for visibility
 
 ---
 
