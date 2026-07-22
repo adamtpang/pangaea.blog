@@ -1,0 +1,390 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+// SSR: this page renders UNPUBLISHED drafts, so it must never be a static file
+// on the public CDN.
+export const prerender = false;
+
+// Gate. Fails CLOSED: no WRITE_PASSWORD configured means nobody gets in, because
+// the alternative is serving Adam's private drafts to the open internet.
+const PASSWORD = import.meta.env.WRITE_PASSWORD ?? process.env.WRITE_PASSWORD ?? '';
+const url = new URL(Astro.request.url);
+const supplied = url.searchParams.get('key') ?? Astro.cookies.get('pangaea_studio')?.value ?? '';
+const authed = PASSWORD.length > 0 && supplied === PASSWORD;
+
+// Remember the key so the querystring does not have to be re-pasted (or land in
+// a screenshot). Session cookie, httpOnly.
+if (authed && url.searchParams.get('key')) {
+  Astro.cookies.set('pangaea_studio', PASSWORD, {
+    httpOnly: true, sameSite: 'lax', path: '/', secure: url.protocol === 'https:',
+  });
+}
+
+// The studio edits DRAFTS only. Published posts are not loaded here on purpose:
+// this is the workbench, not the archive. Empty unless authed.
+const drafts = authed ? await getCollection('posts', ({ data }) => data.draft) : [];
+
+const payload = drafts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map((d) => ({
+    slug: d.slug,
+    title: d.data.title,
+    blurb: d.data.blurb ?? '',
+    date: d.data.date.toISOString().slice(0, 10),
+    tags: d.data.tags ?? [],
+    number: d.data.number ?? null,
+    status: d.data.status ?? 'seedling',
+    body: d.body,
+  }));
+---
+
+<Base title="Studio · Pangaea" description="Sentence-by-sentence editing workbench for Pangaea drafts.">
+  {!authed && (
+    <div class="lock">
+      <h1>Studio</h1>
+      <p class="meta">
+        Backstage. This workbench renders unpublished drafts, so it stays behind
+        the key.
+      </p>
+      <form method="get" class="lock-form">
+        <input type="password" name="key" placeholder="WRITE_PASSWORD" autofocus required />
+        <button type="submit" class="btn">Unlock</button>
+      </form>
+      {PASSWORD.length === 0 && (
+        <p class="lock-warn">
+          No <code>WRITE_PASSWORD</code> is configured on this deployment, so the
+          studio is sealed. Set it in the Vercel environment to use this page.
+        </p>
+      )}
+    </div>
+  )}
+
+  {authed && (
+  <>
+  <div class="studio-head">
+    <h1>Studio</h1>
+    <p class="meta">
+      One sentence per line. Edit word by word. The panel on the right is your
+      house-style editor: it reads every sentence against the Pangaea rules as
+      you type.
+    </p>
+    <label class="picker">
+      <span>Draft</span>
+      <select id="draft-picker"></select>
+    </label>
+  </div>
+
+  <div class="studio">
+    <!-- LEFT: the sentence-by-sentence editor -->
+    <main class="sheet">
+      <div class="sheet-head">
+        <input id="title-input" class="title-input" placeholder="Claim title" />
+        <input id="blurb-input" class="blurb-input" placeholder="Blurb: one sentence, the claim itself" />
+      </div>
+      <ol id="lines" class="lines"></ol>
+      <div class="sheet-actions">
+        <button type="button" class="btn" id="copy-btn">Copy MDX</button>
+        <button type="button" class="btn ghost" id="split-btn">Re-split sentences</button>
+        <span class="hint" id="copy-status"></span>
+      </div>
+    </main>
+
+    <!-- RIGHT: the editor panel -->
+    <aside class="panel">
+      <div class="odometer">
+        <div class="count"><span id="wc">0</span><span class="of">/ <span id="goal-label">300</span></span></div>
+        <div class="bar"><div class="fill" id="wc-fill"></div></div>
+        <div class="sub">
+          <span id="sc">0</span> sentences · avg <span id="avg">0</span> w ·
+          <span id="rt">0</span> min read
+        </div>
+        <label class="goal">
+          goal
+          <input type="number" id="goal" value="300" min="50" max="2000" step="50" />
+        </label>
+      </div>
+
+      <div class="checks">
+        <h2>House style</h2>
+        <ul id="checklist"></ul>
+      </div>
+
+      <div class="issues">
+        <h2>Line notes <span class="badge" id="issue-count">0</span></h2>
+        <ul id="issue-list"></ul>
+      </div>
+    </aside>
+  </div>
+
+  <script type="application/json" id="drafts-data" set:html={JSON.stringify(payload).replace(/</g, '\\u003c')}></script>
+  </>
+  )}
+</Base>
+
+<script>
+  type Draft = {
+    slug: string; title: string; blurb: string; date: string;
+    tags: string[]; number: number | null; status: string; body: string;
+  };
+
+  const $ = <T extends Element = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const drafts: Draft[] = JSON.parse($('drafts-data').textContent || '[]');
+
+  const picker = $<HTMLSelectElement>('draft-picker');
+  const linesEl = $<HTMLOListElement>('lines');
+  const titleInput = $<HTMLInputElement>('title-input');
+  const blurbInput = $<HTMLInputElement>('blurb-input');
+  const goalInput = $<HTMLInputElement>('goal');
+
+  let current: Draft | null = null;
+  // A "line" is either an editable sentence or a locked block (import / JSX embed).
+  let lines: { text: string; locked: boolean }[] = [];
+
+  const words = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
+
+  const isBlock = (l: string) =>
+    /^import\s/.test(l.trim()) || /^<[A-Z][\s\S]*\/?>$/.test(l.trim()) || /^\{\/\*/.test(l.trim());
+
+  /** Split a markdown body into one sentence per line, preserving MDX blocks. */
+  function toLines(body: string) {
+    const out: { text: string; locked: boolean }[] = [];
+    for (const para of body.split(/\n\s*\n/)) {
+      const t = para.trim();
+      if (!t) continue;
+      if (isBlock(t)) { out.push({ text: t, locked: true }); continue; }
+      // Sentence boundary: ., !, ? followed by whitespace.
+      const parts = t.replace(/\n/g, ' ').split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
+      for (const p of parts) out.push({ text: p, locked: false });
+    }
+    return out;
+  }
+
+  // ---- The house-style rules (from CLAUDE.md). Deterministic, no API. -------
+  const OPENERS = [
+    "in today's world", 'in an era', 'in a world', "let's explore", 'in conclusion',
+    'to summarize', 'it is important to note', 'needless to say', 'at the end of the day',
+  ];
+  const HEDGES = ['very', 'really', 'just', 'quite', 'actually', 'basically', 'somewhat', 'perhaps', 'maybe'];
+
+  function lint(text: string) {
+    const notes: { kind: 'error' | 'warn' | 'nudge'; msg: string }[] = [];
+    if (/[—–]/.test(text)) notes.push({ kind: 'error', msg: 'Em/en dash. House rule: never. Use a comma, semicolon, colon, or parentheses.' });
+    const w = words(text);
+    if (w > 30) notes.push({ kind: 'warn', msg: `${w} words. Long for this voice, consider splitting.` });
+    const low = text.toLowerCase();
+    for (const o of OPENERS) if (low.includes(o)) notes.push({ kind: 'warn', msg: `Throat-clearing: "${o}". Cut it and lead with the claim.` });
+    const found = HEDGES.filter((h) => new RegExp(`\\b${h}\\b`, 'i').test(text));
+    if (found.length) notes.push({ kind: 'nudge', msg: `Hedge word: ${found.join(', ')}. Usually stronger without.` });
+    return notes;
+  }
+
+  // ---- Rendering ------------------------------------------------------------
+  function render() {
+    linesEl.innerHTML = '';
+    lines.forEach((line, i) => {
+      const li = document.createElement('li');
+      li.className = 'line' + (line.locked ? ' locked' : '');
+
+      const ta = document.createElement('textarea');
+      ta.value = line.text;
+      ta.rows = 1;
+      ta.spellcheck = true;
+      ta.readOnly = line.locked;
+      ta.addEventListener('input', () => {
+        lines[i].text = ta.value;
+        autosize(ta);
+        recompute();
+      });
+      // Enter splits into a new sentence line; Backspace on empty merges up.
+      ta.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          lines.splice(i + 1, 0, { text: '', locked: false });
+          render(); recompute();
+          (linesEl.children[i + 1]?.querySelector('textarea') as HTMLTextAreaElement)?.focus();
+        }
+        if (e.key === 'Backspace' && ta.value === '' && lines.length > 1) {
+          e.preventDefault();
+          lines.splice(i, 1);
+          render(); recompute();
+          const prev = linesEl.children[Math.max(0, i - 1)]?.querySelector('textarea') as HTMLTextAreaElement;
+          prev?.focus();
+        }
+      });
+
+      const meta = document.createElement('span');
+      meta.className = 'line-meta';
+      const notes = line.locked ? [] : lint(line.text);
+      meta.textContent = line.locked ? 'block' : `${words(line.text)}w`;
+      if (notes.some((n) => n.kind === 'error')) li.classList.add('has-error');
+      else if (notes.some((n) => n.kind === 'warn')) li.classList.add('has-warn');
+
+      li.append(ta, meta);
+      linesEl.append(li);
+      autosize(ta);
+    });
+  }
+
+  function autosize(ta: HTMLTextAreaElement) {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  }
+
+  function recompute() {
+    const prose = lines.filter((l) => !l.locked);
+    const total = prose.reduce((n, l) => n + words(l.text), 0);
+    const goal = parseInt(goalInput.value, 10) || 300;
+    $('wc').textContent = String(total);
+    $('goal-label').textContent = String(goal);
+    $('sc').textContent = String(prose.length);
+    $('avg').textContent = prose.length ? String(Math.round(total / prose.length)) : '0';
+    $('rt').textContent = String(Math.max(1, Math.round(total / 220)));
+    const pct = Math.min(100, Math.round((total / goal) * 100));
+    const fill = $('wc-fill');
+    fill.style.width = pct + '%';
+    fill.className = 'fill' + (total > goal * 1.35 ? ' over' : total >= goal * 0.85 ? ' good' : '');
+
+    // Whole-draft checks
+    const titleWords = words(titleInput.value);
+    const checks = [
+      { ok: !prose.some((l) => /[—–]/.test(l.text)), label: 'No em or en dashes' },
+      { ok: total >= 150 && total <= 400, label: '150 to 400 words' },
+      { ok: titleWords >= 1 && titleWords <= 5, label: 'Claim title, 2 to 5 words' },
+      { ok: blurbInput.value.trim().length > 0, label: 'Blurb states the claim' },
+      { ok: !prose.some((l) => words(l.text) > 30), label: 'No sentence over 30 words' },
+      { ok: prose.length > 0 && words(prose[prose.length - 1].text) <= 18, label: 'Ends on a line that lands' },
+    ];
+    $('checklist').innerHTML = checks
+      .map((c) => `<li class="${c.ok ? 'ok' : 'no'}">${c.ok ? '✓' : '○'} ${c.label}</li>`)
+      .join('');
+
+    // Per-line notes
+    const items: string[] = [];
+    prose.forEach((l, i) => {
+      for (const n of lint(l.text)) {
+        items.push(`<li class="${n.kind}"><b>L${i + 1}</b> ${n.msg}</li>`);
+      }
+    });
+    $('issue-count').textContent = String(items.length);
+    $('issue-list').innerHTML = items.length ? items.join('') : '<li class="ok">Clean. Ship it.</li>';
+  }
+
+  function buildMdx() {
+    if (!current) return '';
+    const fm = [
+      '---',
+      `title: ${titleInput.value}`,
+      `date: ${current.date}`,
+      current.number !== null ? `number: ${current.number}` : null,
+      `blurb: ${blurbInput.value}`,
+      current.tags.length ? `tags: [${current.tags.join(', ')}]` : null,
+      `status: ${current.status}`,
+      'draft: true',
+      '---',
+      '',
+    ].filter((x) => x !== null).join('\n');
+    // Locked blocks keep their own paragraph; sentences rejoin into paragraphs.
+    const body = lines.map((l) => l.text.trim()).filter(Boolean).join('\n\n');
+    return fm + body + '\n';
+  }
+
+  function load(slug: string) {
+    current = drafts.find((d) => d.slug === slug) || null;
+    if (!current) return;
+    titleInput.value = current.title;
+    blurbInput.value = current.blurb;
+    lines = toLines(current.body);
+    render();
+    recompute();
+  }
+
+  // ---- Wire up --------------------------------------------------------------
+  picker.innerHTML = drafts
+    .map((d) => `<option value="${d.slug}">${d.title} (${d.date})</option>`)
+    .join('');
+  picker.addEventListener('change', () => load(picker.value));
+  goalInput.addEventListener('input', recompute);
+  titleInput.addEventListener('input', recompute);
+  blurbInput.addEventListener('input', recompute);
+
+  $('split-btn').addEventListener('click', () => {
+    lines = toLines(lines.map((l) => l.text).join('\n\n'));
+    render(); recompute();
+  });
+
+  $('copy-btn').addEventListener('click', async () => {
+    await navigator.clipboard.writeText(buildMdx());
+    const s = $('copy-status');
+    s.textContent = 'Copied. Paste over the file in src/content/posts/.';
+    setTimeout(() => (s.textContent = ''), 4000);
+  });
+
+  if (drafts.length) load(drafts[0].slug);
+  else linesEl.innerHTML = '<li class="empty">No drafts. Everything is published.</li>';
+</script>
+
+<style>
+  .lock { max-width: 26rem; }
+  .lock-form { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
+  .lock-form input { flex: 1; padding: 0.55rem 0.7rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--surface); color: var(--ink); font-family: var(--sans); }
+  .lock-form input:focus { outline: none; border-color: var(--accent); }
+  .lock-warn { margin-top: 1rem; font-family: var(--sans); font-size: 0.8rem; color: #9e3c1b; line-height: 1.5; }
+
+  .studio-head { margin-bottom: 1.5rem; }
+  .studio-head h1 { margin-bottom: 0.25rem; }
+  .picker { display: flex; gap: 0.6rem; align-items: center; margin-top: 1rem; font-family: var(--sans); font-size: 0.85rem; }
+  .picker span { color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .picker select { flex: 1; padding: 0.5rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--surface); color: var(--ink); font-family: inherit; }
+
+  /* Two columns: sheet + panel. Stacks on mobile. */
+  .studio { display: grid; grid-template-columns: 1fr 260px; gap: 1.75rem; align-items: start; }
+  @media (max-width: 780px) { .studio { grid-template-columns: 1fr; } .panel { position: static !important; } }
+
+  .sheet-head { display: grid; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .title-input, .blurb-input { width: 100%; border: none; border-bottom: 1px solid var(--rule); background: transparent; color: var(--ink); padding: 0.35rem 0; font-family: var(--serif); }
+  .title-input { font-size: 1.6rem; font-weight: 600; }
+  .blurb-input { font-size: 0.95rem; font-style: italic; color: var(--muted); }
+  .title-input:focus, .blurb-input:focus { outline: none; border-bottom-color: var(--accent); }
+
+  /* One sentence per row. The numbers are the point: they make length visible. */
+  .lines { list-style: none; margin: 0; padding: 0; counter-reset: line; }
+  .line { position: relative; display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.15rem 0 0.15rem 2.2rem; border-left: 2px solid transparent; }
+  .line::before { counter-increment: line; content: counter(line); position: absolute; left: 0; top: 0.5rem; width: 1.7rem; text-align: right; font-family: var(--mono); font-size: 0.7rem; color: var(--rule); }
+  .line:focus-within { border-left-color: var(--accent); background: var(--surface); }
+  .line.has-warn::before { color: #b8860b; }
+  .line.has-error::before { color: #9e3c1b; font-weight: 700; }
+  .line textarea { flex: 1; border: none; background: transparent; color: var(--ink); font-family: var(--serif); font-size: 1.02rem; line-height: 1.6; resize: none; overflow: hidden; padding: 0.3rem 0; }
+  .line textarea:focus { outline: none; }
+  .line.locked textarea { color: var(--muted); font-family: var(--mono); font-size: 0.8rem; }
+  .line-meta { font-family: var(--mono); font-size: 0.65rem; color: var(--rule); padding-top: 0.6rem; min-width: 2.2rem; text-align: right; }
+  .empty { color: var(--muted); font-style: italic; }
+
+  .sheet-actions { margin-top: 1.5rem; display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+  .hint { font-family: var(--sans); font-size: 0.75rem; color: var(--land); }
+
+  /* The editor panel */
+  .panel { position: sticky; top: 1.5rem; display: grid; gap: 1.5rem; font-family: var(--sans); font-size: 0.8rem; }
+  .odometer { border: 1px solid var(--rule); border-radius: 6px; padding: 0.9rem; background: var(--surface); }
+  .count { font-family: var(--mono); font-size: 2rem; line-height: 1; color: var(--ink); }
+  .count .of { font-size: 0.8rem; color: var(--muted); margin-left: 0.3rem; }
+  .bar { height: 4px; background: var(--rule); border-radius: 2px; margin: 0.6rem 0 0.5rem; overflow: hidden; }
+  .fill { height: 100%; width: 0; background: var(--accent-soft); transition: width 0.15s; }
+  .fill.good { background: var(--land); }
+  .fill.over { background: #b8860b; }
+  .sub { color: var(--muted); font-size: 0.72rem; }
+  .goal { display: flex; gap: 0.4rem; align-items: center; margin-top: 0.6rem; color: var(--muted); font-size: 0.72rem; }
+  .goal input { width: 4.5rem; padding: 0.2rem 0.35rem; border: 1px solid var(--rule); border-radius: 3px; background: var(--bg); color: var(--ink); font-family: var(--mono); }
+
+  .panel h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 0.5rem; font-weight: 600; }
+  .panel ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+  .checks li { font-size: 0.76rem; line-height: 1.4; }
+  .checks li.ok { color: var(--land); }
+  .checks li.no { color: var(--muted); }
+  .issues li { font-size: 0.74rem; line-height: 1.45; padding-left: 0.5rem; border-left: 2px solid var(--rule); color: var(--muted); }
+  .issues li.error { border-left-color: #9e3c1b; color: var(--ink); }
+  .issues li.warn { border-left-color: #b8860b; }
+  .issues li.ok { border-left-color: var(--land); color: var(--land); }
+  .issues b { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+  .badge { font-family: var(--mono); background: var(--rule); color: var(--ink); border-radius: 8px; padding: 0.05rem 0.4rem; font-size: 0.65rem; }
+</style>

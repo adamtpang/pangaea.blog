@@ -7,13 +7,19 @@ const epoch = new Date('1971-01-01').valueOf();
 const postItems = await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch);
 const songItems = await getCollection('songs', ({ data }) => !data.draft);
 const appItems = await getCollection('apps', ({ data }) => !data.draft);
+const podItems = await getCollection('episodes', ({ data }) => !data.draft);
 
 // Build a number -> {href, label} map per pillar so a filled cell links to the work.
-function mapByNumber(items: any[], hrefFor: (i: any) => string) {
+// `numOf` exists because episodes count with `episode:` rather than `number:`.
+function mapByNumber(
+  items: any[],
+  hrefFor: (i: any) => string,
+  numOf: (i: any) => number | undefined = (i) => i.data.number
+) {
   const m = new Map<number, { href: string; label: string }>();
   let fallback = 0;
-  for (const it of items.sort((a, b) => (a.data.number ?? 1e9) - (b.data.number ?? 1e9))) {
-    const n = it.data.number ?? fallback;
+  for (const it of items.sort((a, b) => (numOf(a) ?? 1e9) - (numOf(b) ?? 1e9))) {
+    const n = numOf(it) ?? fallback;
     m.set(n, { href: hrefFor(it), label: it.data.title });
     fallback = Math.max(fallback, n) + 1;
   }
@@ -23,25 +29,27 @@ function mapByNumber(items: any[], hrefFor: (i: any) => string) {
 const essays = mapByNumber(postItems, (i) => `/posts/${i.slug}/`);
 const songs = mapByNumber(songItems, () => '/songs/');
 const apps = mapByNumber(appItems, (i) => i.data.url ?? '/apps/');
+const pods = mapByNumber(podItems, (i) => `/podcast/${i.slug}/`, (i) => i.data.episode);
 
 const pillars = [
   { key: 'essays', label: 'Essays', href: '/posts/', map: essays, line: 'The written word.' },
   { key: 'songs', label: 'Songs', href: '/songs/', map: songs, line: 'The felt word.' },
   { key: 'apps', label: 'Apps', href: '/apps/', map: apps, line: 'The built word.' },
+  { key: 'podcasts', label: 'Podcasts', href: '/podcast/', map: pods, line: 'The spoken word.' },
 ];
 
 const SLOTS = 1000;
-const total = essays.size + songs.size + apps.size;
+const total = essays.size + songs.size + apps.size + pods.size;
 const cells = Array.from({ length: SLOTS }, (_, n) => n);
 ---
 
 <Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 songs, 1,000 apps. 3,000 pieces, made in public.">
   <h1>The Work</h1>
   <p class="hero">
-    One body of work, three pillars, three thousand pieces: a thousand essays, a
-    thousand songs, a thousand apps. Made in public, owned forever. Every slot
-    below is a piece waiting to exist; the lit ones are done. Toward
-    <strong>{total.toLocaleString()} / 3,000</strong>.
+    One body of work, four pillars, four thousand pieces: a thousand essays, a
+    thousand songs, a thousand apps, a thousand conversations. Made in public,
+    owned forever. Every slot below is a piece waiting to exist; the lit ones are
+    done. Toward <strong>{total.toLocaleString()} / 4,000</strong>.
   </p>
 
   {pillars.map((p) => (
@@ -103,6 +111,7 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
   .slots-essays .slot.filled { background: #0c3a4b; }
   .slots-songs .slot.filled { background: #176079; }
   .slots-apps .slot.filled { background: #3f97b3; }
+  .slots-podcasts .slot.filled { background: #79bfd4; }
 
   @media (max-width: 640px) {
     .slots { grid-template-columns: repeat(30, 1fr); }
