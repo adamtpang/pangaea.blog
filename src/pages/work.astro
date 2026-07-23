@@ -8,6 +8,7 @@ const postItems = await getCollection('posts', ({ data }) => !data.draft && data
 const songItems = await getCollection('songs', ({ data }) => !data.draft);
 const appItems = await getCollection('apps', ({ data }) => !data.draft);
 const podItems = await getCollection('episodes', ({ data }) => !data.draft);
+const cityItems = await getCollection('cities', ({ data }) => !data.draft);
 
 // Build a number -> {href, label} map per pillar so a filled cell links to the work.
 // `numOf` exists because episodes count with `episode:` rather than `number:`.
@@ -30,26 +31,29 @@ const essays = mapByNumber(postItems, (i) => `/posts/${i.slug}/`);
 const songs = mapByNumber(songItems, () => '/songs/');
 const apps = mapByNumber(appItems, (i) => i.data.url ?? '/apps/');
 const pods = mapByNumber(podItems, (i) => `/podcast/${i.slug}/`, (i) => i.data.episode);
+const cities = mapByNumber(cityItems, (i) => i.data.url ?? '/cities/');
 
 const pillars = [
   { key: 'essays', label: 'Essays', href: '/posts/', map: essays, line: 'The written word.' },
   { key: 'songs', label: 'Songs', href: '/songs/', map: songs, line: 'The felt word.' },
   { key: 'apps', label: 'Apps', href: '/apps/', map: apps, line: 'The built word.' },
   { key: 'podcasts', label: 'Podcasts', href: '/podcast/', map: pods, line: 'The spoken word.' },
+  { key: 'cities', label: 'City-states', href: '/cities/', map: cities, line: 'The governed word.' },
 ];
 
 const SLOTS = 1000;
-const total = essays.size + songs.size + apps.size + pods.size;
+const total = essays.size + songs.size + apps.size + pods.size + cities.size;
 const cells = Array.from({ length: SLOTS }, (_, n) => n);
 ---
 
 <Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 songs, 1,000 apps. 3,000 pieces, made in public.">
   <h1>The Work</h1>
   <p class="hero">
-    One body of work, four pillars, four thousand pieces: a thousand essays, a
-    thousand songs, a thousand apps, a thousand conversations. Made in public,
-    owned forever. Every slot below is a piece waiting to exist; the lit ones are
-    done. Toward <strong>{total.toLocaleString()} / 4,000</strong>.
+    One body of work, five pillars, five thousand pieces: a thousand essays, a
+    thousand songs, a thousand apps, a thousand conversations, a thousand
+    city-states. Made in public, owned forever. Every slot below is a piece
+    waiting to exist; the lit ones are done. Toward
+    <strong>{total.toLocaleString()} / 5,000</strong>.
   </p>
 
   {pillars.map((p) => (
@@ -112,6 +116,7 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
   .slots-songs .slot.filled { background: #176079; }
   .slots-apps .slot.filled { background: #3f97b3; }
   .slots-podcasts .slot.filled { background: #79bfd4; }
+  .slots-cities .slot.filled { background: #2f6b4f; }
 
   @media (max-width: 640px) {
     .slots { grid-template-columns: repeat(30, 1fr); }

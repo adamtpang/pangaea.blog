@@ -147,6 +147,26 @@ const apps = defineCollection({
   }),
 });
 
+// Cities: the fifth pillar. Network-state and city-state experiments, the
+// interneta.world lane. A "city" is a proposed or forming society: a thesis
+// about how a group of people should live and govern together. `number` is the
+// odometer toward 1,000.
+const cities = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date().default(new Date('1970-01-01')),
+    number: z.number().int().nonnegative().optional(),
+    url: z.string().optional(),
+    blurb: z.string().optional(),
+    cover: z.string().optional(),
+    location: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    status: z.enum(['proposed', 'forming', 'live', 'archived']).default('proposed'),
+    draft: z.boolean().default(true),
+  }),
+});
+
 export const collections = {
   posts,
   inbox,
@@ -155,4 +175,5 @@ export const collections = {
   pilot,
   songs,
   apps,
+  cities,
 };

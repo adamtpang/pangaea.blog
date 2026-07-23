@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const cities = (await getCollection('cities', ({ data }) => !data.draft))
+  .sort((a, b) => (a.data.number ?? 1e9) - (b.data.number ?? 1e9));
+---
+
+<Base title="City-states · Pangaea" description="Network states and city-state experiments. The governed word.">
+  <h1>City-states</h1>
+  <p class="hero">
+    The fifth pillar. A city is software now: you gather the people first, on the
+    internet, around a shared thesis about how to live. The land comes last, if
+    it comes at all. Toward <strong>{cities.length} / 1,000</strong>.
+  </p>
+
+  {cities.length === 0 ? (
+    <p class="meta">Nothing published here yet. The first societies are forming.</p>
+  ) : (
+    <ul class="city-list">
+      {cities.map((c) => (
+        <li class="city">
+          <div class="city-head">
+            <span class="city-num">№ {String(c.data.number ?? 0).padStart(3, '0')}</span>
+            {c.data.url ? (
+              <a class="city-title" href={c.data.url} target="_blank" rel="noopener">{c.data.title}</a>
+            ) : (
+              <span class="city-title">{c.data.title}</span>
+            )}
+            <span class={`city-status s-${c.data.status}`}>{c.data.status}</span>
+          </div>
+          {c.data.blurb && <p class="city-blurb">{c.data.blurb}</p>}
+          {c.data.location && <p class="city-loc">{c.data.location}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
+</Base>
+
+<style>
+  .city-list { list-style: none; margin: 2rem 0 0; padding: 0; }
+  .city { border-top: 1px solid var(--rule); padding: 1rem 0; }
+  .city-head { display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; }
+  .city-num { font-family: var(--mono); font-size: 0.72rem; color: var(--land); }
+  .city-title { font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+  a.city-title { text-decoration: underline; text-underline-offset: 2px; }
+  a.city-title:hover { color: var(--accent); }
+  .city-status { font-family: var(--sans); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.07em; padding: 0.1rem 0.45rem; border-radius: 10px; border: 1px solid var(--rule); color: var(--muted); }
+  .city-status.s-live { color: var(--land); border-color: var(--land-soft); }
+  .city-blurb { color: var(--muted); margin: 0.4rem 0 0; }
+  .city-loc { font-family: var(--sans); font-size: 0.75rem; color: var(--muted); margin: 0.25rem 0 0; }
+</style>
