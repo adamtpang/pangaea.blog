@@ -1,0 +1,17 @@
+{
+  "name": "adamanack-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Poor Adam's Almanack — interactive book reader at adamanack.com",
+  "scripts": {
+    "dev": "astro dev --host",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.16.18"
+  }
+}

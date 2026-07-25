@@ -1,0 +1,51 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base>
+  <object
+    data="/almanack.pdf#view=FitH&pagemode=none"
+    type="application/pdf"
+    aria-label="Poor Adam's Almanack — full PDF"
+  >
+    <div class="fallback">
+      <h1>Poor Adam's Almanack</h1>
+      <p><em>Notes from a life under construction.</em></p>
+      <p>
+        Your browser can't embed the PDF.
+        <a href="/almanack.pdf">Open the book →</a>
+      </p>
+    </div>
+  </object>
+</Base>
+
+<style>
+  object {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+  }
+
+  .fallback {
+    max-width: 28rem;
+    margin: 6rem auto 0;
+    padding: 0 1.5rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+  .fallback h1 {
+    font-weight: 500;
+    font-size: 2rem;
+    margin-bottom: 0.4rem;
+  }
+  .fallback p {
+    color: #6b6b6b;
+    margin-bottom: 1rem;
+  }
+  .fallback a {
+    color: #0a0a0a;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

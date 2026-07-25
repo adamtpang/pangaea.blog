@@ -1,0 +1,174 @@
+{
+  "title": "Poor Adam's Almanack",
+  "version": "v1.0",
+  "author": "Tomas Pangelinan",
+  "read_time_minutes": 5,
+  "total_aphorisms": 117,
+  "themes": [
+    {
+      "letter": "A",
+      "name": "Beginning",
+      "aphorisms": [
+        "All you have to do is get the ball rolling.",
+        "Begin with the quest, then the companions.",
+        "Build windmills before the wind blows.",
+        "Do it casually on purpose to get started.",
+        "Either find it or make it.",
+        "Find and buy the solution, or make and sell it.",
+        "It is the theory.",
+        "Keep subtracting, and what is left is the answer.",
+        "Map the idea maze, then walk out of it.",
+        "Names are life prompts.",
+        "Pick the right door before you lock in.",
+        "Stress is untaken action.",
+        "The fastest way to do something is to not do it at all.",
+        "The most interesting things in life are not on the map.",
+        "There is no speed limit to action."
+      ]
+    },
+    {
+      "letter": "B",
+      "name": "Building",
+      "aphorisms": [
+        "Act like an owner to gain ownership.",
+        "Be an adventure capitalist.",
+        "Be an opportunity detector and sniper.",
+        "Build and participate in superorganisms.",
+        "Build the lever, point the lever, pull the lever.",
+        "Build whatever stops the bleeding.",
+        "Create magic buttons that transform the world.",
+        "Create the set first, then look for its power law.",
+        "Design the castle, lay the brick.",
+        "Don't paint a picture — let time paint the picture.",
+        "Every post is a commit to the collective consciousness codebase.",
+        "Shipping is good. Shipping is good. Shipping is good.",
+        "Through volume, your signature is known.",
+        "Use your magic wand to create more magic wands.",
+        "We need to make new timeless art."
+      ]
+    },
+    {
+      "letter": "C",
+      "name": "Truth",
+      "aphorisms": [
+        "A clear conscience is priceless.",
+        "Authorities are largely false.",
+        "Be a clear thinker and a clear feeler.",
+        "Cynicism poses as authoritative. Optimism is correct.",
+        "Don't be an intellectual yet idiot.",
+        "Find the explanation behind the statistics.",
+        "If it makes you laugh, there is truth in it.",
+        "Listen to your cognitive dissonance.",
+        "Selling is just telling the truth.",
+        "Set the truth free.",
+        "Tell it like it is. Say the quiet part out loud.",
+        "The absolute truth is impossible to vary.",
+        "The truth brings peace of mind.",
+        "To an open mind, there are no hot takes.",
+        "What you want is transformational truth, not mere truth."
+      ]
+    },
+    {
+      "letter": "D",
+      "name": "Love",
+      "aphorisms": [
+        "An encouraging word is heard for miles.",
+        "An invisible man is a dead man.",
+        "Be an amazing ancestor.",
+        "Be loyal to yourself.",
+        "Forgive yourself and others. We are all fallible.",
+        "Internalize the love people give you.",
+        "Love and death summon courage and clarify things.",
+        "Love is a verb. Do it daily.",
+        "Love is the path to mastery.",
+        "Love is what it's all for.",
+        "Make room for unknown angels.",
+        "Make your grandchildren proud.",
+        "The family unit is sacred.",
+        "The only unforgivable thing is not forgiving.",
+        "You are your ancestors. You are your descendants."
+      ]
+    },
+    {
+      "letter": "E",
+      "name": "Errors",
+      "aphorisms": [
+        "All errors are correctable. All sins are forgivable.",
+        "Anxiety is cured through baby-step approaches.",
+        "Burnout means it's not right for you.",
+        "Find errors, correct errors.",
+        "Half of solving a problem is being aware of it.",
+        "Many things in life are reversible.",
+        "Most errors in life are suicides, not homicides.",
+        "The only thing worth regretting is regretting itself.",
+        "You are allowed to be imperfect.",
+        "You are allowed to be wrong.",
+        "You are allowed to change your mind.",
+        "You are not your worst deed."
+      ]
+    },
+    {
+      "letter": "F",
+      "name": "People",
+      "aphorisms": [
+        "A transaction is a mutual thank you.",
+        "Be a good PageRank node.",
+        "Be grateful for your para-social mentors.",
+        "Competition is for losers. Collaboration is for winners.",
+        "Critiques are a gift.",
+        "Don't project your frugality onto others.",
+        "Have a theory of mind for others. Empathy, some call it.",
+        "Leave the door open. Keep the bar high.",
+        "Listen to someone's mother tongue to hear their true articulation.",
+        "People compass: do you feel better or worse after spending time with them?",
+        "Take children more seriously. Take adults less seriously.",
+        "The infinite game player is friend to the old and young.",
+        "To gauge the integrity of someone, look at the integrity of their friends.",
+        "Trust actions, not words.",
+        "You are someone's society. Be a good society."
+      ]
+    },
+    {
+      "letter": "G",
+      "name": "Mind",
+      "aphorisms": [
+        "Action is your shield.",
+        "Anything done out of neediness is an instant regret.",
+        "Be free from the shackles of expectation.",
+        "Flow is when the map and territory are one.",
+        "Gratitude is the cheapest therapy.",
+        "Self-untangle. S-tier life skill.",
+        "Sleep solves a ton of life problems.",
+        "Status games are hilarious in retrospect.",
+        "The mind is powered by the legs.",
+        "The most common problem is problematizing.",
+        "The reality that you want is programmable.",
+        "The world is full of dopamine dementors.",
+        "Try on different identities, like hats.",
+        "Try to keep your ego in check.",
+        "Your body's state drives your mind's story."
+      ]
+    },
+    {
+      "letter": "H",
+      "name": "Time",
+      "aphorisms": [
+        "All knowledge is fallible, permanently improvable, never final.",
+        "Be on the beat of the universe.",
+        "I'll never give up. Death is at my back.",
+        "If it's funny, do it.",
+        "Imperfection in the arena beats perfection from the stands.",
+        "Never forget there is infinity out there.",
+        "Now is all there ever was or will be.",
+        "Short-term strategies only work because death is left uncured.",
+        "Since there are infinite problems, there are infinite opportunities.",
+        "The beginning of infinity is a hero's journey.",
+        "The only thing you can change is here and now.",
+        "The timeless is always timely.",
+        "There really is no moment but this one.",
+        "Twenty percent of your days account for eighty percent of your life.",
+        "With death in the picture, there really is nothing to lose."
+      ]
+    }
+  ]
+}

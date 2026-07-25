@@ -1,0 +1,234 @@
+{
+  "title": "Poor Adam's Almanack",
+  "subtitle": "Notes from a life under construction",
+  "author": "Tomas \"Bubba\" Pangelinan",
+  "place": "Network School · Forest City",
+  "version": "v1.0-draft",
+  "dedication": "For the unfinished.",
+  "epigraph": "Write what should not be forgotten.",
+  "preface": "These are small things — sentences, observations, lessons learned by paying attention. None are new. All are mine. I wrote them at different times and in different places, mostly on a phone, mostly between other obligations. They were going to die in the timelines of a few apps. This book is my attempt at giving them a longer shelf.\n\nIt owes its shape to Benjamin Franklin and its temperament to Naval Ravikant. The aphoristic compression I learned from Taleb. The structure — a guest brought between every chapter — I borrowed from Tim Ferriss. It pretends to nothing. The lines are arranged because that is what writers do with sentences they have kept.\n\nRead in order or at random. Quote without attribution. If a line stays with you a week, it has done its job.",
+  "authors_note": "These were drawn from a decade of posts, casts, drafts, and articles. Where a line was already complete, I left it. Where it was a seed, I trimmed. I added nothing that was not somewhere already mine. The interludes between chapters are the company I keep — quotes from people whose thinking shaped my own, and questions I keep returning to.",
+  "colophon": "Set in EB Garamond. Compiled at Network School, Forest City, 2026.",
+  "chapters": [
+    {
+      "type": "theme",
+      "name": "beginning",
+      "aphorisms": [
+        "Do it casually on purpose to get started.",
+        "All you have to do is get the ball rolling.",
+        "Build windmills before the wind blows.",
+        "Pick the right door before you lock in.",
+        "Map the idea maze, then walk out of it.",
+        "Find and buy the solution, or make and sell it.",
+        "Begin with the quest, then the companions.",
+        "Keep subtracting, and what is left is the answer.",
+        "There is no speed limit to action.",
+        "Stress is untaken action.",
+        "Either find it or make it.",
+        "The fastest way to do something is to not do it at all.",
+        "The most interesting things in life are not on the map.",
+        "Names are life prompts.",
+        "It is the theory."
+      ]
+    },
+    {
+      "type": "interlude",
+      "kind": "quotes",
+      "title": "Quotes I'm pondering",
+      "items": [
+        { "q": "Inspiration is perishable. Act on it immediately.", "by": "Naval Ravikant" },
+        { "q": "Whatever you can do or dream you can, begin it. Boldness has genius, power, and magic in it.", "by": "Goethe" },
+        { "q": "The way to get started is to quit talking and begin doing.", "by": "Walt Disney" }
+      ]
+    },
+    {
+      "type": "theme",
+      "name": "building",
+      "aphorisms": [
+        "Build whatever stops the bleeding.",
+        "Build the lever, point the lever, pull the lever.",
+        "Create the set first, then look for its power law.",
+        "Build and participate in superorganisms.",
+        "Design the castle, lay the brick.",
+        "Create magic buttons that transform the world.",
+        "Use your magic wand to create more magic wands.",
+        "Be an adventure capitalist.",
+        "Be an opportunity detector and sniper.",
+        "Act like an owner to gain ownership.",
+        "Don't paint a picture — let time paint the picture.",
+        "Through volume, your signature is known.",
+        "Shipping is good. Shipping is good. Shipping is good.",
+        "Every post is a commit to the collective consciousness codebase.",
+        "We need to make new timeless art."
+      ]
+    },
+    {
+      "type": "interlude",
+      "kind": "question",
+      "text": "What would you build if you couldn't fail?"
+    },
+    {
+      "type": "theme",
+      "name": "truth",
+      "aphorisms": [
+        "Set the truth free.",
+        "Selling is just telling the truth.",
+        "Tell it like it is. Say the quiet part out loud.",
+        "Find the explanation behind the statistics.",
+        "Be a clear thinker and a clear feeler.",
+        "Listen to your cognitive dissonance.",
+        "The truth brings peace of mind.",
+        "The absolute truth is impossible to vary.",
+        "Cynicism poses as authoritative. Optimism is correct.",
+        "Don't be an intellectual yet idiot.",
+        "If it makes you laugh, there is truth in it.",
+        "A clear conscience is priceless.",
+        "What you want is transformational truth, not mere truth.",
+        "To an open mind, there are no hot takes.",
+        "Authorities are largely false."
+      ]
+    },
+    {
+      "type": "interlude",
+      "kind": "quotes",
+      "title": "Quotes I'm pondering",
+      "items": [
+        { "q": "The opposite of success is not failure but name-dropping.", "by": "Nassim Taleb" },
+        { "q": "Honest people are a refuge: you can run to them when in trouble.", "by": "Naval Ravikant" },
+        { "q": "Live not by lies.", "by": "Aleksandr Solzhenitsyn" }
+      ]
+    },
+    {
+      "type": "theme",
+      "name": "love",
+      "aphorisms": [
+        "Love is a verb. Do it daily.",
+        "Love is what it's all for.",
+        "Love is the path to mastery.",
+        "Love and death summon courage and clarify things.",
+        "Internalize the love people give you.",
+        "Make room for unknown angels.",
+        "Be loyal to yourself.",
+        "Be an amazing ancestor.",
+        "You are your ancestors. You are your descendants.",
+        "Make your grandchildren proud.",
+        "Forgive yourself and others. We are all fallible.",
+        "The family unit is sacred.",
+        "An encouraging word is heard for miles.",
+        "The only unforgivable thing is not forgiving.",
+        "An invisible man is a dead man."
+      ]
+    },
+    {
+      "type": "interlude",
+      "kind": "question",
+      "text": "Who would you call at 3 a.m.?"
+    },
+    {
+      "type": "theme",
+      "name": "errors",
+      "aphorisms": [
+        "Find errors, correct errors.",
+        "All errors are correctable. All sins are forgivable.",
+        "Most errors in life are suicides, not homicides.",
+        "You are not your worst deed.",
+        "You are allowed to be wrong.",
+        "You are allowed to be imperfect.",
+        "You are allowed to change your mind.",
+        "Half of solving a problem is being aware of it.",
+        "Burnout means it's not right for you.",
+        "Anxiety is cured through baby-step approaches.",
+        "Many things in life are reversible.",
+        "The only thing worth regretting is regretting itself."
+      ]
+    },
+    {
+      "type": "interlude",
+      "kind": "quotes",
+      "title": "Quotes I'm pondering",
+      "items": [
+        { "q": "The impediment to action advances action. What stands in the way becomes the way.", "by": "Marcus Aurelius" },
+        { "q": "Problems are inevitable. Problems are soluble.", "by": "David Deutsch" },
+        { "q": "All life is problem-solving.", "by": "Karl Popper" }
+      ]
+    },
+    {
+      "type": "theme",
+      "name": "people",
+      "aphorisms": [
+        "Trust actions, not words.",
+        "Have a theory of mind for others. Empathy, some call it.",
+        "Take children more seriously. Take adults less seriously.",
+        "Listen to someone's mother tongue to hear their true articulation.",
+        "Be grateful for your para-social mentors.",
+        "Be a good PageRank node.",
+        "Don't project your frugality onto others.",
+        "Leave the door open. Keep the bar high.",
+        "To gauge the integrity of someone, look at the integrity of their friends.",
+        "People compass: do you feel better or worse after spending time with them?",
+        "The infinite game player is friend to the old and young.",
+        "Competition is for losers. Collaboration is for winners.",
+        "You are someone's society. Be a good society.",
+        "Critiques are a gift.",
+        "A transaction is a mutual thank you."
+      ]
+    },
+    {
+      "type": "interlude",
+      "kind": "question",
+      "text": "Whose integrity tells you something about your own?"
+    },
+    {
+      "type": "theme",
+      "name": "mind",
+      "aphorisms": [
+        "The mind is powered by the legs.",
+        "Your body's state drives your mind's story.",
+        "Sleep solves a ton of life problems.",
+        "The most common problem is problematizing.",
+        "Try to keep your ego in check.",
+        "Be free from the shackles of expectation.",
+        "Try on different identities, like hats.",
+        "Self-untangle. S-tier life skill.",
+        "Status games are hilarious in retrospect.",
+        "The world is full of dopamine dementors.",
+        "The reality that you want is programmable.",
+        "Flow is when the map and territory are one.",
+        "Gratitude is the cheapest therapy.",
+        "Action is your shield.",
+        "Anything done out of neediness is an instant regret."
+      ]
+    },
+    {
+      "type": "interlude",
+      "kind": "quotes",
+      "title": "Quotes I'm pondering",
+      "items": [
+        { "q": "Memento mori.", "by": "Marcus Aurelius" },
+        { "q": "When you say 'I'm going to put my heart and soul into this,' it changes everything.", "by": "Lee Kuan Yew" },
+        { "q": "Begin where you are; use what you have; do what you can.", "by": "Arthur Ashe" }
+      ]
+    },
+    {
+      "type": "theme",
+      "name": "time",
+      "aphorisms": [
+        "Now is all there ever was or will be.",
+        "There really is no moment but this one.",
+        "The only thing you can change is here and now.",
+        "With death in the picture, there really is nothing to lose.",
+        "I'll never give up. Death is at my back.",
+        "Never forget there is infinity out there.",
+        "The beginning of infinity is a hero's journey.",
+        "Since there are infinite problems, there are infinite opportunities.",
+        "All knowledge is fallible, permanently improvable, never final.",
+        "Short-term strategies only work because death is left uncured.",
+        "Be on the beat of the universe.",
+        "Imperfection in the arena beats perfection from the stands.",
+        "If it's funny, do it.",
+        "The timeless is always timely.",
+        "Twenty percent of your days account for eighty percent of your life."
+      ]
+    }
+  ]
+}

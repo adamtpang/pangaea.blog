@@ -69,6 +69,14 @@ Pages:
 
 The hub-style (Base.astro, verb nav, blue/green Earth palette) is now used **only by the older lanes** at `/posts`, `/podcast`, `/vlog`, `/graph`, `/about`. Those URLs still resolve but are not linked from the new homepage.
 
+## The Almanack (`adamanack/`)
+
+*Poor Adam's Almanack* — the aphorism book the homepage lists as forthcoming. Its whole codebase lives in `adamanack/` (self-contained: Typst manuscript, corpus, scripts, its own Astro site). Shipped v1.0 at **https://adamanack.com**; 117 aphorisms across 8 themes, ~5 min read.
+
+**Read `ADAMANACK.md` at the repo root before touching it.** That file is the full handoff: current state, the edit→deploy loop, locked decisions, and the one open decision (expand from 117 to ~393 aphorisms, the Pareto 20% of the source corpus).
+
+It deploys independently to its own Vercel project and GitHub repo — it is not built by pangaea's Astro build. Integrating it as a native `/almanack` route is a listed next step, not done.
+
 ## The three lanes (the media hub, legacy)
 
 Pangaea is a media leverage hub with three content lanes, each with its own collection, list page, and detail page. The nav uses verbs (Tetragrammaton-style): **Read** (`/posts`) · **Listen** (`/podcast`) · **Watch** (`/vlog`) · **Graph** (`/graph`). All three lanes use the same MDX + embed kit; URLs and templates differ.

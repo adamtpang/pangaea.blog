@@ -1,0 +1,43 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Poor Adam's Almanack",
+  description = "Notes from a life under construction.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="generator" content={Astro.generator} />
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>{title}</title>
+
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="book" />
+  <meta property="og:site_name" content="Poor Adam's Almanack" />
+
+  <style is:global>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #ffffff;
+      color: #0a0a0a;
+      font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+    }
+  </style>
+</head>
+<body>
+  <slot />
+</body>
+</html>

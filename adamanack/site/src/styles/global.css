@@ -1,0 +1,119 @@
+/* Poor Adam's Almanack — site styles
+ *
+ * White paper. Black ink. EB Garamond. Editorial.
+ */
+
+@font-face {
+  font-family: "EB Garamond";
+  src: url("/fonts/EBGaramond-VF.ttf") format("truetype-variations");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "EB Garamond";
+  src: url("/fonts/EBGaramond-Italic-VF.ttf") format("truetype-variations");
+  font-weight: 400 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --paper:    #ffffff;
+  --raised:   #fafafa;
+  --ink:      #0a0a0a;
+  --muted:    #6b6b6b;
+  --hairline: #e5e5e5;
+
+  --serif: "EB Garamond", "Iowan Old Style", Georgia, "Times New Roman", serif;
+
+  --fs-base: 19px;
+  --leading: 1.55;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--fs-base);
+  line-height: var(--leading);
+  font-feature-settings: "onum" 1, "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--hairline);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.18s ease;
+}
+a:hover { text-decoration-color: var(--ink); }
+
+button {
+  font-family: inherit;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+::selection { background: var(--ink); color: var(--paper); }
+
+/* Layout */
+
+.container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Top nav */
+.topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.75rem 1.25rem;
+  border-bottom: 1px solid var(--hairline);
+}
+.topnav .brand {
+  font-family: var(--serif);
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.topnav .nav-links {
+  display: flex;
+  gap: 1.75rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.topnav .nav-links a { text-decoration: none; transition: color 0.18s ease; }
+.topnav .nav-links a:hover { color: var(--ink); }
+
+/* Footer */
+.sitefoot {
+  margin-top: auto;
+  padding: 2.5rem 1.75rem 1.75rem;
+  border-top: 1px solid var(--hairline);
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sitefoot .dot { color: var(--hairline); margin: 0 0.5em; }

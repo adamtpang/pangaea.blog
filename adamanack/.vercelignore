@@ -1,0 +1,15 @@
+# Don't upload these to Vercel — they're not needed for the build
+sources/
+references/
+build/
+_archive/
+**/*.zip
+**/.DS_Store
+node_modules/
+site/.astro/
+site/dist/
+site/node_modules/
+
+# IMPORTANT: do NOT exclude PDFs globally — site/public/almanack.pdf
+# is the actual book and MUST be uploaded.
+references/*.pdf
