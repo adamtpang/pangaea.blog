@@ -30,6 +30,14 @@ const posts = defineCollection({
     // small edits compounds and the work reads as alive.
     updated: z.coerce.date().optional(),
     draft: z.boolean().default(true),
+    // Video-ready pipeline (Voice Studio → publish → summon.guide script mode).
+    // When true, the post is a spoken script handable to summon.guide: body is
+    // the spoken spine, beats is the 3-act outline, spoken_seconds is estimated
+    // read-aloud length (~150 wpm), pull_quote is the IG/share line.
+    video_ready: z.boolean().default(false),
+    spoken_seconds: z.number().int().positive().optional(),
+    beats: z.array(z.string()).max(5).optional(),
+    pull_quote: z.string().optional(),
   }),
 });
 
@@ -120,8 +128,30 @@ const songs = defineCollection({
     title: z.string(),
     date: z.coerce.date().default(new Date('1970-01-01')),
     number: z.number().int().nonnegative().optional(),
+
+    // --- The craft layer (the legos) ------------------------------------
+    // A song is a stack, not a single artifact. These fields let a song exist
+    // at ANY layer of the stack, so a chord progression with no recording is
+    // still a real entry. This is what makes 1,000 reachable: you ship the
+    // skeleton, then thicken it later.
+    key: z.string().optional(), // "A minor", "F# dorian"
+    tempo: z.number().int().positive().optional(), // BPM
+    // Harmonic skeleton, written plainly: "| Am | F | C | G |"
+    chords: z.string().optional(),
+    // What Adam actually played on it: drums, bass, guitar, piano, vocals.
+    instruments: z.array(z.string()).optional(),
+    // Where it sits in the stack. `sketch` is the floor and it COUNTS: a voice
+    // memo of a progression is a real song entry, the way a seedling is a real
+    // post. Only `released` implies a public link.
+    stage: z.enum(['sketch', 'demo', 'produced', 'released']).default('sketch'),
+    // The Ableton project folder on disk, so the entry points back at the work.
+    ableton: z.string().optional(),
+    // A self-hosted demo (voice memo, phone recording, rough bounce).
+    audio: z.string().optional(),
+
     spotify: z.string().optional(), // Spotify URI, e.g. "track/XXXXXXXX"
     soundcloud: z.string().optional(), // full SoundCloud URL
+    youtube: z.string().optional(), // YouTube video ID
     blurb: z.string().optional(),
     cover: z.string().optional(),
     tags: z.array(z.string()).optional(),
