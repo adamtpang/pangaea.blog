@@ -100,22 +100,52 @@ This is the highest-leverage template you have. It requires no mic, no
 tracking, no arrangement, and your own listening says you love the result.
 
 ## Template B · "Xtal"
-**The warm four-bar loop. Texture is the song.**
+**The four-bar cycle. Texture is the song.**
+
+Rewritten for **Live 11 Intro**, which ships a small device set. That is a
+feature here, not a limit: Xtal was made on cheap gear in the late 80s. Every
+device below is core Intro.
 
 - **From:** Aphex Twin, *Xtal* (your #1 track) and the adore / sped-up sample
   world
 - **Tempo:** 100 to 130.
-- **Form:** a 4-bar loop. Layer elements in, strip them out. There is no verse
-  and no chorus. Arrangement = what enters when.
+- **Form:** a 4-bar cycle. Layer elements in, strip them out. No verse, no
+  chorus. Arrangement is just what enters when.
 - **Harmony:** two chords is plenty. `i - VII`, or one suspended drone.
-- **Elements:** detuned warm pad (saw + chorus + lowpass) · soft breakbeat ·
-  **your own voice as a wordless pad** (record a held note, reverse it, pitch
-  it, drench it) · round sub bass.
-- **Texture, the whole point:** Saturator, Vinyl Distortion, Redux for bit
-  crush, Auto Filter with slow movement. Add hiss. Make it sound recovered from
-  a cassette, not rendered.
+
+**The four elements, all buildable in Intro:**
+
+1. **The pad is your own voice.** Record yourself humming one held note. Drop
+   that audio into **Simpler**, set it to loop, then play chords on your MIDI
+   keyboard. Your voice becomes the instrument. This is closer to what Xtal
+   actually is than any synth preset, and it needs nothing Intro lacks.
+2. **The breakbeat.** **Drum Rack** or **Impulse**. Soft, and slightly behind
+   the beat. Do not quantize it straight.
+3. **The bass.** One round low note per bar. It should feel like a heartbeat,
+   not a riff.
+4. **The dust.** The silence has to have texture too. That is the chain below.
+
+**The texture chain. This IS the template:**
+
+| # | Device | What it does here |
+|---|---|---|
+| 1 | **Saturator** | drive until it thickens, stop before it distorts |
+| 2 | **Erosion** | the secret weapon: hiss and grit. This is your tape noise |
+| 3 | **Redux** | drop bit depth and sample rate until it sounds like 1992 |
+| 4 | **Auto Filter** | lowpass, LFO very slow, so the cycle breathes |
+| 5 | **Reverb** | large, high wet, and roll its highs off |
+| 6 | **EQ Three** | pull the top end down last. A memory, not a photograph |
+
+**Erosion** is the one everybody skips. It is the whole difference between "a
+loop" and "something recovered from a cassette."
+
 - **Budget:** 60 to 90 minutes.
-- **Done when:** the loop survives four minutes of listening. `stage: sketch`.
+- **Done when:** the cycle survives four minutes of listening. `stage: sketch`.
+
+> Live was not running when this was written, so the device list could not be
+> read from Live itself. Everything above is core Intro. If your browser also
+> shows Echo, Vinyl Distortion, or Hybrid Reverb, you have more than Intro and
+> can swap them in freely.
 
 ## Template C · "The Lemon Twigs / Tennis"
 **The warm guitar-pop song. This is the one that uses all of you.**
