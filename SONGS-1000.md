@@ -61,6 +61,107 @@ Drums, bass, guitar, some piano, vocals, production. That is a whole band in one
 person, which means **no song is ever blocked on a collaborator.** Put what you
 actually played in `instruments:` so the catalog shows the range.
 
+## The rig
+
+Ableton 11 · MIDI keyboard · audio interface · mics · XLR + quarter inch ·
+stands · headphones · laptop.
+
+That is a complete recording studio. Nothing is missing, nothing needs buying,
+and no track in your top 18 was made with more than this. FINNEAS cut a Grammy
+album in a bedroom, Burial worked in Sound Forge, Steve Lacy used an iPhone.
+The rig is done. From here the only variable is reps.
+
+---
+
+# The four templates
+
+Derived from your own top artists and tracks. Each is a repeatable recipe with
+a time budget and a definition of done. Kanye ran one formula thousands of
+times; these are yours. Pick a template, run it, ship at the stated stage, move
+on. Do not exceed the time budget: the budget is the point.
+
+## Template A · "Avril 14th"
+**The two-minute piano piece. Zero setup, one sitting.**
+
+- **From:** Aphex Twin, *Avril 14th* (your #6 track, solo piano, under 2 min)
+- **Gear:** MIDI keyboard, stock piano. Nothing else.
+- **Tempo:** 60 to 80. Rubato is welcome, do not quantize.
+- **Form:** ONE idea, 8 to 16 bars, played twice. Small variation the second
+  time. No chorus, no drums, no bass, no build.
+- **Harmony:** extended and slightly sad. Try `| Am | Fmaj7 | C/G | E7 |` or
+  `| Cmaj7 | Am9 | Fmaj7 | G6 |`. For the Aphex color, use chromatic mediants:
+  `| C | Ab | Eb | G |`. Let the bass move by step or half step.
+- **Texture:** soft/felt piano, keep the pedal noise, add a touch of Saturator
+  and a slow subtle detune so it wobbles like tape.
+- **Budget:** 45 to 60 minutes.
+- **Done when:** the take is bounced. `stage: demo`.
+
+This is the highest-leverage template you have. It requires no mic, no
+tracking, no arrangement, and your own listening says you love the result.
+
+## Template B · "Xtal"
+**The warm four-bar loop. Texture is the song.**
+
+- **From:** Aphex Twin, *Xtal* (your #1 track) and the adore / sped-up sample
+  world
+- **Tempo:** 100 to 130.
+- **Form:** a 4-bar loop. Layer elements in, strip them out. There is no verse
+  and no chorus. Arrangement = what enters when.
+- **Harmony:** two chords is plenty. `i - VII`, or one suspended drone.
+- **Elements:** detuned warm pad (saw + chorus + lowpass) · soft breakbeat ·
+  **your own voice as a wordless pad** (record a held note, reverse it, pitch
+  it, drench it) · round sub bass.
+- **Texture, the whole point:** Saturator, Vinyl Distortion, Redux for bit
+  crush, Auto Filter with slow movement. Add hiss. Make it sound recovered from
+  a cassette, not rendered.
+- **Budget:** 60 to 90 minutes.
+- **Done when:** the loop survives four minutes of listening. `stage: sketch`.
+
+## Template C · "The Lemon Twigs / Tennis"
+**The warm guitar-pop song. This is the one that uses all of you.**
+
+- **From:** The Lemon Twigs, Tennis, The Beatles, Olivia Dean, Laufey
+- **Tempo:** 100 to 130. **Length:** 2:30 to 3:30.
+- **Harmony:** this is the identity. Use maj7 and m9 instead of triads, ii-V
+  motion, secondary dominants, and above all the **minor iv in a major key**
+  (`| C | F | Fm | C |`), the saddest and most Beatles move there is.
+- **Tracking order, do not deviate:**
+  1. scratch guitar + vocal to a click
+  2. real drums
+  3. bass
+  4. rhythm guitars
+  5. lead vocal
+  6. **double the lead vocal** (sing it twice, do not copy the take)
+  7. harmonies, percussion, keys
+- **Texture:** doubled vocals, tape saturation on the mix bus, roll the highs
+  off. Aim for 1974, not 2026.
+- **Budget:** two sessions.
+- **Done when:** mixed and bounced. `stage: produced`.
+
+## Template D · Groove study
+**Steal one rhythmic tradition per song. Six of your nine artists live here.**
+
+Pick ONE, learn its actual rule, write a song obeying it:
+
+| Tradition | From | Tempo | The rule |
+|---|---|---|---|
+| One drop | Bob Marley | 70 to 90 | kick + snare land together on beat **3**, guitar skank on the offbeats, bass is melodic and round |
+| Rumba flamenca | Gipsy Kings | 100 to 130 | fast strummed nylon, palmas (handclaps) carry the groove, no drum kit |
+| Bossa | Laufey | 120 to 140 | half-time feel, thumb plays bass while fingers comp offbeat, brushes not sticks, maj7/m7 throughout |
+| Jersey club / UK garage | NewJeans, *Prada* | 130 to 140 | swung 16ths, syncopated kick clusters, chopped vocal stabs used as percussion |
+| Afropop guitar | Vampire Weekend | 110 to 140 | two clean high-register guitar lines interlocking, neither one is the "rhythm" part |
+
+- **Budget:** one session.
+- **Done when:** the groove is recognizable without any melody on top.
+  `stage: sketch`.
+
+## Shared definition of done
+
+A template run is finished when the file exists with `key`, `tempo`, `chords`,
+and `instruments` filled in, plus an audio bounce. Not when it is good. Ship it
+at whatever stage it reached and start the next one. The catalog is the goal;
+quality is what happens to you along the way.
+
 ## The daily floor for songs
 
 One of these, every day. Any one counts:
