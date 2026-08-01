@@ -27,15 +27,27 @@ function mapByNumber(
   return m;
 }
 
+// Work in progress lights a DIMMER cell. The pile is real practice and should be
+// visible, but a working title in an Ableton folder is not a published decision,
+// so these cells carry no title and no link.
+const wipItems = await getCollection('songs', ({ data }) => data.draft && data.stage !== 'released');
+function wipSet(items: any[]) {
+  const s = new Set<number>();
+  for (const it of items) if (typeof it.data.number === 'number') s.add(it.data.number);
+  return s;
+}
+
 const essays = mapByNumber(postItems, (i) => `/posts/${i.slug}/`);
 const songs = mapByNumber(songItems, () => '/songs/');
 const apps = mapByNumber(appItems, (i) => i.data.url ?? '/apps/');
 const pods = mapByNumber(podItems, (i) => `/podcast/${i.slug}/`, (i) => i.data.episode);
 const cities = mapByNumber(cityItems, (i) => i.data.url ?? '/cities/');
 
+const songsWip = wipSet(wipItems);
+
 const pillars = [
   { key: 'essays', label: 'Essays', href: '/posts/', map: essays, line: 'The written word.' },
-  { key: 'songs', label: 'Songs', href: '/songs/', map: songs, line: 'The felt word.' },
+  { key: 'songs', label: 'Songs', href: '/songs/', map: songs, line: 'The felt word.', wip: songsWip },
   { key: 'apps', label: 'Apps', href: '/apps/', map: apps, line: 'The built word.' },
   { key: 'podcasts', label: 'Podcasts', href: '/podcast/', map: pods, line: 'The spoken word.' },
   { key: 'cities', label: 'City-states', href: '/cities/', map: cities, line: 'The governed word.' },
@@ -61,11 +73,23 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
       <div class="pillar-head">
         <a class="pillar-name" href={p.href}>{p.label}</a>
         <span class="pillar-tally">{p.map.size} <span class="of">/ 1,000</span></span>
+        {p.wip && p.wip.size > 0 && (
+          <span class="pillar-wip">+{p.wip.size} in progress</span>
+        )}
         <span class="pillar-line">{p.line}</span>
       </div>
       <div class={`slots slots-${p.key}`}>
         {cells.map((n) => {
           const hit = p.map.get(n);
+          const wip = !hit && p.wip?.has(n);
+          if (wip) {
+            return (
+              <span
+                class="slot wip"
+                title={`№ ${String(n).padStart(3, '0')} — in the workshop`}
+              ></span>
+            );
+          }
           return hit ? (
             <a
               class="slot filled"
@@ -117,6 +141,11 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
   .slots-apps .slot.filled { background: #3f97b3; }
   .slots-podcasts .slot.filled { background: #79bfd4; }
   .slots-cities .slot.filled { background: #2f6b4f; }
+
+  /* Work in progress: lit, but clearly unfinished. The pile counts as practice
+     without claiming to be published work. */
+  .slot.wip { background: transparent; box-shadow: inset 0 0 0 1.5px var(--accent-soft); opacity: 0.55; }
+  .pillar-wip { font-family: var(--sans); font-size: 0.7rem; color: var(--accent-soft); }
 
   @media (max-width: 640px) {
     .slots { grid-template-columns: repeat(30, 1fr); }
