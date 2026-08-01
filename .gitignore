@@ -36,3 +36,6 @@ Thumbs.db
 # Local-only working files synced via OneDrive (not part of the public site)
 src/content/drafts/
 scripts/
+
+# Separated audio stems (big, derived, not source)
+stems/
