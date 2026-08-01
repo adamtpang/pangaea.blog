@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "ableton": {
+      "command": "uvx",
+      "args": ["--with", "mcp<2", "ableton-mcp"],
+      "env": {
+        "DISABLE_TELEMETRY": "true",
+        "ABLETON_MCP_DISABLE_TELEMETRY": "true",
+        "MCP_DISABLE_TELEMETRY": "true",
+        "ABLETON_MCP_TELEMETRY_CONSENT": "false"
+      }
+    }
+  }
+}
