@@ -48,7 +48,7 @@ run crashes on import. Last working version is `mcp` 1.9.4.
 ## Setup
 
 ```
-powershell -ExecutionPolicy Bypass -File scripts\install-ableton-mcp.ps1
+powershell -ExecutionPolicy Bypass -File tools\ableton\install-ableton-mcp.ps1
 ```
 
 Then in Live: **Preferences > Link/Tempo/MIDI > Control Surface > AbletonMCP**,
