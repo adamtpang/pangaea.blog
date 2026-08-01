@@ -20,11 +20,15 @@ param(
   # Write mp3 instead of wav. Much smaller, fine for study.
   [switch]$Mp3,
 
-  # Where stems go. Default: .\stems next to the repo.
-  [string]$Out = (Join-Path $PSScriptRoot '..\stems')
+  # Where stems go. Default: .\stems at the repo root.
+  [string]$Out
 )
 
 $ErrorActionPreference = 'Stop'
+
+# $PSScriptRoot is not populated inside a param default, so resolve it here.
+$here = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
+if (-not $Out) { $Out = Join-Path $here '..\stems' }
 
 if (-not (Test-Path $Path)) { throw "No such file: $Path" }
 
