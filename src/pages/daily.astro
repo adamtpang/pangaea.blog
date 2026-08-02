@@ -64,7 +64,9 @@ import Base from '../layouts/Base.astro';
     <div class="syncbar">
       <span class="sync-dot" id="syncDot" aria-hidden="true"></span>
       <span id="syncState" role="status">Saved on this device only.</span>
-      <button type="button" class="linkbtn" id="syncBtn">Turn on sync</button>
+      <a class="linkbtn" id="signinBtn" href="/api/auth/github" hidden>Sign in with GitHub</a>
+      <button type="button" class="linkbtn" id="signoutBtn" hidden>Sign out</button>
+      <button type="button" class="linkbtn" id="syncBtn" hidden>Use a passphrase instead</button>
     </div>
 
     <div class="unlock" id="unlock">
@@ -897,25 +899,63 @@ import Base from '../layouts/Base.astro';
       if (s < 5400) return Math.round(s / 60) + 'm ago';
       return Math.round(s / 3600) + 'h ago';
     }
+    /* Signed in with GitHub? Then the session cookie authorizes sync and there
+       is no passphrase to think about. The passphrase route stays as a fallback
+       for deployments where OAuth is not configured. */
+    var signedInAs = null;
+    var canOauth = false;
+    var canPassphrase = false;
+    var signinBtn = document.getElementById('signinBtn');
+    var signoutBtn = document.getElementById('signoutBtn');
+
+    function syncOn() { return !!(signedInAs || syncKey); }
+
     function refreshSyncUI() {
+      signinBtn.hidden = true;
+      signoutBtn.hidden = true;
+      syncBtn.hidden = true;
+
+      if (signedInAs) {
+        signoutBtn.hidden = false;
+        setSync('on', lastSyncAt
+          ? 'Synced ' + ago(lastSyncAt) + ', as ' + signedInAs + '.'
+          : 'Signed in as ' + signedInAs + '. Your pages follow you.');
+        return;
+      }
       if (syncKey) {
+        syncBtn.hidden = false;
         syncBtn.textContent = 'Turn off';
         setSync('on', lastSyncAt ? 'Synced ' + ago(lastSyncAt) + '.' : 'Sync is on.');
-      } else {
+        return;
+      }
+      if (canOauth) {
+        signinBtn.hidden = false;
+        if (canPassphrase) { syncBtn.hidden = false; syncBtn.textContent = 'Use a passphrase instead'; }
+        setSync('', 'Saved on this device only. Sign in to keep it across devices.');
+        return;
+      }
+      if (canPassphrase) {
+        syncBtn.hidden = false;
         syncBtn.textContent = 'Turn on sync';
         setSync('', 'Saved on this device only.');
+        return;
       }
+      setSync('', 'Saved on this device only.');
     }
 
     /* One POST does both directions: the server merges what it has with what
        we send and returns the union, so this is also the "pull". */
     function pushNow(opts) {
-      if (!syncKey) return;
+      if (!syncOn()) return;
       if (pushTimer) { clearTimeout(pushTimer); pushTimer = null; }
       setSync('busy', 'Syncing...');
+      var headers = { 'content-type': 'application/json' };
+      // Signed in? The session cookie carries the authorization instead.
+      if (!signedInAs && syncKey) headers['x-daily-key'] = syncKey;
       fetch('/api/daily/sync', {
         method: 'POST',
-        headers: { 'content-type': 'application/json', 'x-daily-key': syncKey },
+        headers: headers,
+        credentials: 'same-origin',
         body: JSON.stringify({ entries: entries }),
         keepalive: !!(opts && opts.keepalive)
       })
@@ -925,8 +965,13 @@ import Base from '../layouts/Base.astro';
         })
         .then(function (res) {
           if (res.status === 401) {
-            writeKey(null); refreshSyncUI();
-            setSync('err', 'That passphrase was rejected. Turn sync on again.');
+            var wasSignedIn = !!signedInAs;
+            signedInAs = null;
+            writeKey(null);
+            refreshSyncUI();
+            setSync('err', wasSignedIn
+              ? 'Your session expired. Sign in again to keep syncing.'
+              : 'That passphrase was rejected. Turn sync on again.');
             return;
           }
           if (res.status === 503) {
@@ -946,7 +991,7 @@ import Base from '../layouts/Base.astro';
         });
     }
     function schedulePush() {
-      if (!syncKey) return;
+      if (!syncOn()) return;
       if (pushTimer) clearTimeout(pushTimer);
       // Slow on purpose: a commit per burst of writing, not per keystroke.
       pushTimer = setTimeout(function () { pushTimer = null; pushNow(); }, 6000);
@@ -1002,12 +1047,22 @@ import Base from '../layouts/Base.astro';
       if (ev.key === 'Enter') { ev.preventDefault(); document.getElementById('unlockSave').click(); }
     });
 
+    signoutBtn.addEventListener('click', function () {
+      fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
+        .catch(function () {})
+        .then(function () {
+          signedInAs = null;
+          refreshSyncUI();
+          setSync('', 'Signed out. This device keeps its own copy.');
+        });
+    });
+
     // Coming back to the tab is exactly when another device's work should land.
     document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'visible' && syncKey) pushNow();
+      if (document.visibilityState === 'visible' && syncOn()) pushNow();
     });
     window.addEventListener('pagehide', function () {
-      if (syncKey && pushTimer) pushNow({ keepalive: true });
+      if (syncOn() && pushTimer) pushNow({ keepalive: true });
     });
 
     /* ---------- boot ---------- */
@@ -1016,7 +1071,35 @@ import Base from '../layouts/Base.astro';
     renderHistory();
     syncKey = readKey();
     refreshSyncUI();
-    if (syncKey) pushNow();
+
+    // Ask the server who we are, then start syncing if we are anyone.
+    fetch('/api/auth/me', { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (me) {
+        signedInAs = me.login || null;
+        canOauth = !!me.oauth;
+        canPassphrase = !!me.passphrase;
+        refreshSyncUI();
+        if (syncOn()) pushNow();
+      })
+      .catch(function () { if (syncOn()) pushNow(); });
+
+    // Surface the result of a GitHub redirect, then tidy the URL.
+    (function reportAuthRedirect() {
+      var m = new URLSearchParams(location.search).get('auth');
+      if (!m) return;
+      if (m !== 'ok') {
+        var why = {
+          'not-allowed': 'That GitHub account is not allowed here.',
+          'not-configured': 'GitHub sign-in is not set up on the server yet.',
+          'no-session-secret': 'Set SESSION_SECRET (or WRITE_PASSWORD) to enable sessions.',
+          'bad-state': 'Sign-in expired. Try again.'
+        }[m] || 'Sign-in did not complete. Try again.';
+        setSync('err', why);
+      }
+      history.replaceState({}, '', location.pathname);
+    })();
+
     if (window.matchMedia('(pointer:fine)').matches) page.focus();
   })();
 </script>

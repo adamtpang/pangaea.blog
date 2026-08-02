@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { SESSION_COOKIE, verifySession } from '../../../lib/session';
 
 /*
   /api/daily/sync — server-side persistence for the daily page.
@@ -49,23 +50,36 @@ function safeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
-function authorize(request: Request): Response | null {
+/**
+ * Two ways in, both fail closed:
+ *   1. A GitHub sign-in session cookie (the normal path).
+ *   2. The legacy x-daily-key passphrase, kept so existing devices and
+ *      scripted access keep working.
+ * Returns null when authorized, or the Response to send back when not.
+ */
+function authorize(request: Request, sessionCookie?: string): Response | null {
+  if (verifySession(sessionCookie)) return null;
+
   const expected = process.env.DAILY_PASSWORD || process.env.WRITE_PASSWORD;
-  if (!expected) {
+  const oauthReady = Boolean(
+    process.env.GITHUB_OAUTH_CLIENT_ID && process.env.GITHUB_OAUTH_CLIENT_SECRET
+  );
+
+  if (!expected && !oauthReady) {
     return json(
       {
         error:
-          'Sync is not configured. Set DAILY_PASSWORD on the server to enable it.',
+          'Sync is not configured. Set up GitHub sign-in, or set DAILY_PASSWORD.',
         configured: false,
       },
       503
     );
   }
+
   const given = request.headers.get('x-daily-key') ?? '';
-  if (!given || !safeEqual(given, expected)) {
-    return json({ error: 'Wrong or missing key.' }, 401);
-  }
-  return null;
+  if (expected && given && safeEqual(given, expected)) return null;
+
+  return json({ error: 'Sign in to sync.', oauth: oauthReady }, 401);
 }
 
 function gh(token: string, path: string, init: RequestInit = {}) {
@@ -173,8 +187,8 @@ async function writeStore(token: string, entries: Entries, sha?: string) {
   if (!res.ok) throw new Error(`GitHub ${res.status}: ${await res.text()}`);
 }
 
-export const GET: APIRoute = async ({ request }) => {
-  const denied = authorize(request);
+export const GET: APIRoute = async ({ request, cookies }) => {
+  const denied = authorize(request, cookies.get(SESSION_COOKIE)?.value);
   if (denied) return denied;
 
   const token = process.env.GITHUB_TOKEN;
@@ -189,8 +203,8 @@ export const GET: APIRoute = async ({ request }) => {
   }
 };
 
-export const POST: APIRoute = async ({ request }) => {
-  const denied = authorize(request);
+export const POST: APIRoute = async ({ request, cookies }) => {
+  const denied = authorize(request, cookies.get(SESSION_COOKIE)?.value);
   if (denied) return denied;
 
   const token = process.env.GITHUB_TOKEN;

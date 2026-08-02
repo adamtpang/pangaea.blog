@@ -46,11 +46,19 @@ one codebase and one design system.
   dedicated **`daily` branch** of this repo, so main's history stays clean, and
   every commit is tagged `[skip ci]` so writing never triggers a Vercel rebuild.
   It reuses `GITHUB_TOKEN`; no new service.
-  - **Auth: `DAILY_PASSWORD`** (falls back to `WRITE_PASSWORD`), sent as the
-    `x-daily-key` header. The endpoint **fails closed**: with no password set on
-    the server it returns 503 and does nothing, so a public URL cannot expose the
-    journal by default. Adam enters the passphrase once per device; it lives in
-    `localStorage` under `w300.key`.
+  - **Auth: sign in with GitHub.** `/api/auth/github` starts it, `/api/auth/callback`
+    finishes it, `/api/auth/me` reports who you are, `/api/auth/logout` ends it.
+    There is no user table: the session IS an HMAC-signed cookie (`src/lib/session.ts`),
+    and "logged in" means GitHub confirmed a login on the allowlist. Env vars:
+    `GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET`, `SESSION_SECRET`
+    (falls back to `WRITE_PASSWORD`), and `ALLOWED_GITHUB_LOGINS` (comma separated,
+    defaults to `GITHUB_OWNER` then `adamtpang`). The OAuth callback URL must be
+    `https://pangaea.blog/api/auth/callback`.
+  - **Legacy fallback: `DAILY_PASSWORD`** (falls back to `WRITE_PASSWORD`), sent as
+    the `x-daily-key` header, kept so existing devices and scripts keep working.
+    The endpoint **fails closed**: with neither OAuth nor a password configured it
+    returns 503 and does nothing, so a public URL cannot expose the journal by
+    default. `/daily` only offers the passphrase UI when the server says it exists.
   - **Merge rule, both sides:** a day never shrinks. More words wins, `updatedAt`
     breaks ties. That makes sync order-independent, so a stale tab or a second
     device can never delete work. The client additionally refuses to overwrite
