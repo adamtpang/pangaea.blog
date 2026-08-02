@@ -40,6 +40,24 @@ one codebase and one design system.
 - **Migration.** The standalone app was another origin, so its `localStorage` does
   not follow. `/daily` has "Back up everything (.json)" and "Restore from backup",
   which merges and keeps whichever version of a day has more writing.
+- **Sync (optional, off until configured).** `POST /api/daily/sync` merges the
+  browser's entries with the server's and returns the union, so one request is
+  both push and pull. Storage is a single JSON blob at `daily/entries.json` on a
+  dedicated **`daily` branch** of this repo, so main's history stays clean, and
+  every commit is tagged `[skip ci]` so writing never triggers a Vercel rebuild.
+  It reuses `GITHUB_TOKEN`; no new service.
+  - **Auth: `DAILY_PASSWORD`** (falls back to `WRITE_PASSWORD`), sent as the
+    `x-daily-key` header. The endpoint **fails closed**: with no password set on
+    the server it returns 503 and does nothing, so a public URL cannot expose the
+    journal by default. Adam enters the passphrase once per device; it lives in
+    `localStorage` under `w300.key`.
+  - **Merge rule, both sides:** a day never shrinks. More words wins, `updatedAt`
+    breaks ties. That makes sync order-independent, so a stale tab or a second
+    device can never delete work. The client additionally refuses to overwrite
+    today's page while the textarea has focus.
+  - Local-first is still the contract: the server is a backup and a cross-device
+    merge, never the source of truth. Sync off, or offline, means the page saves
+    to the device exactly as before.
 
 ## The /write editor (the main authoring path)
 

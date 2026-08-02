@@ -61,6 +61,19 @@ import Base from '../layouts/Base.astro';
       <p id="statusLine"><span id="status" role="status"></span> <span id="interim"></span></p>
     </div>
 
+    <div class="syncbar">
+      <span class="sync-dot" id="syncDot" aria-hidden="true"></span>
+      <span id="syncState" role="status">Saved on this device only.</span>
+      <button type="button" class="linkbtn" id="syncBtn">Turn on sync</button>
+    </div>
+
+    <div class="unlock" id="unlock">
+      <label for="syncKey">Sync passphrase (kept on this device):</label>
+      <input type="password" id="syncKey" autocomplete="current-password" />
+      <button type="button" class="btn ghost" id="unlockSave">Unlock</button>
+      <button type="button" class="linkbtn" id="unlockCancel">Cancel</button>
+    </div>
+
     <p class="tip">
       Prefer to speak? Click into the page and use
       <a href="https://handy.computer" rel="noopener" target="_blank">Handy</a>, or the
@@ -269,6 +282,53 @@ import Base from '../layouts/Base.astro';
     padding: 0;
   }
   .backline button:hover { border-color: var(--accent); }
+
+  /* --- sync ---------------------------------------------------------- */
+  .syncbar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    font-size: 0.86rem;
+    color: var(--ink-mute);
+  }
+  .sync-dot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: var(--rule);
+    flex: none;
+  }
+  .sync-dot.on { background: var(--gold); }
+  .sync-dot.busy { background: var(--accent-tint); }
+  .sync-dot.err { background: var(--accent); }
+
+  .unlock {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 0.7rem;
+    padding: 0.8rem 1rem;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .unlock.show { display: flex; }
+  .unlock label { width: 100%; font-size: 0.84rem; color: var(--ink-mute); }
+  .unlock input {
+    font: inherit;
+    font-size: 0.92rem;
+    flex: 1;
+    min-width: 12rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.45em 0.7em;
+    color: var(--ink);
+  }
+  .unlock input:focus { outline: none; border-color: var(--accent); }
 
   .tip {
     margin-top: 1.2rem;
@@ -489,6 +549,7 @@ import Base from '../layouts/Base.astro';
       persist();
       renderStreak();
       renderHistory();
+      schedulePush();
     }
 
     page.addEventListener('input', function () {
@@ -802,10 +863,160 @@ import Base from '../layouts/Base.astro';
       document.getElementById('statBest').textContent = bestStreak();
     }
 
+    /* ---------- sync (optional, passphrase-gated) ----------
+       Local-first stays true: the server is a backup and a cross-device
+       merge, never the source of truth. If sync is off, or the network is
+       down, the page still saves to this device exactly as before. */
+    var KEYSTORE = 'w300.key';
+    var syncKey = null;
+    var pushTimer = null;
+    var lastSyncAt = 0;
+    var syncDot = document.getElementById('syncDot');
+    var syncState = document.getElementById('syncState');
+    var syncBtn = document.getElementById('syncBtn');
+    var unlockBox = document.getElementById('unlock');
+    var keyInput = document.getElementById('syncKey');
+
+    function readKey() {
+      try { return localStorage.getItem(KEYSTORE) || null; } catch (e) { return null; }
+    }
+    function writeKey(v) {
+      try {
+        if (v) localStorage.setItem(KEYSTORE, v);
+        else localStorage.removeItem(KEYSTORE);
+      } catch (e) {}
+      syncKey = v;
+    }
+    function setSync(state, msg) {
+      syncDot.className = 'sync-dot' + (state ? ' ' + state : '');
+      syncState.textContent = msg;
+    }
+    function ago(ts) {
+      var s = Math.round((Date.now() - ts) / 1000);
+      if (s < 45) return 'just now';
+      if (s < 5400) return Math.round(s / 60) + 'm ago';
+      return Math.round(s / 3600) + 'h ago';
+    }
+    function refreshSyncUI() {
+      if (syncKey) {
+        syncBtn.textContent = 'Turn off';
+        setSync('on', lastSyncAt ? 'Synced ' + ago(lastSyncAt) + '.' : 'Sync is on.');
+      } else {
+        syncBtn.textContent = 'Turn on sync';
+        setSync('', 'Saved on this device only.');
+      }
+    }
+
+    /* One POST does both directions: the server merges what it has with what
+       we send and returns the union, so this is also the "pull". */
+    function pushNow(opts) {
+      if (!syncKey) return;
+      if (pushTimer) { clearTimeout(pushTimer); pushTimer = null; }
+      setSync('busy', 'Syncing...');
+      fetch('/api/daily/sync', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-daily-key': syncKey },
+        body: JSON.stringify({ entries: entries }),
+        keepalive: !!(opts && opts.keepalive)
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; })
+            .then(function (d) { return { status: r.status, ok: r.ok, d: d }; });
+        })
+        .then(function (res) {
+          if (res.status === 401) {
+            writeKey(null); refreshSyncUI();
+            setSync('err', 'That passphrase was rejected. Turn sync on again.');
+            return;
+          }
+          if (res.status === 503) {
+            setSync('err', (res.d && res.d.error) || 'Sync is not set up on the server yet.');
+            return;
+          }
+          if (!res.ok) {
+            setSync('err', 'Sync failed. Your writing is still saved on this device.');
+            return;
+          }
+          if (res.d && res.d.entries) mergeRemote(res.d.entries);
+          lastSyncAt = Date.now();
+          setSync('on', 'Synced just now.');
+        })
+        .catch(function () {
+          setSync('err', 'Offline. Saved on this device, will sync when you are back.');
+        });
+    }
+    function schedulePush() {
+      if (!syncKey) return;
+      if (pushTimer) clearTimeout(pushTimer);
+      // Slow on purpose: a commit per burst of writing, not per keystroke.
+      pushTimer = setTimeout(function () { pushTimer = null; pushNow(); }, 6000);
+    }
+    /* Same never-shrink rule the server uses, so both sides agree. */
+    function mergeRemote(remote) {
+      var changed = 0;
+      for (var k in remote) {
+        if (!Object.prototype.hasOwnProperty.call(remote, k)) continue;
+        var inc = remote[k], cur = entries[k];
+        if (!cur || inc.words > cur.words ||
+            (inc.words === cur.words && (inc.updatedAt || 0) > (cur.updatedAt || 0))) {
+          // Do not yank text out from under the cursor mid-sentence.
+          if (k === todayK && viewK === todayK && document.activeElement === page &&
+              (cur && cur.words) >= inc.words) continue;
+          entries[k] = inc;
+          changed++;
+        }
+      }
+      if (changed) {
+        persist();
+        if (document.activeElement !== page) renderView();
+        renderStreak();
+        renderHistory();
+      }
+      return changed;
+    }
+
+    syncBtn.addEventListener('click', function () {
+      if (syncKey) {
+        if (!confirm('Turn off sync on this device? Your pages stay saved here, and stay on the server.')) return;
+        writeKey(null);
+        refreshSyncUI();
+        return;
+      }
+      unlockBox.classList.add('show');
+      keyInput.focus();
+    });
+    document.getElementById('unlockCancel').addEventListener('click', function () {
+      unlockBox.classList.remove('show');
+      keyInput.value = '';
+    });
+    document.getElementById('unlockSave').addEventListener('click', function () {
+      var v = keyInput.value.trim();
+      if (!v) { keyInput.focus(); return; }
+      writeKey(v);
+      keyInput.value = '';
+      unlockBox.classList.remove('show');
+      refreshSyncUI();
+      pushNow();
+    });
+    keyInput.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter') { ev.preventDefault(); document.getElementById('unlockSave').click(); }
+    });
+
+    // Coming back to the tab is exactly when another device's work should land.
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible' && syncKey) pushNow();
+    });
+    window.addEventListener('pagehide', function () {
+      if (syncKey && pushTimer) pushNow({ keepalive: true });
+    });
+
     /* ---------- boot ---------- */
     renderView();
     renderStreak();
     renderHistory();
+    syncKey = readKey();
+    refreshSyncUI();
+    if (syncKey) pushNow();
     if (window.matchMedia('(pointer:fine)').matches) page.focus();
   })();
 </script>
