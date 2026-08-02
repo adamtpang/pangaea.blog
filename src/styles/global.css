@@ -199,7 +199,7 @@ footer.site a:hover {
 
 /* --- Cadence widget (top of /posts) --- */
 .cadence {
-  background: rgba(47, 107, 79, 0.05); /* faintest land-green wash */
+  background: rgba(138, 109, 52, 0.05); /* faintest gold wash */
   border: 1px solid var(--rule);
   border-left: 3px solid var(--accent);
   border-radius: 3px;
