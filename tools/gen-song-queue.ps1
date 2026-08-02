@@ -14,7 +14,18 @@ $ErrorActionPreference = 'Stop'
 $out = Join-Path $PSScriptRoot '..\SONGS-QUEUE.md'
 
 $NOTES = @('C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B')
-function Chord([int]$tonic, [int]$semis, [string]$q) { $NOTES[(($tonic + $semis) % 12)] + $q }
+
+# Quality strings beginning with "/" are slash chords: the number after the
+# slash is the bass note's semitone offset from the chord root, so it can be
+# spelled as a real note name (C/B, G/F#) rather than printed literally.
+function Chord([int]$tonic, [int]$semis, [string]$q) {
+  $root = $NOTES[(($tonic + $semis) % 12)]
+  if ($q -match '^/(\d+)$') {
+    $bass = $NOTES[(($tonic + $semis + [int]$Matches[1]) % 12)]
+    return "$root/$bass"
+  }
+  return $root + $q
+}
 
 # Progressions as (semitone offset from tonic, chord quality), so they transpose
 # correctly into any key. Each is lifted from something in Adam's top 18.
@@ -26,7 +37,7 @@ $PROGS = @(
   @{ n='The minor iv';      mode='maj'; d=@(@(0,''),@(5,''),@(5,'m'),@(0,'')) }
   @{ n='Beatles vi-iv';     mode='maj'; d=@(@(0,''),@(9,'m'),@(5,''),@(5,'m')) }
   @{ n='Secondary dom';     mode='maj'; d=@(@(0,''),@(4,'7'),@(9,'m'),@(5,'')) }
-  @{ n='Descending bass';   mode='maj'; d=@(@(0,''),@(0,'/7'),@(9,'m'),@(0,'/5')) }
+  @{ n='Descending bass';   mode='maj'; d=@(@(0,''),@(0,'/11'),@(9,'m'),@(0,'/7')) }
   @{ n='Laufey ii-V';       mode='maj'; d=@(@(0,'maj7'),@(9,'m7'),@(2,'m7'),@(7,'7')) }
   @{ n='Bossa turnaround';  mode='maj'; d=@(@(5,'maj7'),@(4,'m7'),@(2,'m7'),@(7,'7')) }
   @{ n='Modal bright';      mode='maj'; d=@(@(2,''),@(9,'/4'),@(11,'m'),@(7,'')) }
