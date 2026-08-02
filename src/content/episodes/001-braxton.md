@@ -6,7 +6,7 @@ youtube: YoY8NJs-ytY
 guest: Braxton
 blurb: Your work works on you more than you work on it. A descent through systems, language, religion, and geometry.
 tags: [podcast, philosophy, craft]
-draft: true
+draft: false
 ---
 
 Recorded a season before it was released. The album's philosophical closer, and
