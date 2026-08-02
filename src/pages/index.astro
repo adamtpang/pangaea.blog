@@ -1,34 +1,223 @@
 ---
 import PilotLayout from '../layouts/PilotLayout.astro';
+import { getCollection } from 'astro:content';
+
+const epoch = new Date('1971-01-01').valueOf();
+
+const posts = await getCollection('posts');
+const songs = await getCollection('songs');
+const apps = await getCollection('apps');
+const eps = await getCollection('episodes');
+const cities = await getCollection('cities');
+
+const pub = (c: any[]) => c.filter((i) => !i.data.draft);
+const wip = (c: any[]) => c.filter((i) => i.data.draft);
+
+// Posts additionally hide anything at the sentinel epoch date.
+const livePosts = posts.filter((p) => !p.data.draft && p.data.date.valueOf() >= epoch);
+
+const pillars = [
+  { label: 'Essays', href: '/posts/', live: livePosts.length, wip: posts.length - livePosts.length },
+  { label: 'Songs', href: '/songs/', live: pub(songs).length, wip: wip(songs).length },
+  { label: 'Apps', href: '/apps/', live: pub(apps).length, wip: wip(apps).length },
+  { label: 'Podcasts', href: '/podcast/', live: pub(eps).length, wip: wip(eps).length },
+  { label: 'City-states', href: '/cities/', live: pub(cities).length, wip: wip(cities).length },
+];
+
+const shipped = pillars.reduce((n, p) => n + p.live, 0);
+const inHand = pillars.reduce((n, p) => n + p.wip, 0);
+
+// The subcomponents. A piece is a stack, so measure the layers, not just the
+// finished count. These are the numbers that say what to do next.
+const has = (c: any[], f: (d: any) => boolean) => c.filter((i) => f(i.data)).length;
+
+const parts = [
+  {
+    label: 'Songs',
+    total: songs.length,
+    legos: [
+      { n: 'key + tempo', v: has(songs, (d) => Boolean(d.key && d.tempo)) },
+      { n: 'chords', v: has(songs, (d) => Boolean(d.chords)) },
+      { n: 'instruments', v: has(songs, (d) => Boolean(d.instruments?.length)) },
+      { n: 'recording', v: has(songs, (d) => Boolean(d.audio || d.soundcloud || d.spotify || d.youtube)) },
+    ],
+  },
+  {
+    label: 'Essays',
+    total: posts.length,
+    legos: [
+      { n: 'has a claim title', v: posts.length },
+      { n: 'blurb', v: has(posts, (d) => Boolean(d.blurb)) },
+      { n: 'tagged', v: has(posts, (d) => Boolean(d.tags?.length)) },
+      { n: 'published', v: livePosts.length },
+    ],
+  },
+  {
+    label: 'Apps',
+    total: apps.length,
+    legos: [
+      { n: 'live url', v: has(apps, (d) => Boolean(d.url)) },
+      { n: 'one-line thesis', v: has(apps, (d) => Boolean(d.blurb)) },
+      { n: 'cover', v: has(apps, (d) => Boolean(d.cover)) },
+      { n: 'published', v: pub(apps).length },
+    ],
+  },
+];
+
+const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
 ---
 
 <PilotLayout
   title="Pangaea"
-  description="A publication for long conversations. Released as seasons."
+  description="A body of work in five pillars: essays, songs, apps, conversations, city-states."
 >
   <h1 class="wordmark">PANGAEA</h1>
 
   <p class="about">
-    A publication for long conversations on memetics, relationships, and the
-    shape of attention. Released as seasons. Each season a finite world.
+    A body of work, made in public and owned forever. Five pillars, a thousand
+    pieces each: the written word, the felt word, the built word, the spoken
+    word, the governed word. What gets measured gets managed.
   </p>
 
+  <!-- THE LEDGER: the counter. Shipped is what is public; in hand is the pile. -->
+  <h2 class="sec">The ledger</h2>
+
+  <table class="ledger">
+    <tbody>
+      {pillars.map((p) => (
+        <tr>
+          <th scope="row"><a href={p.href}>{p.label}</a></th>
+          <td class="num">{p.live}</td>
+          <td class="of">/ 1,000</td>
+          <td class="bar">
+            <span class="fill" style={`width:${Math.max(pct(p.live, 1000), p.live > 0 ? 1 : 0)}%`}></span>
+          </td>
+          <td class="wip">{p.wip > 0 ? `+${p.wip} in hand` : ''}</td>
+        </tr>
+      ))}
+      <tr class="total">
+        <th scope="row">Shipped</th>
+        <td class="num">{shipped}</td>
+        <td class="of">/ 5,000</td>
+        <td class="bar"></td>
+        <td class="wip">{inHand} in hand</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- THE PARTS: every piece is a stack. These say what is missing. -->
+  <h2 class="sec">The parts</h2>
+  <p class="note">
+    A piece is a stack, not a single artifact. These count the layers that
+    exist across every entry, finished or not.
+  </p>
+
+  {parts.map((p) => (
+    <table class="parts">
+      <caption>{p.label} <span class="cap-total">{p.total} entries</span></caption>
+      <tbody>
+        {p.legos.map((l) => (
+          <tr>
+            <th scope="row">{l.n}</th>
+            <td class="pnum">{l.v}</td>
+            <td class="bar">
+              <span class="fill" style={`width:${pct(l.v, p.total)}%`}></span>
+            </td>
+            <td class="ppct">{pct(l.v, p.total)}%</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ))}
+
+  <h2 class="sec">The work</h2>
   <ul class="projects">
+    <li>
+      <a class="project-title" href="/work/">The field</a>
+      <span class="project-meta">all 5,000 slots</span>
+    </li>
+    <li>
+      <a class="project-title" href="/archive/">Archive</a>
+      <span class="project-meta">everything shipped</span>
+    </li>
     <li>
       <a class="project-title" href="/pilot/">Pangaea Pilot &middot; Season 1</a>
       <span class="project-meta">May 2026</span>
     </li>
     <li>
-      <span class="project-title coming">Almanack</span>
-      <span class="project-meta">forthcoming</span>
-    </li>
-    <li>
-      <span class="project-title coming">Notes</span>
-      <span class="project-meta">forthcoming</span>
-    </li>
-    <li>
-      <span class="project-title coming">Field Notes</span>
-      <span class="project-meta">forthcoming</span>
+      <a class="project-title" href="/start/">Start here</a>
+      <span class="project-meta">the guided path</span>
     </li>
   </ul>
 </PilotLayout>
+
+<style>
+  .sec {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-weight: normal;
+    font-style: italic;
+    margin: 3rem 0 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .note { font-size: 0.85rem; color: var(--muted); margin: 0 0 1.25rem; }
+
+  table { width: 100%; border-collapse: collapse; font-family: var(--serif); }
+
+  /* The ledger */
+  .ledger th, .ledger td { padding: 0.45rem 0; vertical-align: baseline; text-align: left; }
+  .ledger th { font-weight: normal; width: 8.5rem; }
+  .ledger th a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+  .ledger th a:hover { color: var(--accent); }
+  .ledger .num { font-size: 1.5rem; text-align: right; width: 3.5rem; }
+  .ledger .of { color: var(--muted); font-size: 0.8rem; padding-left: 0.3rem; width: 3.5rem; }
+  .ledger .wip { color: var(--accent); font-size: 0.78rem; text-align: right; white-space: nowrap; }
+  .ledger .total { border-top: 1px solid var(--rule); }
+  .ledger .total th { font-style: italic; }
+
+  /* Hairline bars. Static, no animation, black on white with a terracotta fill. */
+  .bar {
+    width: 100%;
+    min-width: 4rem;
+    padding: 0 0.6rem !important;
+  }
+  .bar::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--rule);
+    opacity: 0.25;
+  }
+  .bar { position: relative; }
+  .fill {
+    position: absolute;
+    left: 0.6rem;
+    right: auto;
+    bottom: 0.45rem;
+    height: 3px;
+    background: var(--accent);
+    max-width: calc(100% - 1.2rem);
+  }
+
+  /* The parts */
+  .parts { margin: 0 0 1.75rem; }
+  .parts caption {
+    text-align: left;
+    font-style: italic;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .parts .cap-total { color: var(--muted); font-style: normal; font-size: 0.78rem; }
+  .parts th, .parts td { padding: 0.3rem 0; vertical-align: baseline; text-align: left; }
+  .parts th { font-weight: normal; width: 9.5rem; font-size: 0.9rem; }
+  .parts .pnum { text-align: right; width: 3rem; font-size: 0.95rem; }
+  .parts .ppct { text-align: right; width: 3rem; color: var(--muted); font-size: 0.78rem; }
+
+  @media (max-width: 560px) {
+    .ledger th { width: 6.5rem; font-size: 0.9rem; }
+    .ledger .num { font-size: 1.2rem; }
+    .bar { display: none; }
+    .parts th { width: 8rem; }
+  }
+</style>
