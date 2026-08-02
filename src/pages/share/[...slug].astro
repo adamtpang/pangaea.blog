@@ -30,27 +30,42 @@ const fmt = (d: Date) =>
     <meta name="viewport" content="width=1080" />
     <title>{data.title} · share</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap"
+    />
     <style>
       /* /share v2 — fixed-proportion screenshot essay for X / IG / threads.
          Frame is 1080 × 2160 (canonical 1:2). Take a browser screenshot of the
          framed area and post. */
+      /* Synced copy of src/styles/tokens.css ("the daily page"). This page
+         is deliberately self-contained so the screenshot frame can be
+         designed independently; keep these values in step with tokens.css. */
       :root {
-        --bg: #f3f7f6;
+        --paper: #fbf7f0;
+        --paper-2: #f5efe4;
+        --bg: #fbf7f0;
         --surface: #ffffff;
-        --ink: #14201f;
-        --muted: #4d635f;
-        --rule: #cad9d3;
-        --accent: #176079;       /* ocean */
-        --accent-soft: #6a9bad;
-        --land: #2f6b4f;         /* the supercontinent: identity */
-        --serif: 'Iowan Old Style', 'Charter', 'Georgia', 'Cambria', serif;
-        --sans: 'IBM Plex Sans', 'Helvetica Neue', system-ui, sans-serif;
+        --ink: #1c1917;
+        --ink-soft: #403a34;
+        --muted: #6b625a;
+        --rule: #d9cfbe;
+        --rule-soft: #e7decf;
+        --accent: #b34a2f;       /* terracotta: interaction */
+        --accent-deep: #8f3721;
+        --accent-soft: #e8cfc3;
+        --land: #8a6d34;         /* gold: identity */
+        --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+        --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+        --sans: var(--serif);
         --mono: 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;
       }
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; font-family: var(--serif); }
       body {
-        background: #0e1c20; /* deep space around the framed essay */
+        background: #241e1a; /* warm dark surround, so the paper frame glows */
         min-height: 100vh;
       }
       .help {
@@ -112,7 +127,7 @@ const fmt = (d: Date) =>
         margin-bottom: 64px;
       }
       .masthead .brand {
-        font-family: var(--serif);
+        font-family: var(--display);
         font-size: 30px;
         font-weight: 600;
         color: var(--ink);
@@ -126,18 +141,18 @@ const fmt = (d: Date) =>
         margin-right: 8px;
       }
 
-      /* The headline. Big serif, tight. */
+      /* The headline. Big display serif, tight. */
       h1.headline {
-        font-family: var(--serif);
+        font-family: var(--display);
         font-size: 86px;
-        line-height: 1.04;
-        font-weight: 600;
-        letter-spacing: -0.015em;
+        line-height: 1.02;
+        font-weight: 560;
+        letter-spacing: -0.022em;
         margin: 0 0 36px;
         color: var(--ink);
       }
 
-      /* The italic blurb with ocean accent bar. */
+      /* The italic blurb with terracotta accent bar. */
       .blurb {
         font-style: italic;
         color: var(--muted);

@@ -215,8 +215,8 @@ const enoughForGraph = nodes.length >= 2;
 
       function draw() {
         ctx.clearRect(0, 0, W(), H());
-        // edges (shallow water between landmasses)
-        ctx.strokeStyle = '#6a9bad';
+        // edges (the hairline rule, drawn between nodes)
+        ctx.strokeStyle = '#d9cfbe';
         ctx.lineWidth = 1;
         for (const e of edges) {
           ctx.beginPath();
@@ -228,10 +228,10 @@ const enoughForGraph = nodes.length >= 2;
         for (const n of nodes) {
           ctx.beginPath();
           ctx.arc(n.x, n.y, 7, 0, Math.PI * 2);
-          ctx.fillStyle = '#2f6b4f'; /* posts are landmasses */
+          ctx.fillStyle = '#8a6d34'; /* gold: a post is identity, not a link */
           ctx.fill();
-          ctx.fillStyle = '#14201f';
-          ctx.font = '12px Iowan Old Style, Charter, Georgia, serif';
+          ctx.fillStyle = '#1c1917';
+          ctx.font = '12px Newsreader, Iowan Old Style, Georgia, serif';
           ctx.textAlign = 'center';
           ctx.fillText(n.label, n.x, n.y + 22);
         }

@@ -19,6 +19,28 @@ Adam's legacy essays live in `src/content/inbox/` (their own collection, never r
 2. Add `date:` and `draft: false` to the frontmatter.
 3. Optionally add `number:`, `blurb:`, `tags:`.
 
+## The /daily page (the capture surface)
+
+`/daily` is where the writing starts: 300 words a day, spoken or typed. It was
+its own product at 300words.app and now lives here, so capture and publish share
+one codebase and one design system.
+
+- **Local-first.** Everything (today's page, streaks, 30-day history) lives in
+  `localStorage` under `w300.entries.v1`, shaped `{ "YYYY-MM-DD": {text, words, updatedAt, doneAt?} }`.
+  Nothing leaves the device until Adam presses Send. `persist()` merges onto the
+  freshest stored state and only overlays today, so a stale tab cannot clobber
+  other days. Past days open read-only; only today is editable.
+- **Voice.** Pairs with [Handy](https://handy.computer) with zero integration
+  (system-wide dictation just types into the focused textarea). The mic button is
+  the in-browser fallback via the Web Speech API (Chrome / Edge), with a capped
+  auto-restart so a network or mic failure cannot loop forever.
+- **Send to /write** navigates same-origin to `/write?from=daily&title=…&seed=…`,
+  which assembles it into a seedling draft. That is the front of capture ->
+  scaffold -> ship.
+- **Migration.** The standalone app was another origin, so its `localStorage` does
+  not follow. `/daily` has "Back up everything (.json)" and "Restore from backup",
+  which merges and keeps whichever version of a day has more writing.
+
 ## The /write editor (the main authoring path)
 
 `/write` is a password-gated backstage editor. Adam types a topic, Claude scaffolds a multi-modal MDX draft (`POST /api/write/scaffold`), Adam polishes in the textarea, then "Publish" commits a new MDX file to `src/content/posts/` via the GitHub Contents API (`POST /api/write/publish`). Vercel auto-rebuilds.
@@ -56,7 +78,7 @@ The `/posts` page has client-side search + sort + tag filtering, all in vanilla 
 
 ## The Pilot publication (`/` and `/pilot`)
 
-Pangaea's homepage and Season 1 are an **audio-first, monastic publication**: pure white background, pure black text, ONE accent (terracotta `#9e3c1b`), serif throughout (Times New Roman), single column max 640px, no nav, no animation, no shadows. Uses `PilotLayout.astro` (not `Base.astro`) and its own stylesheet at `src/styles/pilot.css` (single file, fully commented).
+Pangaea's homepage and Season 1 are an **audio-first, monastic publication**: single column max 640px, no nav, no animation, no shadows, serif throughout. Uses `PilotLayout.astro` (not `Base.astro`) and its own stylesheet at `src/styles/pilot.css` (single file, fully commented). `pilot.css` now `@import`s `tokens.css`, so it shares the site-wide palette and type; what stays monastic is the LAYOUT discipline, not a separate color scheme. Do not reintroduce a local `:root` there.
 
 Collection at `src/content/pilot/` with episode frontmatter: `title`, `track`, `guest_name`, `signature_quote`, `quote_attribution`, `duration` (optional), `audio_url` (optional, omit if not yet hosted), `chapters` (array), `draft`.
 
@@ -119,24 +141,33 @@ When those exist, add a `FIGMA_FILE_KEY` env var, a `FIGMA_TEMPLATE_NODE_ID` env
 - Terse, considered, eclectic. Whole Earth Catalog energy. Sive.rs brevity. 150 to 400 words is the target for a typical post.
 - **No em dashes (—) or en dashes (–).** Use commas, semicolons, colons, periods, or parentheses. Hyphens inside compound words ("first-person") are fine.
 
-## Design system: "the blue marble"
+## Design system: "the daily page"
 
-Palette is Earth seen from space. Tokens in `src/styles/global.css` `:root` (the `/share` page and `/graph` script keep their own synced copies):
+ONE system for the whole site: music, philosophy, tech and business, all in one voice. It is the writing surface made into a website (it came from the daily page at `/daily`): paper you want to write on, ink you can read for an hour, one warm accent that means "link", and a gold that means "ours".
 
-- `--bg #f3f7f6` sea-mist white, `--surface #ffffff` for inset surfaces (sky / space / clouds)
-- `--ink #14201f` abyssal near-black, `--muted #4d635f` slate-teal, `--rule #cad9d3` hairline
-- `--accent #176079` OCEAN blue, `--accent-soft #6a9bad` shallow water
-- `--land #2f6b4f` PANGAEA green, `--land-soft #8fb6a1` lichen
+**Single source of truth: `src/styles/tokens.css`.** Both stylesheets `@import` it, so the monastic pages and the hub pages move together:
+- `global.css` (Base.astro): `/posts`, `/songs`, `/apps`, `/daily`, `/graph`, `/write`, ...
+- `pilot.css` (PilotLayout.astro): `/`, `/pilot`, `/pilot/[track]`
+
+Do not redeclare colors or fonts in either stylesheet. Edit `tokens.css`. The `/share` page keeps its own synced copy on purpose (it must be self-contained for screenshots), so update it in step.
+
+- `--paper #fbf7f0` warm sheet, `--paper-2 #f5efe4`, `--paper-3 #efe7d8`, `--surface #ffffff` for inputs
+- `--ink #1c1917`, `--ink-soft #403a34`, `--ink-mute #6b625a` (the old `--muted`)
+- `--accent #b34a2f` TERRACOTTA, `--accent-deep #8f3721`, `--accent-tint #e8cfc3`
+- `--gold #8a6d34` (the old `--land`), `--gold-soft #c9b183`
+- `--rule #d9cfbe`, `--rule-soft #e7decf`
+- Legacy aliases `--bg`, `--muted`, `--land`, `--accent-soft` still resolve, so old rules keep working. New code should use the names above.
 
 **Usage discipline (do not blur this):**
-- BLUE `--accent` = the ocean: links, focus rings, reading-flow accent bars (hero, pullquote, cadence border).
-- GREEN `--land` = the supercontinent: brand-mark dot, № issue badges, the /share masthead stripe, progress numbers. Identity, never interaction.
-- WHITE = sky/space: backgrounds and breathing room.
-- Headings stay `--ink`. Never color a heading. Color is never the only affordance (links stay underlined). All text tokens clear WCAG AA (~5.6:1+) on `--bg`.
+- TERRACOTTA `--accent` = interaction ONLY: links, focus rings, reading-flow accent bars (hero, pullquote, cadence border), active state.
+- GOLD `--gold` = identity ONLY, never interaction: brand-mark dot, № issue badges, the /share masthead stripe, graph nodes, progress numbers.
+- PAPER = the page: backgrounds and breathing room. The body carries a faint two-wash + fractal-noise grain; keep it subtle enough to read as texture, not pattern.
+- Headings stay `--ink`. Never color a heading. Color is never the only affordance (links stay underlined). All text tokens clear WCAG AA on `--paper`.
+- The three threads (`--music` plum, `--philosophy` moss, `--tech` slate) are for topic markers ONLY: tag chips and thread labels. Never body text, never a heading, never a link. The system is one voice; these are just the room it is spoken in.
 
-`Dino.astro` is a Pangaea-era sauropodomorph silhouette (fossil-plate, not mascot), used small and low-opacity in the footer. Keep it a watermark; do not make it loud or childish.
+`Dino.astro` is a Pangaea-era sauropodomorph silhouette (fossil-plate, not mascot), used small and low-opacity in the footer. Keep it a watermark; do not make it loud or childish. `Globe.astro` is an antique plate: dark sepia sphere, fired-clay supercontinent, not a photograph.
 
-- Type: serif body (Iowan / Charter / Georgia stack), sans for meta, mono for issue numbers/code.
+- Type: **Fraunces** display (`--display`, headings and wordmarks) over **Newsreader** body (`--serif`), both from Google Fonts, loaded in `Base.astro`, `PilotLayout.astro`, and `/share`. Serif throughout: `--sans` deliberately resolves to the body serif, so there is no sans anywhere. Mono only for issue numbers and code.
 - Don't add JavaScript to public pages unless there's a real reason. `/posts` (search), `/graph` (canvas), and `/write` have JS by necessity.
 - Don't render the `episodes` collection anywhere except `/podcast` and `/podcast/[slug]`.
 

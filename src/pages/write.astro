@@ -238,8 +238,9 @@ export const prerender = false;
     titleInput.focus();
   });
 
-  // ---- Inbound handoff from 300words.app (the capture surface) --------------
-  // 300words opens /write?from=300words&title=…&seed=<the day's writing>. The
+  // ---- Inbound handoff from the capture surface -----------------------------
+  // /daily (and legacy 300words.app) opens
+  // /write?from=daily&title=…&seed=<the day's writing>. The
   // day's writing IS the draft: we assemble a seedling post body from it,
   // prefill the publish form, and let Adam title + review + ship. Publishing
   // commits it as draft:true (flip to false in the body to go live) so nothing
@@ -291,10 +292,11 @@ export const prerender = false;
     updateWords();
 
     const n = prose.split(/\s+/).filter(Boolean).length;
-    const src = params.get('from') === '300words' ? '300words' : 'your capture';
+    const from = params.get('from');
+    const src = from === 'daily' ? 'the daily page' : from === '300words' ? '300words' : 'your capture';
     setStatus(
       buildStatus,
-      `Seedling from ${src} (${n} words). Give it a claim-title, trim, then Publish. Commits as draft:true — change to false in the body to go live.`,
+      `Seedling from ${src} (${n} words). Give it a claim-title, trim, then Publish. Commits as draft:true; change it to false in the body to go live.`,
       'ok'
     );
     bodyInput.scrollIntoView({ behavior: 'smooth', block: 'start' });

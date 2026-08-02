@@ -5,24 +5,18 @@
    Used by: src/layouts/PilotLayout.astro
    Pages: /, /pilot, /pilot/[track]
 
-   Rules:
+   Palette and type come from tokens.css, the SAME source the rest of
+   the site uses, so the monastic pages and the hub pages read as one
+   publication. This file only keeps the monastic LAYOUT discipline:
+
    - Serif typography throughout. No sans-serif anywhere.
-   - Pure white background, pure black text.
-   - One accent color: terracotta (#9E3C1B).
+   - Warm paper, ink, one terracotta accent.
    - Single column, 640px max width, generous whitespace.
    - 1px hairlines, no shadows, no gradients, no rounded corners.
    - No icons, no emoji, no animation beyond opacity fades.
    ============================================================ */
 
-:root {
-  --paper: #ffffff;
-  --ink: #000000;
-  --accent: #9e3c1b;          /* terracotta, the one warm note */
-  --muted: #555555;           /* for timestamps, attribution */
-  --rule: #000000;            /* hairlines are always pure black */
-  --column: 640px;
-  --serif: 'Times New Roman', Times, serif;
-}
+@import './tokens.css';
 
 /* --- Base typography --- */
 *,
@@ -34,13 +28,19 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: var(--paper);
+  background-color: var(--paper);
   color: var(--ink);
   font-family: var(--serif);
   font-size: 19px;
-  line-height: 1.55;
+  line-height: 1.6;
+  font-weight: 380;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(179, 74, 47, 0.035), transparent 42%),
+    radial-gradient(circle at 88% 78%, rgba(138, 109, 52, 0.045), transparent 46%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+  background-attachment: fixed;
 }
 body {
   padding: 4rem 1.5rem 6rem;
@@ -55,11 +55,11 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--serif);
-  font-weight: 400;
-  line-height: 1.15;
+  font-family: var(--display);
+  font-weight: 500;
+  line-height: 1.1;
   margin: 0;
-  letter-spacing: 0;
+  letter-spacing: -0.018em;
 }
 h1 {
   font-size: 2.4rem;

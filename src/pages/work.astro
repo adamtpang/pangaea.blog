@@ -131,16 +131,16 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
   .slot {
     aspect-ratio: 1;
     border-radius: 1px;
-    background: rgba(20, 32, 31, 0.05); /* faint empty slot */
+    background: rgba(28, 25, 23, 0.06); /* faint empty slot */
   }
   .slot.filled { cursor: pointer; transition: transform 0.08s, filter 0.08s; }
   .slot.filled:hover { transform: scale(1.6); filter: brightness(1.15); position: relative; z-index: 2; }
-  /* Ocean depths, one blue per pillar */
-  .slots-essays .slot.filled { background: #0c3a4b; }
-  .slots-songs .slot.filled { background: #176079; }
-  .slots-apps .slot.filled { background: #3f97b3; }
-  .slots-podcasts .slot.filled { background: #79bfd4; }
-  .slots-cities .slot.filled { background: #2f6b4f; }
+  /* Earth pigments, one per pillar: fired clay through gold to moss */
+  .slots-essays .slot.filled { background: #7a3320; }
+  .slots-songs .slot.filled { background: #b34a2f; }
+  .slots-apps .slot.filled { background: #c2814d; }
+  .slots-podcasts .slot.filled { background: #8a6d34; }
+  .slots-cities .slot.filled { background: #4f6656; }
 
   /* Work in progress: lit, but clearly unfinished. The pile counts as practice
      without claiming to be published work. */

@@ -1,0 +1,811 @@
+---
+import Base from '../layouts/Base.astro';
+
+/*
+  /daily — the writing surface. Formerly 300words.app, now part of Pangaea.
+
+  Speak or type 300 words a day. The page is local-first: everything lives in
+  localStorage on this device and nothing is sent anywhere until you choose to
+  send it. "Send to /write" hands the day's page to the backstage editor as a
+  seedling draft, which is the front of the capture -> scaffold -> ship pipeline.
+
+  Pairs with Handy (handy.computer) for system-wide dictation: click into the
+  page, hold the hotkey, talk. No integration needed, it just types. The mic
+  button is the in-browser fallback (Chrome / Edge).
+*/
+---
+
+<Base
+  title="Daily · Pangaea"
+  description="Write 300 words a day. Speak them or type them. The daily page that feeds the essays."
+>
+  <div class="daily">
+    <p class="backline" id="backline">
+      <span id="backlineText">Viewing an older page, read only.</span>
+      <button type="button" id="backBtn">&larr; Back to today</button>
+    </p>
+
+    <div class="sheet">
+      <div class="sheet-head">
+        <span class="sheet-date" id="dateLabel">Today</span>
+        <span class="sheet-streak" id="streak"><i aria-hidden="true">&#9670;</i> <span id="streakText">start your streak today</span></span>
+      </div>
+
+      <textarea
+        id="page"
+        spellcheck="true"
+        autocomplete="off"
+        aria-label="Today's page, write or dictate here"
+        placeholder="Start talking, or typing. Whatever is in your head counts."></textarea>
+
+      <div class="sheet-foot">
+        <div class="meter">
+          <span><b id="wc">0</b> / 300 words</span>
+          <span id="wcState">say it or type it, it all counts</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="fill"></div></div>
+      </div>
+
+      <div class="stamp" id="stamp" aria-hidden="true">
+        <span class="stamp-big">300</span><small>Done</small>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn" id="sendBtn">Send to /write &rarr;</button>
+      <button type="button" class="btn ghost" id="micBtn" aria-pressed="false">
+        <span class="recdot" aria-hidden="true"></span><span id="micLabel">Speak</span>
+      </button>
+      <button type="button" class="btn ghost" id="copyBtn"><span id="copyLabel">Copy</span></button>
+      <button type="button" class="btn ghost" id="dlBtn">.md</button>
+      <p id="statusLine"><span id="status" role="status"></span> <span id="interim"></span></p>
+    </div>
+
+    <p class="tip">
+      Prefer to speak? Click into the page and use
+      <a href="https://handy.computer" rel="noopener" target="_blank">Handy</a>, or the
+      mic button. When the page is ready, <strong>Send to /write</strong> carries it
+      into the editor as a seedling draft to title, trim, and publish.
+    </p>
+
+    <p class="warn" id="storageWarn">
+      Autosave is not available in this browser session (private mode?). Your words
+      will be lost when you close the tab, so copy them out before you go.
+    </p>
+
+    <section class="history" aria-labelledby="hist-h">
+      <h2 id="hist-h">The last 30 days</h2>
+      <div class="stats">
+        <div class="stat"><span class="n" id="statTotal">0</span><small>words written</small></div>
+        <div class="stat"><span class="n" id="statPages">0</span><small>pages done</small></div>
+        <div class="stat"><span class="n" id="statBest">0</span><small>best streak</small></div>
+      </div>
+      <div class="hgrid" id="hgrid" aria-label="Word counts for the last 30 days"></div>
+      <div class="hlegend"><span id="legendStart"></span><span>today</span></div>
+      <div class="history-foot">
+        <button type="button" class="linkbtn" id="backupBtn">Back up everything (.json)</button>
+        <button type="button" class="linkbtn" id="restoreBtn">Restore from backup</button>
+        <input type="file" id="restoreInput" accept="application/json,.json" hidden />
+        <span class="whisper">Your words stay on this device.</span>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .daily { max-width: 42rem; }
+
+  /* --- the sheet --------------------------------------------------- */
+  .sheet {
+    position: relative;
+    background: linear-gradient(180deg, #fff, #fcf9f2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(28, 25, 23, 0.04), 0 18px 40px -24px rgba(28, 25, 23, 0.28);
+    padding: 1.4rem 1.4rem 1.2rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .sheet::before {
+    content: '';
+    position: absolute;
+    left: 1.3rem;
+    right: 1.3rem;
+    top: -1px;
+    height: 3px;
+    background: repeating-linear-gradient(90deg, var(--accent-tint) 0 6px, transparent 6px 13px);
+    opacity: 0.55;
+  }
+  .sheet:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(179, 74, 47, 0.12), 0 18px 40px -24px rgba(28, 25, 23, 0.28);
+  }
+  .sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--rule-soft);
+    padding-bottom: 0.6rem;
+  }
+  .sheet-date {
+    font-family: var(--display);
+    font-weight: 560;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+  }
+  .sheet-streak { font-size: 0.85rem; color: var(--ink-mute); white-space: nowrap; }
+  .sheet-streak i { color: var(--gold); font-style: normal; }
+  .sheet-streak.lit { color: var(--accent); font-weight: 500; }
+  .sheet-streak.lit i { color: var(--accent); }
+
+  #page {
+    display: block;
+    width: 100%;
+    min-height: min(44vh, 24rem);
+    border: 0;
+    outline: none;
+    resize: none;
+    background: transparent;
+    font-family: var(--serif);
+    font-size: 1.08rem;
+    line-height: 1.78;
+    font-weight: 380;
+    color: var(--ink);
+    padding: 0.8rem 0 0.4rem;
+    caret-color: var(--accent);
+  }
+  #page::placeholder { color: var(--ink-mute); opacity: 0.75; font-style: italic; }
+  #page[readonly] { color: var(--ink-soft); }
+
+  .sheet-foot { margin-top: 0.5rem; padding-top: 0.8rem; border-top: 1px solid var(--rule-soft); }
+  .meter {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.82rem;
+    color: var(--ink-mute);
+    margin-bottom: 0.5rem;
+  }
+  .meter b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .goalhit { color: var(--accent) !important; font-weight: 600; }
+  .bar-track {
+    height: 6px;
+    background: var(--paper-3);
+    border: 1px solid var(--rule-soft);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-deep));
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .stamp {
+    position: absolute;
+    right: -0.5rem;
+    bottom: -0.8rem;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-family: var(--display);
+    font-weight: 600;
+    line-height: 1;
+    background: var(--paper);
+    transform: rotate(-9deg);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .stamp.show { animation: stampIn 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+  @keyframes stampIn {
+    from { opacity: 0; transform: rotate(-9deg) scale(1.5); }
+    to { opacity: 0.92; transform: rotate(-9deg) scale(1); }
+  }
+  .stamp .stamp-big { font-size: 1rem; display: block; }
+  .stamp small {
+    display: block;
+    font-family: var(--serif);
+    font-size: 0.5rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-top: 0.15em;
+  }
+
+  /* --- actions ----------------------------------------------------- */
+  .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-top: 1.3rem; }
+  .actions .btn { font-family: var(--serif); }
+  .recdot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+    margin-right: 0.45em;
+  }
+  #micBtn[aria-pressed='true'] {
+    background: var(--accent);
+    border-color: var(--accent-deep);
+    color: #fff;
+  }
+  #micBtn[aria-pressed='true'] .recdot { animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.25; } }
+  #statusLine {
+    width: 100%;
+    font-size: 0.88rem;
+    color: var(--ink-mute);
+    font-style: italic;
+    min-height: 1.3em;
+    margin: 0.35rem 0 0;
+  }
+  .heard { color: var(--ink-soft); }
+
+  .backline {
+    display: none;
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    color: var(--ink-mute);
+    font-style: italic;
+    align-items: center;
+    gap: 0.8em;
+    flex-wrap: wrap;
+  }
+  .backline.show { display: flex; }
+  .backline button {
+    font: inherit;
+    font-style: normal;
+    color: var(--accent);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--accent-tint);
+    cursor: pointer;
+    padding: 0;
+  }
+  .backline button:hover { border-color: var(--accent); }
+
+  .tip {
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--ink-mute);
+    border-left: 3px solid var(--accent-tint);
+    padding: 0.15rem 0 0.15rem 1rem;
+    font-style: italic;
+  }
+  .warn {
+    display: none;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: var(--accent-deep);
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.6rem 0.9rem;
+  }
+  .warn.show { display: block; }
+
+  /* --- history ----------------------------------------------------- */
+  .history { margin-top: 3rem; padding-top: 1.6rem; border-top: 1px solid var(--rule); }
+  .stats { display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .stat .n {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    display: block;
+    letter-spacing: -0.02em;
+  }
+  .stat small {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .hgrid { display: flex; align-items: flex-end; gap: 4px; margin-top: 1.3rem; height: 64px; }
+  .hbar {
+    flex: 1;
+    min-width: 4px;
+    max-width: 22px;
+    background: var(--paper-3);
+    border: 1px solid var(--rule-soft);
+    border-radius: 2px 2px 0 0;
+    padding: 0;
+    align-self: flex-end;
+    transition: background-color 0.25s;
+  }
+  .hbar.filled { background: var(--accent-tint); border-color: var(--accent-tint); }
+  .hbar.done { background: var(--accent); border-color: var(--accent-deep); }
+  .hbar.today { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--accent); }
+  .hbar[data-view] { cursor: pointer; }
+  .hbar[data-view]:hover { background: var(--accent-deep); }
+  .hlegend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.76rem;
+    color: var(--ink-mute);
+    margin-top: 0.4rem;
+  }
+  .history-foot {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .linkbtn {
+    font: inherit;
+    font-size: 0.86rem;
+    color: var(--ink-mute);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    padding: 0 0 0.05em;
+    cursor: pointer;
+  }
+  .linkbtn:hover { color: var(--accent); border-color: var(--accent); }
+  .whisper { font-size: 0.84rem; color: var(--ink-mute); font-style: italic; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stamp.show { animation: none; opacity: 0.92; }
+    #micBtn[aria-pressed='true'] .recdot { animation: none; }
+    .bar-fill { transition: none; }
+  }
+  @media (max-width: 540px) {
+    .stats { gap: 1.25rem; }
+    .actions .btn { font-size: 0.82rem; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    'use strict';
+
+    var GOAL = 300;
+    var KEY = 'w300.entries.v1';
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var page = document.getElementById('page');
+    var wc = document.getElementById('wc');
+    var wcState = document.getElementById('wcState');
+    var fill = document.getElementById('fill');
+    var stamp = document.getElementById('stamp');
+    var statusEl = document.getElementById('status');
+    var interimEl = document.getElementById('interim');
+
+    function setStatus(html) { statusEl.innerHTML = html || ''; }
+    function setInterim(html) { interimEl.innerHTML = html || ''; }
+
+    /* ---------- storage ---------- */
+    function loadAll() {
+      try {
+        var v = JSON.parse(localStorage.getItem(KEY));
+        return v && typeof v === 'object' && !Array.isArray(v) ? v : {};
+      } catch (e) { return {}; }
+    }
+    function persist() {
+      try {
+        // Merge onto the freshest stored state so a stale tab never clobbers
+        // days written elsewhere. This tab only ever mutates today.
+        var latest = loadAll();
+        for (var k in entries) {
+          if (Object.prototype.hasOwnProperty.call(entries, k) &&
+              !Object.prototype.hasOwnProperty.call(latest, k)) {
+            latest[k] = entries[k];
+          }
+        }
+        if (entries[todayK]) latest[todayK] = entries[todayK];
+        entries = latest;
+        localStorage.setItem(KEY, JSON.stringify(entries));
+      } catch (e) {
+        document.getElementById('storageWarn').classList.add('show');
+      }
+    }
+
+    /* ---------- dates ---------- */
+    function fmtKey(d) {
+      return d.getFullYear() + '-' +
+        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d.getDate()).padStart(2, '0');
+    }
+    function keyOffset(n) { var d = new Date(); d.setDate(d.getDate() - n); return fmtKey(d); }
+    function keyToDate(k) { var p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+    function prettyDate(k) {
+      return keyToDate(k).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    }
+    function shortDate(k) {
+      return keyToDate(k).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    var entries = loadAll();
+    var todayK = fmtKey(new Date());
+    var viewK = todayK;
+    var prevWords = 0;
+
+    function countWords(t) { t = t.trim(); return t ? t.split(/\s+/).length : 0; }
+    function isDone(k) { var e = entries[k]; return !!(e && e.words >= GOAL); }
+
+    /* ---------- streaks ---------- */
+    function currentStreak() {
+      var todayDone = isDone(keyOffset(0));
+      var s = 0;
+      for (var i = todayDone ? 0 : 1; ; i++) {
+        if (isDone(keyOffset(i))) s++; else break;
+      }
+      return { n: s, todayDone: todayDone };
+    }
+    function bestStreak() {
+      var days = Object.keys(entries).filter(isDone).sort();
+      var best = 0, run = 0, prev = null;
+      for (var i = 0; i < days.length; i++) {
+        var k = days[i];
+        if (prev && Math.round((keyToDate(k) - keyToDate(prev)) / 86400000) === 1) run++;
+        else run = 1;
+        if (run > best) best = run;
+        prev = k;
+      }
+      return best;
+    }
+    function renderStreak() {
+      var st = currentStreak();
+      var el = document.getElementById('streak');
+      var txt = document.getElementById('streakText');
+      if (st.n === 0) { el.classList.remove('lit'); txt.textContent = 'start your streak today'; }
+      else if (st.todayDone) { el.classList.add('lit'); txt.textContent = st.n + '-day streak'; }
+      else { el.classList.remove('lit'); txt.textContent = st.n + '-day streak, write today to keep it'; }
+    }
+
+    /* ---------- meter ---------- */
+    function updateMeter(words) {
+      wc.textContent = words;
+      fill.style.width = Math.min(100, (words / GOAL) * 100) + '%';
+      if (words >= GOAL) {
+        wcState.textContent = 'goal reached';
+        wcState.className = 'goalhit';
+        stamp.classList.add('show');
+      } else {
+        wcState.textContent = words === 0 ? 'say it or type it, it all counts' : 'keep going...';
+        wcState.className = '';
+        stamp.classList.remove('show');
+      }
+    }
+
+    var saveTimer = null;
+    function scheduleSave() {
+      if (saveTimer) clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveNow, 400);
+    }
+    function saveNow() {
+      if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+      if (viewK !== todayK) return; // never write over the archive
+      var t = page.value;
+      if (!t && !entries[todayK]) return;
+      var e = entries[todayK] || (entries[todayK] = {});
+      e.text = t; e.words = countWords(t); e.updatedAt = Date.now();
+      persist();
+      renderStreak();
+      renderHistory();
+    }
+
+    page.addEventListener('input', function () {
+      if (viewK !== todayK) return;
+      var w = countWords(page.value);
+      if (w >= GOAL && prevWords < GOAL) {
+        var e = entries[todayK] || (entries[todayK] = {});
+        if (!e.doneAt) e.doneAt = Date.now();
+      }
+      prevWords = w;
+      updateMeter(w);
+      scheduleSave();
+    });
+
+    /* ---------- view (today vs archive) ---------- */
+    function renderView() {
+      var e = entries[viewK] || {};
+      var text = e.text || '';
+      var words = e.words || countWords(text);
+      var isToday = viewK === todayK;
+
+      document.getElementById('dateLabel').textContent =
+        (isToday ? 'Today, ' : '') + prettyDate(viewK);
+      page.value = text;
+      page.readOnly = !isToday;
+      page.setAttribute('aria-label', isToday
+        ? "Today's page, write or dictate here"
+        : 'Page from ' + prettyDate(viewK) + ', read only');
+      prevWords = words;
+      updateMeter(words);
+
+      document.getElementById('backline').classList.toggle('show', !isToday);
+      if (!isToday) {
+        document.getElementById('backlineText').textContent =
+          'Viewing ' + prettyDate(viewK) + ', read only.';
+      }
+      document.getElementById('micBtn').style.display =
+        isToday && speechAvailable ? '' : 'none';
+      document.getElementById('sendBtn').textContent =
+        isToday ? 'Send to /write →' : 'Send this page to /write →';
+      if (!isToday) stopListening();
+    }
+    document.getElementById('backBtn').addEventListener('click', function () {
+      viewK = todayK;
+      renderView();
+      page.focus();
+    });
+
+    /* ---------- day rollover ---------- */
+    function checkDay() {
+      var nk = fmtKey(new Date());
+      if (nk !== todayK) {
+        saveNow();
+        var wasToday = viewK === todayK;
+        todayK = nk;
+        if (wasToday) { viewK = nk; renderView(); }
+        renderStreak();
+        renderHistory();
+      }
+    }
+    setInterval(checkDay, 60000);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') checkDay(); else saveNow();
+    });
+    window.addEventListener('pagehide', saveNow);
+
+    /* ---------- speech ---------- */
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var speechAvailable = !!SR;
+    var rec = null, wantListening = false, restartTimer = null, restartCount = 0;
+    var micBtn = document.getElementById('micBtn');
+    var micLabel = document.getElementById('micLabel');
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function appendText(t) {
+      t = t.trim();
+      if (!t) return;
+      var v = page.value;
+      page.value = v + (v && !/\s$/.test(v) ? ' ' : '') + t;
+      page.scrollTop = page.scrollHeight;
+      page.dispatchEvent(new Event('input'));
+    }
+    function updateMicUI(on) {
+      micBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      micLabel.textContent = on ? 'Stop' : 'Speak';
+    }
+    function startListening() {
+      if (!SR || viewK !== todayK) return;
+      wantListening = true;
+      rec = new SR();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = navigator.language || 'en-US';
+      rec.onresult = function (ev) {
+        var interim = '';
+        for (var i = ev.resultIndex; i < ev.results.length; i++) {
+          var r = ev.results[i];
+          if (r.isFinal) { appendText(r[0].transcript); restartCount = 0; }
+          else interim += r[0].transcript;
+        }
+        // Interim goes to a non-live span so screen readers are not spammed.
+        setInterim(interim
+          ? 'hearing: <span class="heard">...' + escapeHtml(interim.slice(-70)) + '</span>'
+          : '');
+      };
+      rec.onend = function () {
+        // Resume only if still wanted, re-checking the flag AT FIRE TIME, and
+        // cap retries so an unrecoverable error cannot loop forever.
+        if (!wantListening) { updateMicUI(false); return; }
+        if (++restartCount > 12) {
+          wantListening = false;
+          updateMicUI(false);
+          setStatus('Dictation paused. Click Speak to pick up where you left off.');
+          return;
+        }
+        restartTimer = setTimeout(function () {
+          restartTimer = null;
+          if (wantListening) { try { rec.start(); } catch (e) {} }
+        }, Math.min(250 * restartCount, 2000));
+      };
+      rec.onerror = function (ev) {
+        var err = ev.error;
+        if (err === 'not-allowed' || err === 'service-not-allowed') {
+          wantListening = false;
+          if (document.activeElement === micBtn) page.focus();
+          updateMicUI(false);
+          micBtn.disabled = true;
+          setStatus('Mic blocked by the browser. Handy still works: click into the page and speak.');
+        } else if (err === 'network') {
+          wantListening = false; updateMicUI(false);
+          setStatus('Dictation needs a connection. Check your internet, then Speak again.');
+        } else if (err === 'audio-capture') {
+          wantListening = false; updateMicUI(false);
+          setStatus('No microphone found. Plug one in (or use Handy), then Speak again.');
+        } else if (err === 'no-speech') {
+          setInterim('listening... (say something)');
+        }
+      };
+      try {
+        rec.start();
+        updateMicUI(true);
+        setStatus('listening...');
+        page.focus();
+      } catch (e) {
+        wantListening = false;
+        updateMicUI(false);
+        setStatus("Could not start dictation just now. Try again, or use Handy.");
+      }
+    }
+    function stopListening() {
+      wantListening = false;
+      if (restartTimer) { clearTimeout(restartTimer); restartTimer = null; }
+      if (rec) { try { rec.stop(); } catch (e) {} }
+      updateMicUI(false);
+      setStatus('');
+      setInterim('');
+    }
+    micBtn.addEventListener('click', function () {
+      if (micBtn.getAttribute('aria-pressed') === 'true') stopListening();
+      else startListening();
+    });
+    if (!speechAvailable) {
+      micBtn.style.display = 'none';
+      setStatus('Built-in dictation needs Chrome or Edge. Handy works everywhere.');
+    }
+
+    /* ---------- export ---------- */
+    function currentText() {
+      var e = entries[viewK] || {};
+      return (viewK === todayK ? page.value : e.text || '').trim();
+    }
+    function asMarkdown() {
+      return '# ' + prettyDate(viewK) + ', ' + keyToDate(viewK).getFullYear() +
+        '\n\n' + currentText() + '\n';
+    }
+    document.getElementById('copyBtn').addEventListener('click', function () {
+      if (!currentText()) { setStatus('Nothing to copy yet, the page is blank.'); return; }
+      var label = document.getElementById('copyLabel');
+      var ok = function () {
+        label.textContent = 'Copied';
+        setTimeout(function () { label.textContent = 'Copy'; }, 1800);
+      };
+      var md = asMarkdown();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(md).then(ok, function () { fallbackCopy(md, ok); });
+      } else fallbackCopy(md, ok);
+    });
+    function fallbackCopy(text, ok) {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok(); }
+      catch (e) { setStatus('Copy failed, select the text and copy manually.'); }
+      document.body.removeChild(ta);
+    }
+    function downloadFile(name, content, type) {
+      var blob = new Blob([content], { type: type + ';charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    }
+    document.getElementById('dlBtn').addEventListener('click', function () {
+      if (!currentText()) { setStatus('Nothing to download yet, the page is blank.'); return; }
+      downloadFile('300words-' + viewK + '.md', asMarkdown(), 'text/markdown');
+    });
+    document.getElementById('backupBtn').addEventListener('click', function () {
+      saveNow();
+      downloadFile('300words-backup-' + todayK + '.json', JSON.stringify(entries, null, 2), 'application/json');
+    });
+
+    /* Restore: the standalone app lived on another origin, so its localStorage
+       does not follow you here. This imports a backup and merges it in. */
+    var restoreInput = document.getElementById('restoreInput');
+    document.getElementById('restoreBtn').addEventListener('click', function () {
+      restoreInput.click();
+    });
+    restoreInput.addEventListener('change', function () {
+      var file = restoreInput.files && restoreInput.files[0];
+      if (!file) return;
+      var fr = new FileReader();
+      fr.onload = function () {
+        var incoming;
+        try { incoming = JSON.parse(String(fr.result)); }
+        catch (e) { setStatus('That file is not valid JSON.'); return; }
+        if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) {
+          setStatus('That does not look like a 300words backup.');
+          return;
+        }
+        var added = 0;
+        for (var k in incoming) {
+          if (!Object.prototype.hasOwnProperty.call(incoming, k)) continue;
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
+          var inc = incoming[k];
+          if (!inc || typeof inc.text !== 'string') continue;
+          var cur = entries[k];
+          // Keep whichever version has more writing; never silently shrink a day.
+          if (!cur || (inc.words || 0) > (cur.words || 0)) {
+            entries[k] = { text: inc.text, words: inc.words || 0, updatedAt: inc.updatedAt || Date.now() };
+            added++;
+          }
+        }
+        persist();
+        renderView(); renderStreak(); renderHistory();
+        setStatus(added ? 'Restored ' + added + ' day' + (added === 1 ? '' : 's') + '.' : 'Nothing new to restore.');
+        restoreInput.value = '';
+      };
+      fr.readAsText(file);
+    });
+
+    /* ---------- send to /write ---------- */
+    document.getElementById('sendBtn').addEventListener('click', function () {
+      var text = currentText();
+      if (!text) { setStatus('Nothing to send yet, write your page first.'); return; }
+      saveNow();
+      var first = (text.split(/\n/)[0] || '').trim();
+      var title = (first.split(/[.!?]/)[0] || first).split(/\s+/).slice(0, 9).join(' ');
+      // Same origin now, so a plain navigation works: no popup, nothing blocked.
+      window.location.href = '/write?from=daily&title=' +
+        encodeURIComponent(title) + '&seed=' + encodeURIComponent(text);
+    });
+
+    /* ---------- history ---------- */
+    var DAYS = 30;
+    function renderHistory() {
+      var grid = document.getElementById('hgrid');
+      grid.innerHTML = '';
+      for (var i = DAYS - 1; i >= 0; i--) {
+        var k = keyOffset(i);
+        var e = entries[k];
+        var words = e ? e.words || 0 : 0;
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'hbar' +
+          (words >= GOAL ? ' done' : words > 0 ? ' filled' : '') +
+          (k === todayK ? ' today' : '');
+        b.style.height = (words > 0 ? Math.max(8, Math.round(60 * Math.min(words, GOAL) / GOAL)) : 4) + 'px';
+        b.setAttribute('aria-label', shortDate(k) + ', ' + words + ' words' + (words >= GOAL ? ', done' : ''));
+        b.title = shortDate(k) + ', ' + words + ' words';
+        if (e && e.text) {
+          b.setAttribute('data-view', k);
+          b.addEventListener('click', function (ev) {
+            saveNow();
+            viewK = ev.currentTarget.getAttribute('data-view');
+            renderView();
+            // Focus the sheet: announces the change, and survives the grid
+            // being rebuilt by the saveNow above.
+            page.focus();
+            window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+          });
+        } else {
+          b.disabled = true;
+        }
+        grid.appendChild(b);
+      }
+      document.getElementById('legendStart').textContent = shortDate(keyOffset(DAYS - 1));
+
+      var total = 0, pages = 0;
+      for (var k2 in entries) {
+        if (!Object.prototype.hasOwnProperty.call(entries, k2)) continue;
+        total += entries[k2].words || 0;
+        if ((entries[k2].words || 0) >= GOAL) pages++;
+      }
+      document.getElementById('statTotal').textContent = total.toLocaleString('en-US');
+      document.getElementById('statPages').textContent = pages;
+      document.getElementById('statBest').textContent = bestStreak();
+    }
+
+    /* ---------- boot ---------- */
+    renderView();
+    renderStreak();
+    renderHistory();
+    if (window.matchMedia('(pointer:fine)').matches) page.focus();
+  })();
+</script>
