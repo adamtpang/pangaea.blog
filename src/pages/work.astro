@@ -9,6 +9,7 @@ const songItems = await getCollection('songs', ({ data }) => !data.draft);
 const appItems = await getCollection('apps', ({ data }) => !data.draft);
 const podItems = await getCollection('episodes', ({ data }) => !data.draft);
 const cityItems = await getCollection('cities', ({ data }) => !data.draft);
+const vlogItems = await getCollection('vlogs', ({ data }) => !data.draft);
 
 // Build a number -> {href, label} map per pillar so a filled cell links to the work.
 // `numOf` exists because episodes count with `episode:` rather than `number:`.
@@ -42,6 +43,7 @@ const songs = mapByNumber(songItems, () => '/songs/');
 const apps = mapByNumber(appItems, (i) => i.data.url ?? '/apps/');
 const pods = mapByNumber(podItems, (i) => `/podcast/${i.slug}/`, (i) => i.data.episode);
 const cities = mapByNumber(cityItems, (i) => i.data.url ?? '/cities/');
+const vlogs = mapByNumber(vlogItems, (i) => `/vlog/${i.slug}/`, (i) => i.data.vlog);
 
 const songsWip = wipSet(wipItems);
 
@@ -50,22 +52,23 @@ const pillars = [
   { key: 'songs', label: 'Songs', href: '/songs/', map: songs, line: 'The felt word.', wip: songsWip },
   { key: 'apps', label: 'Apps', href: '/apps/', map: apps, line: 'The built word.' },
   { key: 'podcasts', label: 'Podcasts', href: '/podcast/', map: pods, line: 'The spoken word.' },
+  { key: 'videos', label: 'Video essays', href: '/vlog/', map: vlogs, line: 'The shown word.' },
   { key: 'cities', label: 'City-states', href: '/cities/', map: cities, line: 'The governed word.' },
 ];
 
 const SLOTS = 1000;
-const total = essays.size + songs.size + apps.size + pods.size + cities.size;
+const total = essays.size + songs.size + apps.size + pods.size + cities.size + vlogs.size;
 const cells = Array.from({ length: SLOTS }, (_, n) => n);
 ---
 
 <Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 songs, 1,000 apps. 3,000 pieces, made in public.">
   <h1>The Work</h1>
   <p class="hero">
-    One body of work, five pillars, five thousand pieces: a thousand essays, a
-    thousand songs, a thousand apps, a thousand conversations, a thousand
+    One body of work, six pillars, six thousand pieces: a thousand essays, a
+    thousand songs, a thousand apps, a thousand conversations, a thousand videos, a thousand
     city-states. Made in public, owned forever. Every slot below is a piece
     waiting to exist; the lit ones are done. Toward
-    <strong>{total.toLocaleString()} / 5,000</strong>.
+    <strong>{total.toLocaleString()} / 6,000</strong>.
   </p>
 
   {pillars.map((p) => (
@@ -140,6 +143,7 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
   .slots-songs .slot.filled { background: #b34a2f; }
   .slots-apps .slot.filled { background: #c2814d; }
   .slots-podcasts .slot.filled { background: #8a6d34; }
+  .slots-videos .slot.filled { background: #a2703f; }
   .slots-cities .slot.filled { background: #4f6656; }
 
   /* Work in progress: lit, but clearly unfinished. The pile counts as practice

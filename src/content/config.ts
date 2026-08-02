@@ -79,11 +79,27 @@ const vlogs = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    date: z.coerce.date(),
+    date: z.coerce.date().default(new Date('1970-01-01')),
     vlog: z.number().int().nonnegative().optional(),
     youtube: z.string().optional(),
     blurb: z.string().optional(),
     tags: z.array(z.string()).optional(),
+
+    // --- The Van Neistat model (see VIDEOS-1000.md) ---------------------
+    // A recurring segment name, so the channel has a shape instead of being a
+    // stream of one-offs: build, take, study, ranked, thing, field.
+    format: z
+      .enum(['build', 'take', 'study', 'ranked', 'thing', 'field', 'flagship'])
+      .optional(),
+    // Flagship monthly episodes get cut into standalone segments. `parent`
+    // points a segment back at the flagship it came from.
+    parent: z.string().optional(),
+    duration: z.string().optional(),
+    // What this video is ABOUT, when it documents another pillar. Lets a video
+    // point at the song or app it covers, so the pillars feed each other.
+    covers: z.string().optional(),
+    // Where it sits: filmed but not cut, cut but not posted, live.
+    stage: z.enum(['idea', 'filmed', 'cut', 'published']).default('idea'),
     draft: z.boolean().default(true),
   }),
 });
