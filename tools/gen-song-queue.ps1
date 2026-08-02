@@ -119,8 +119,11 @@ foreach ($t in $TEMPLATES) {
     if ($n -gt 999) { break }
     $tonic = ($i * 7) % 12                      # cycle by fifths, feels less random
     $p = $valid[$i % $valid.Count]
+    # Move advances every row, progression every row, but on different periods
+    # (10 vs 14), so pairings only repeat after 70. Advancing the move only once
+    # per progression cycle made the first 14 rows instructionally identical.
     $moveSet = $MOVES[$t.k]
-    $move = $moveSet[[math]::Floor($i / $valid.Count) % $moveSet.Count]
+    $move = $moveSet[$i % $moveSet.Count]
     $span = $t.hi - $t.lo
     $tempo = $t.lo + (($i * 6) % ($span + 1))
     $keyName = $NOTES[$tonic] + $(if ($p.mode -eq 'min') { ' minor' } else { ' major' })
