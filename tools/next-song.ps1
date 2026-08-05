@@ -86,6 +86,7 @@ nothing to invent before you start playing.
 - [x] key + tempo
 - [x] chords
 - [ ] melody
+- [ ] lyrics
 - [ ] recording
 - [ ] liner notes
 

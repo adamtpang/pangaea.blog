@@ -25,6 +25,33 @@ const layers = (d: any) => [
   { on: Boolean(d.instruments?.length), label: 'instruments' },
   { on: Boolean(d.audio || d.soundcloud || d.spotify || d.youtube), label: 'recording' },
 ];
+
+// The music game. Same XP table as tools/music-score.ps1 (see MUSIC-GAME.md),
+// computed here so the site and the CLI never drift apart. Scores craft and
+// shipping, not performance: sketch, melody, lyrics, demo, produced, released.
+const checked = (body: string, item: string) =>
+  new RegExp(`^-\\s*\\[x\\]\\s*${item}`, 'im').test(body);
+
+function songXP(s: (typeof all)[number]) {
+  const d = s.data;
+  let xp = 0;
+  if (d.key && d.tempo && d.chords) xp += 1;
+  if (checked(s.body, 'melody')) xp += 2;
+  if (checked(s.body, 'lyrics')) xp += 2;
+  if (checked(s.body, 'recording') || ['demo', 'produced', 'released'].includes(d.stage)) xp += 5;
+  if (d.stage === 'produced') xp += 8;
+  if (!d.draft) xp += 20;
+  if (d.tags?.includes('study')) xp += 3;
+  return xp;
+}
+
+const totalXP = all.reduce((n, s) => n + songXP(s), 0);
+const LEVELS: [string, number][] = [
+  ['Demo Tape', 0], ['Gold', 50], ['Platinum', 150],
+  ['Multi-Platinum', 400], ['Diamond', 1000], ['Catalog Artist', 2500],
+];
+const level = [...LEVELS].reverse().find(([, floor]) => totalXP >= floor)![0];
+const nextLevel = LEVELS.find(([, floor]) => floor > totalXP);
 ---
 
 <Base title="Songs · Pangaea" description="A thousand songs. The stack, not just the masters.">
@@ -40,6 +67,18 @@ const layers = (d: any) => [
       {remaining > 0 && <span> {remaining.toLocaleString()} to go.</span>}
     </div>
   </div>
+
+  <!-- The music game. Scores craft and shipping, not performance: see MUSIC-GAME.md.
+       Counts only, same privacy rule as the workshop below. -->
+  <section class="player-card">
+    <div class="pc-top">
+      <span class="pc-xp">{totalXP.toLocaleString()} XP</span>
+      <span class="pc-level">{level}</span>
+    </div>
+    {nextLevel && (
+      <div class="pc-next">{(nextLevel[1] - totalXP).toLocaleString()} XP to {nextLevel[0]}</div>
+    )}
+  </section>
 
   <!-- The workshop: proof of practice, without publishing working titles. -->
   {workshop.length > 0 && (
@@ -111,6 +150,13 @@ const layers = (d: any) => [
 <style>
   .cadence-row .split { color: var(--muted); font-size: 0.85rem; margin-left: 0.6rem; }
   .sec { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 2.25rem 0 0.75rem; font-weight: 600; }
+
+  /* The player card. XP scores craft and shipping; see MUSIC-GAME.md. */
+  .player-card { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; margin: 0.9rem 0 0; padding: 0.6rem 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .pc-top { display: flex; align-items: baseline; gap: 0.6rem; }
+  .pc-xp { font-family: var(--mono); font-size: 1.05rem; color: var(--accent); }
+  .pc-level { font-family: var(--sans); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.15rem 0.5rem; border: 1px solid var(--land-soft); color: var(--land); border-radius: 10px; }
+  .pc-next { font-family: var(--sans); font-size: 0.78rem; color: var(--muted); }
 
   /* Workshop: a single proportional bar, so the pile is visible at a glance. */
   .workshop { border: 1px solid var(--rule); border-radius: 6px; padding: 1rem; background: var(--surface); }
