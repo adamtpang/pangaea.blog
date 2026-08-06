@@ -197,6 +197,25 @@ Do not redeclare colors or fonts in either stylesheet. Edit `tokens.css`. The `/
 - Don't add JavaScript to public pages unless there's a real reason. `/posts` (search), `/graph` (canvas), and `/write` have JS by necessity.
 - Don't render the `episodes` collection anywhere except `/podcast` and `/podcast/[slug]`.
 
+## Making music with Claude (Ableton MCP)
+
+`scripts/README-ableton-mcp.md` has the setup. Once Live is open with the
+AbletonMCP control surface selected, this session's `.mcp.json` gives Claude
+tools to create tracks, write MIDI, load instruments, and fire clips directly.
+
+**While driving it, narrate progress in game terms, out loud, as it happens.**
+That live narration — not the after-the-fact scoreboard — is what makes
+creating more fun than scrolling Spotify. After each meaningful step (a chord
+progression goes in, a melody gets recorded, a track moves to `produced`),
+say what just happened and roughly what it's worth per `MUSIC-GAME.md`'s XP
+table, the same way `tools/music-session.ps1` does when it's watching files
+directly. Don't wait for a session recap at the end — the reward has to land
+in the moment, mid-session, or it doesn't do its job.
+
+Run `tools/music-session.ps1` alongside a session (in a second terminal, or
+ask Adam to) for the live watch-and-beep version of the same idea when he's
+working by hand rather than through Claude.
+
 ## Don't do
 
 - Don't add a tracking pixel, ad network, or analytics that requires consent banners.
@@ -205,3 +224,6 @@ Do not redeclare colors or fonts in either stylesheet. Edit `tokens.css`. The `/
 - Don't bring back the "rift" name or the forced 1-app/1-essay/1-song schema.
 - Don't reintroduce em dashes anywhere in public-facing copy.
 - Don't render the `inbox` collection on the public site.
+- Don't revert the AbletonMCP remote-script security fixes (loopback-only
+  bind, telemetry disabled) if reinstalling or upgrading — see
+  `scripts/README-ableton-mcp.md`.

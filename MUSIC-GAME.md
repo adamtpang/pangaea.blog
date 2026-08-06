@@ -79,3 +79,34 @@ Prints total XP, level, XP to next level, current streak, and this week's
 ships against your best week. The same total appears on `/songs` as a player
 card, counts only, same privacy rule as everywhere else on the site: what you
 have built is public, what it's called is not until you ship it.
+
+## Live session mode (the actual point: make creating more fun than consuming)
+
+`music-score.ps1` is a scoreboard you check afterward. That's fine for a
+status check, but it's the wrong shape for the thing that's supposed to
+compete with opening Spotify: the reward has to land *while you're playing*,
+not after you close Ableton and remember to run a script.
+
+```
+tools\music-session.ps1                # start a session, watch and reward
+tools\music-session.ps1 -Quest weekly  # frame progress as boss-fight XP
+tools\music-session.ps1 -Once          # just print current status, no watch
+```
+
+Start it before you sit down (leave it running in a terminal alongside Live).
+It polls `src/content/songs/` every couple seconds and the instant a real
+step lands — a sketch gets its key/tempo/chords filled in, a melody or
+lyrics box gets checked, a stage moves to demo/produced/released — it prints
+an immediate `+N XP` banner and plays a system beep. Level-ups get a
+four-note ascending chime instead of a single beep. On `-Quest weekly`, a
+`produced`/`released` bump also prints "BOSS HIT" — that's the quest that's
+actually worth chasing (see the quest board above).
+
+Same scoring engine as `music-score.ps1` — both import `tools/MusicScore.psm1`
+so the number can't drift between "what the watcher just rewarded you for"
+and "what the scoreboard says your total is."
+
+**When Claude is driving Ableton via the MCP tools directly** (see
+`CLAUDE.md`'s Ableton section), it narrates the same reward conversationally
+in real time instead of you needing a second terminal running the watcher —
+the point either way is the same: don't wait for the recap, land the hit now.
