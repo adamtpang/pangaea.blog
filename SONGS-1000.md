@@ -38,6 +38,30 @@ The counter on `/work` should light for ALL of them. A thousand songs means a
 thousand *entries*, not a thousand masters. Visakanv's 1,000 works because the
 unit is small.
 
+## Live from strummer.fun/vibe
+
+Pulled from the vibecheck database on 2026-08-02 — this is what actually gets
+played, not a memory of it. `strummer.fun/vibe` is the live source; re-pull it
+periodically and this section should drift with your real listening, not stay
+frozen at one snapshot.
+
+**Top genres (by artist frequency, all-time window):** classic rock ·
+psychedelic rock · indie · pop soul · idm
+
+**Top 12 artists:** The Beatles · Olivia Dean · Aphex Twin · Bob Marley & The
+Wailers · Vampire Weekend · Kanye West · Jack Johnson · Red Hot Chili Peppers ·
+The Vaccines · Sam Fender · adore · Eagles
+
+**What this confirms:** Beatles, Olivia Dean, Aphex Twin, Bob Marley, and
+Vampire Weekend are all still top-12 — the templates below built around them
+(A/B/C/D) are still pointed at real, current taste, not a stale guess.
+
+**What this surfaces that the templates didn't have yet:** Kanye West, Red Hot
+Chili Peppers, Eagles, and Jack Johnson are top-12 artists with no template.
+Jack Johnson's surf-rock/acoustic lane is close enough to Template C (warm
+guitar-pop) to fold in rather than duplicate. The other three earned real
+additions — see Template D's new rows and the new Template E below.
+
 ## Where the catalog stands
 
 | Stage | Count | What it is |
@@ -73,10 +97,11 @@ The rig is done. From here the only variable is reps.
 
 ---
 
-# The four templates
+# The templates
 
-Derived from your own top artists and tracks. Each is a repeatable recipe with
-a time budget and a definition of done. Kanye ran one formula thousands of
+Derived from your own top artists and tracks — see the live pull above. Each
+is a repeatable recipe with a time budget and a definition of done. Kanye ran
+one formula thousands of
 times; these are yours. Pick a template, run it, ship at the stated stage, move
 on. Do not exceed the time budget: the budget is the point.
 
@@ -180,10 +205,39 @@ Pick ONE, learn its actual rule, write a song obeying it:
 | Bossa | Laufey | 120 to 140 | half-time feel, thumb plays bass while fingers comp offbeat, brushes not sticks, maj7/m7 throughout |
 | Jersey club / UK garage | NewJeans, *Prada* | 130 to 140 | swung 16ths, syncopated kick clusters, chopped vocal stabs used as percussion |
 | Afropop guitar | Vampire Weekend | 110 to 140 | two clean high-register guitar lines interlocking, neither one is the "rhythm" part |
+| Funk rock | Red Hot Chili Peppers | 100 to 120 | slap/pop bass carries the hook, guitar plays short muted stabs on the 1 and the "and" of 3, drums push hard on the hi-hat, leave space — the gaps are the groove |
+| Yacht rock / soft rock | Eagles | 95 to 115 | tight vocal harmony stacked in 3rds is the lead instrument, clean electric guitar arpeggios, no distortion anywhere, the whole thing should sound sun-bleached |
 
 - **Budget:** one session.
 - **Done when:** the groove is recognizable without any melody on top.
   `stage: sketch`.
+
+## Template E · "The College Dropout"
+**The chop-and-loop beat. Steal a soul sample, flip it, add drums.**
+
+- **From:** Kanye West's early production (before he was a rapper, he was a
+  producer who sped up soul samples and looped them under a hard beat)
+- **Tempo:** 85 to 95. Boom-bap, not trap — the kick and snare sit behind the
+  beat, not on it.
+- **Gear:** Simpler (or any sampler), Drum Rack, one soul/gospel/jazz record
+  you actually like (a public-domain source or your own playing — this is a
+  practice exercise, not a release you'd clear samples for).
+- **Form:** find a 2-to-4-bar phrase with a vocal hook or a horn stab. Pitch
+  it up a few semitones (the classic "chipmunk soul" move). Loop it. That loop
+  IS the song — no separate chorus, the drums dropping in and out is the
+  arrangement.
+- **The chop:** don't just loop the whole phrase — cut it into 2 or 3 pieces
+  in Simpler's slice mode and rearrange them. A single word repeated on the
+  off-beat is more Kanye than the phrase played straight.
+- **Drums:** hard kick on 1, snare on 3, hi-hats swung slightly. Sample
+  drum sounds from an old record too if you have one — the grit matters more
+  than the pattern.
+- **Budget:** 45 to 75 minutes.
+- **Done when:** the loop survives without needing anything added.
+  `stage: sketch`.
+
+This is the fastest template in the set if you already have a source to chop —
+faster than Template A, because you're arranging four bars, not writing them.
 
 ## Shared definition of done
 
