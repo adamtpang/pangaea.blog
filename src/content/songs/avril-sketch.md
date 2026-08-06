@@ -35,9 +35,10 @@ Fmaj7 | G6`, root-position voicings, one idea across 8 bars played twice
 writing and visible in the piano roll.
 
 **Not yet true to the template, on purpose — flagging honestly:**
-- The template calls for stock piano; the track ended up with **Serum**
-  loaded instead (an accidental browser double-click mid-session, not a
-  deliberate choice). Swap it for a piano before this goes further.
+- ~~Track had Serum loaded instead of piano~~ — fixed via socket
+  (`load_browser_item` onto the same track slot swaps the instrument in
+  place, no manual delete needed): now loaded with Live's stock
+  `Grand Piano.adg`, matching the template exactly.
 - "Rubato welcome, do not quantize" — this pass is programmed on a plain
   grid, not humanized. A live take (or manual nudging) would help a lot.
 - Project file: `Avril Sketch Project/Avril Sketch.als` in
