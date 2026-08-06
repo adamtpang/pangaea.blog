@@ -216,6 +216,17 @@ Run `tools/music-session.ps1` alongside a session (in a second terminal, or
 ask Adam to) for the live watch-and-beep version of the same idea when he's
 working by hand rather than through Claude.
 
+## Pulling from Spotify (Spotify MCP)
+
+`scripts/README-spotify-mcp.md` has the setup. The credential + login steps
+are Adam's alone (a Developer Dashboard secret and a one-time OAuth browser
+login) — Claude preps everything else (the `.mcp.json` entry, dependency
+verification) but cannot complete those two. Once authenticated, `spotify_*`
+tools give real liked-songs, recently-played, search, and playlist access —
+use this instead of the one-off Neon pulls from `users.top_tracks` when it's
+available; the Neon data is a cached snapshot from vibecheck.style, this is
+live.
+
 ## Don't do
 
 - Don't add a tracking pixel, ad network, or analytics that requires consent banners.

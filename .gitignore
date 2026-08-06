@@ -36,7 +36,13 @@ Thumbs.db
 
 # Local-only working files synced via OneDrive (not part of the public site)
 src/content/drafts/
-scripts/
+
+# scripts/ holds real, committed setup docs (README-*-mcp.md, install
+# scripts, the vendored Ableton remote script) - only scratch clones under it
+# are ignored, not the directory itself. See scripts/README-*-mcp.md.
+scripts/*-src/
+scripts/*/.venv/
 
 # Separated audio stems (big, derived, not source)
 stems/
+.env*
