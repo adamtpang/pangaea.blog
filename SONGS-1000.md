@@ -239,6 +239,70 @@ Pick ONE, learn its actual rule, write a song obeying it:
 This is the fastest template in the set if you already have a source to chop —
 faster than Template A, because you're arranging four bars, not writing them.
 
+## Template F · "Kokomo"
+**Linger on a minor chord before you come home. That one move is doing most
+of the emotional work in five of your real top tracks.**
+
+- **From:** deconstructed live, not guessed — pulled your actual top 5 tracks
+  (`strummer.fun/vibe`, 2026-08-06) and looked up every chord chart:
+  - *Kokomo*, The Beach Boys — C major, `F | Fm | C | Gm7` (IV to iv, the
+    textbook borrowed chord: F major goes minor for one bar right before
+    resolving home)
+  - *Man I Need*, Olivia Dean — Db major, `Db | Gb | Bbm | Db` (rests on the
+    diatonic ii, Bbm, for a full bar before returning)
+  - *Dive*, Olivia Dean — G major, `G | Em | C | Am | Bm` (both the vi and
+    the iii get real weight, not passed through)
+  - *Tongue Tied*, Grouplove — Eb major, `Ab | Fm | Cm | Eb` (ii and vi both
+    minor, IV stays major, so the minor chords are what you notice)
+  - *Rein Me In*, Sam Fender & Olivia Dean — a version reads `G | Am | Dm | F
+    | Em`, three minor chords out of five
+- **The honest pattern:** these are not all the same trick. Kokomo's Fm is a
+  genuine borrowed chord (chromatic, outside the key). The other four just
+  give real time to their ordinary diatonic ii or vi instead of rushing past
+  it. What they share is not the theory, it's the choice: don't treat the
+  minor chord as a passing tone, let it sit.
+- **Tempo:** 91 to 124, the exact range these five actually cover. Nothing
+  here is a ballad and nothing is fast; mid-tempo pop walking pace.
+- **The drill:** write a 4-chord loop in a major key. Pick ONE chord to be
+  minor when it "shouldn't" be, either genuinely borrowed (the iv, like
+  Kokomo) or just held longer than expected (a diatonic ii or vi, like the
+  other four). Everything else stays warm and major. That contrast is the
+  whole song.
+- **Budget:** 30 to 45 minutes. This is a harmony drill, not a full song plan
+  the way Templates A to E are.
+- **Done when:** you can play the loop and feel the one chord land different
+  from the rest. `stage: sketch`.
+
+## The speed round (the Clairo method)
+
+Verified, not folklore: Clairo made *Pretty Girl* in about two hours in
+GarageBand, on a $10 flea-market MIDI keyboard she found random cables to
+connect ([The FADER](https://www.thefader.com/2018/05/24/clairo-diary-001-pretty-girl-4ever-interview),
+[Wikipedia](https://en.wikipedia.org/wiki/Pretty_Girl_(Clairo_song))). The
+video that made it take off was a 30-minute MacBook-camera take. Cheap gear,
+a hard time limit, shipped almost immediately: none of the three things that
+usually block a perfectionist were present, because there was no room for
+them.
+
+This is a new quest type, not a template (it's a constraint, not a recipe):
+
+- **Set a 2-hour timer before you start**, and pick the plainest gear in the
+  room on purpose. Not your good keyboard. Not Suite. Whatever the cheapest
+  path from idea to sound is on this machine.
+- **One take, minimal edits.** The constraint is the point: no time to
+  second-guess a chord, so you don't.
+- **Ship the video, not the "finished song."** Clairo's video was 30 minutes
+  of effort, not zero, but nowhere near "produced." A phone recording of you
+  playing the 2-hour sketch counts as done for this quest.
+- **Log it with `tags: [song, sketch, speed-round]`** so `music-score.ps1`
+  and `/line` can tell a speed-round sketch apart from a slow one, and so the
+  pattern (do speed rounds correlate with things you actually finish?) is
+  checkable later, not just felt.
+
+The bet: the two hours you'd have spent perfecting one bar of Template A gets
+you an entire finished loop this way instead. Try both, keep whichever
+actually gets logged more.
+
 ## Shared definition of done
 
 A template run is finished when the file exists with `key`, `tempo`, `chords`,

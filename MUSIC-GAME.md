@@ -22,6 +22,7 @@ CLI and the site.
 | Produced | **8** | `stage: produced` |
 | **Released** | **20** | `draft: false` (actually public) |
 | Study logged | **+3** bonus | `tags` includes `study` |
+| Speed round logged | **+3** bonus | `tags` includes `speed-round` (see below) |
 
 Released is worth as much as everything else in the stack combined, on
 purpose. The musicians index said it plainly: nobody great had a short run,

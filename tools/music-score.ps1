@@ -35,4 +35,5 @@ Write-Host "  the stack" -ForegroundColor DarkGray
 Write-Host ("    sketches   {0,3}   melody {1,3}   lyrics {2,3}" -f $score.Counts.sketch, $score.Counts.melody, $score.Counts.lyrics)
 Write-Host ("    demo       {0,3}   produced {1,3}   released {2,3}" -f $score.Counts.demo, $score.Counts.produced, $score.Counts.released)
 if ($score.Counts.study -gt 0) { Write-Host ("    studies    {0,3}" -f $score.Counts.study) }
+if ($score.Counts.speedRound -gt 0) { Write-Host ("    speed rounds {0,3}" -f $score.Counts.speedRound) }
 Write-Host ""

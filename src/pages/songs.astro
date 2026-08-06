@@ -42,6 +42,8 @@ function songXP(s: (typeof all)[number]) {
   if (d.stage === 'produced') xp += 8;
   if (!d.draft) xp += 20;
   if (d.tags?.includes('study')) xp += 3;
+  // Same bonus as a study, on purpose: see MUSIC-GAME.md's speed round.
+  if (d.tags?.includes('speed-round')) xp += 3;
   return xp;
 }
 

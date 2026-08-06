@@ -27,7 +27,7 @@ function Get-MusicScore([string]$repoRoot) {
   $files = Get-ChildItem $songDir -Filter *.md -File -ErrorAction SilentlyContinue
 
   $xp = 0
-  $counts = [ordered]@{ sketch = 0; melody = 0; lyrics = 0; demo = 0; produced = 0; released = 0; study = 0 }
+  $counts = [ordered]@{ sketch = 0; melody = 0; lyrics = 0; demo = 0; produced = 0; released = 0; study = 0; speedRound = 0 }
 
   foreach ($f in $files) {
     $raw = Get-Content $f.FullName -Raw
@@ -40,6 +40,7 @@ function Get-MusicScore([string]$repoRoot) {
     $isDraft = -not ($fm -match "(?m)^draft:\s*false")
     $stage = if ($fm -match "(?m)^stage:\s*'?([a-z]+)") { $Matches[1] } else { 'sketch' }
     $isStudy = $fm -match "(?m)^tags:.*\bstudy\b"
+    $isSpeedRound = $fm -match "(?m)^tags:.*\bspeed-round\b"
 
     if ($hasKey -and $hasTempo -and $hasChords) { $xp += 1; $counts.sketch++ }
     if (Test-MusicChecked $body 'melody') { $xp += 2; $counts.melody++ }
@@ -48,6 +49,10 @@ function Get-MusicScore([string]$repoRoot) {
     if ($stage -eq 'produced') { $xp += 8; $counts.produced++ }
     if (-not $isDraft) { $xp += 20; $counts.released++ }
     if ($isStudy) { $xp += 3; $counts.study++ }
+    # Same bonus as a study, deliberately: a speed round finishing at all is
+    # exactly as valuable as logging a study, per the whole point of it
+    # existing (reward speed over polish, don't make it the lesser option).
+    if ($isSpeedRound) { $xp += 3; $counts.speedRound++ }
   }
 
   $level = 'Demo Tape'; $next = $null; $nextAt = $null
