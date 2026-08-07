@@ -8,7 +8,7 @@ const apps = (await getCollection('apps', ({ data }) => !data.draft)).sort(
 const remaining = Math.max(0, 1000 - apps.length);
 ---
 
-<Base title="Apps · Pangaea" description="One of the three pillars: a thousand apps.">
+<Base title="Apps · Pangaea" description="One of the pillars: a thousand apps.">
   <h1>Apps</h1>
 
   <div class="cadence">
@@ -16,7 +16,8 @@ const remaining = Math.max(0, 1000 - apps.length);
       <span><strong>{apps.length}</strong> / 1,000 apps</span>
     </div>
     <div class="cadence-row meta">
-      One of three pillars: 1,000 essays, 1,000 songs, 1,000 apps.
+      One of the pillars: 1,000 essays, 1,000 apps, and more at
+      <a href="/work/">/work</a>.
       {remaining > 0 && <span> {remaining.toLocaleString()} to go.</span>}
     </div>
   </div>

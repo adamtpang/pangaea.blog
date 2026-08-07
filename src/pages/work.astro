@@ -5,7 +5,6 @@ import { getCollection } from 'astro:content';
 const epoch = new Date('1971-01-01').valueOf();
 
 const postItems = await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch);
-const songItems = await getCollection('songs', ({ data }) => !data.draft);
 const appItems = await getCollection('apps', ({ data }) => !data.draft);
 const podItems = await getCollection('episodes', ({ data }) => !data.draft);
 const cityItems = await getCollection('cities', ({ data }) => !data.draft);
@@ -28,28 +27,14 @@ function mapByNumber(
   return m;
 }
 
-// Work in progress lights a DIMMER cell. The pile is real practice and should be
-// visible, but a working title in an Ableton folder is not a published decision,
-// so these cells carry no title and no link.
-const wipItems = await getCollection('songs', ({ data }) => data.draft && data.stage !== 'released');
-function wipSet(items: any[]) {
-  const s = new Set<number>();
-  for (const it of items) if (typeof it.data.number === 'number') s.add(it.data.number);
-  return s;
-}
-
 const essays = mapByNumber(postItems, (i) => `/posts/${i.slug}/`);
-const songs = mapByNumber(songItems, () => '/songs/');
 const apps = mapByNumber(appItems, (i) => i.data.url ?? '/apps/');
 const pods = mapByNumber(podItems, (i) => `/podcast/${i.slug}/`, (i) => i.data.episode);
 const cities = mapByNumber(cityItems, (i) => i.data.url ?? '/cities/');
 const vlogs = mapByNumber(vlogItems, (i) => `/vlog/${i.slug}/`, (i) => i.data.vlog);
 
-const songsWip = wipSet(wipItems);
-
 const pillars = [
   { key: 'essays', label: 'Essays', href: '/posts/', map: essays, line: 'The written word.' },
-  { key: 'songs', label: 'Songs', href: '/songs/', map: songs, line: 'The felt word.', wip: songsWip },
   { key: 'apps', label: 'Apps', href: '/apps/', map: apps, line: 'The built word.' },
   { key: 'podcasts', label: 'Podcasts', href: '/podcast/', map: pods, line: 'The spoken word.' },
   { key: 'videos', label: 'Video essays', href: '/vlog/', map: vlogs, line: 'The shown word.' },
@@ -57,18 +42,19 @@ const pillars = [
 ];
 
 const SLOTS = 1000;
-const total = essays.size + songs.size + apps.size + pods.size + cities.size + vlogs.size;
+const total = essays.size + apps.size + pods.size + cities.size + vlogs.size;
 const cells = Array.from({ length: SLOTS }, (_, n) => n);
 ---
 
-<Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 songs, 1,000 apps. 3,000 pieces, made in public.">
+<Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 apps, 1,000 conversations, 1,000 videos, 1,000 city-states. Made in public.">
   <h1>The Work</h1>
   <p class="hero">
-    One body of work, six pillars, six thousand pieces: a thousand essays, a
-    thousand songs, a thousand apps, a thousand conversations, a thousand videos, a thousand
+    One body of work, five pillars, five thousand pieces: a thousand essays, a
+    thousand apps, a thousand conversations, a thousand videos, a thousand
     city-states. Made in public, owned forever. Every slot below is a piece
-    waiting to exist; the lit ones are done. Toward
-    <strong>{total.toLocaleString()} / 6,000</strong>.
+    waiting to exist; the lit ones are done. Songs live at
+    <a href="https://strummer.fun">strummer.fun</a> now. Toward
+    <strong>{total.toLocaleString()} / 5,000</strong>.
   </p>
 
   {pillars.map((p) => (
@@ -76,23 +62,11 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
       <div class="pillar-head">
         <a class="pillar-name" href={p.href}>{p.label}</a>
         <span class="pillar-tally">{p.map.size} <span class="of">/ 1,000</span></span>
-        {p.wip && p.wip.size > 0 && (
-          <span class="pillar-wip">+{p.wip.size} in progress</span>
-        )}
         <span class="pillar-line">{p.line}</span>
       </div>
       <div class={`slots slots-${p.key}`}>
         {cells.map((n) => {
           const hit = p.map.get(n);
-          const wip = !hit && p.wip?.has(n);
-          if (wip) {
-            return (
-              <span
-                class="slot wip"
-                title={`№ ${String(n).padStart(3, '0')} — in the workshop`}
-              ></span>
-            );
-          }
           return hit ? (
             <a
               class="slot filled"
@@ -140,16 +114,10 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
   .slot.filled:hover { transform: scale(1.6); filter: brightness(1.15); position: relative; z-index: 2; }
   /* Earth pigments, one per pillar: fired clay through gold to moss */
   .slots-essays .slot.filled { background: #7a3320; }
-  .slots-songs .slot.filled { background: #b34a2f; }
   .slots-apps .slot.filled { background: #c2814d; }
   .slots-podcasts .slot.filled { background: #8a6d34; }
   .slots-videos .slot.filled { background: #a2703f; }
   .slots-cities .slot.filled { background: #4f6656; }
-
-  /* Work in progress: lit, but clearly unfinished. The pile counts as practice
-     without claiming to be published work. */
-  .slot.wip { background: transparent; box-shadow: inset 0 0 0 1.5px var(--accent-soft); opacity: 0.55; }
-  .pillar-wip { font-family: var(--sans); font-size: 0.7rem; color: var(--accent-soft); }
 
   @media (max-width: 640px) {
     .slots { grid-template-columns: repeat(30, 1fr); }

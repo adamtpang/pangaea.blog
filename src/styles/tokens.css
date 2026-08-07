@@ -3,7 +3,7 @@
    "The daily page": warm paper, ink, one terracotta accent.
 
    Imported by BOTH stylesheets, so /posts and / are one family:
-     - global.css  (Base.astro: essays, songs, apps, daily, graph...)
+     - global.css  (Base.astro: essays, apps, daily, graph...)
      - pilot.css   (PilotLayout.astro: homepage, /pilot)
 
    It is the writing surface made into a website. Paper you want to

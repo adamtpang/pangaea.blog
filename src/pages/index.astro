@@ -5,7 +5,6 @@ import { getCollection } from 'astro:content';
 const epoch = new Date('1971-01-01').valueOf();
 
 const posts = await getCollection('posts');
-const songs = await getCollection('songs');
 const apps = await getCollection('apps');
 const eps = await getCollection('episodes');
 const cities = await getCollection('cities');
@@ -18,7 +17,6 @@ const livePosts = posts.filter((p) => !p.data.draft && p.data.date.valueOf() >= 
 
 const pillars = [
   { label: 'Essays', href: '/posts/', live: livePosts.length, wip: posts.length - livePosts.length },
-  { label: 'Songs', href: '/songs/', live: pub(songs).length, wip: wip(songs).length },
   { label: 'Apps', href: '/apps/', live: pub(apps).length, wip: wip(apps).length },
   { label: 'Podcasts', href: '/podcast/', live: pub(eps).length, wip: wip(eps).length },
   { label: 'City-states', href: '/cities/', live: pub(cities).length, wip: wip(cities).length },
@@ -32,16 +30,6 @@ const inHand = pillars.reduce((n, p) => n + p.wip, 0);
 const has = (c: any[], f: (d: any) => boolean) => c.filter((i) => f(i.data)).length;
 
 const parts = [
-  {
-    label: 'Songs',
-    total: songs.length,
-    legos: [
-      { n: 'key + tempo', v: has(songs, (d) => Boolean(d.key && d.tempo)) },
-      { n: 'chords', v: has(songs, (d) => Boolean(d.chords)) },
-      { n: 'instruments', v: has(songs, (d) => Boolean(d.instruments?.length)) },
-      { n: 'recording', v: has(songs, (d) => Boolean(d.audio || d.soundcloud || d.spotify || d.youtube)) },
-    ],
-  },
   {
     label: 'Essays',
     total: posts.length,
@@ -69,14 +57,15 @@ const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
 
 <PilotLayout
   title="Pangaea"
-  description="A body of work in five pillars: essays, songs, apps, conversations, city-states."
+  description="A body of work in four pillars: essays, apps, conversations, city-states."
 >
   <h1 class="wordmark">PANGAEA</h1>
 
   <p class="about">
-    A body of work, made in public and owned forever. Five pillars, a thousand
-    pieces each: the written word, the felt word, the built word, the spoken
-    word, the governed word. What gets measured gets managed.
+    A body of work, made in public and owned forever. Four pillars, a thousand
+    pieces each: the written word, the built word, the spoken word, the
+    governed word. Songs live at <a href="https://strummer.fun">strummer.fun</a>
+    now. What gets measured gets managed.
   </p>
 
   <!-- THE LEDGER: the counter. Shipped is what is public; in hand is the pile. -->

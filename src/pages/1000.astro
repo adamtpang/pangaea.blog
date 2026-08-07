@@ -2,34 +2,33 @@
 import Base from '../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
-// The wall: 1,000 essays + 1,000 songs + 1,000 apps. Every published piece
-// fills a cell. The empty cells are the point — the catalog you can see.
+// The wall: 1,000 essays + 1,000 apps. Every published piece fills a cell.
+// The empty cells are the point — the catalog you can see. Songs moved to
+// strummer.fun and keep their own wall there.
 const essays = (await getCollection('posts', ({ data }) => !data.draft)).length;
-const songs = (await getCollection('songs', ({ data }) => !data.draft)).length;
 const apps = (await getCollection('apps', ({ data }) => !data.draft)).length;
-const total = essays + songs + apps;
+const total = essays + apps;
 
 const CAP = 1000;
-const GOAL = CAP * 3;
+const GOAL = CAP * 2;
 
-// Cadence math: the weekly catalog is one essay, one song, one app (3/wk).
-const weeksLeft = Math.ceil((GOAL - total) / 3);
+// Cadence math: the weekly catalog is one essay, one app (2/wk).
+const weeksLeft = Math.ceil((GOAL - total) / 2);
 const finishWeekly = new Date();
 finishWeekly.setDate(finishWeekly.getDate() + weeksLeft * 7);
-const weeksLeftDaily = Math.ceil((GOAL - total) / 21); // one of each per day
+const weeksLeftDaily = Math.ceil((GOAL - total) / 14); // one of each per day
 const finishDaily = new Date();
 finishDaily.setDate(finishDaily.getDate() + weeksLeftDaily * 7);
 
 const pillars = [
   { name: 'Essays', count: essays, href: '/posts', cls: 'p-essay' },
-  { name: 'Songs', count: songs, href: '/songs', cls: 'p-song' },
   { name: 'Apps', count: apps, href: '/apps', cls: 'p-app' },
 ];
 ---
 
 <Base
   title="1,000 · Pangaea"
-  description="The wall: 1,000 essays, 1,000 songs, 1,000 apps. A life's catalog, one cell at a time."
+  description="The wall: 1,000 essays, 1,000 apps. A life's catalog, one cell at a time."
 >
   <h1>The thousand</h1>
 
@@ -38,10 +37,11 @@ const pillars = [
       <span><strong>{total.toLocaleString()}</strong> / {GOAL.toLocaleString()} pieces</span>
     </div>
     <div class="cadence-row meta">
-      Three pillars, a thousand each. One essay, one song, one app per week
-      finishes the wall around {finishWeekly.getFullYear()}. One of each per
-      day: {finishDaily.getFullYear()}. Either way, this is the work of a life
-      — that is the feature, not the bug.
+      Two pillars here, a thousand each (songs keep their own wall at
+      <a href="https://strummer.fun">strummer.fun</a>). One essay, one app per
+      week finishes this wall around {finishWeekly.getFullYear()}. One of each
+      per day: {finishDaily.getFullYear()}. Either way, this is the work of a
+      life, that is the feature, not the bug.
     </div>
   </div>
 
@@ -100,7 +100,6 @@ const pillars = [
   }
   .wall i.on { opacity: 1; }
   .wall i.p-essay { background: var(--accent); }
-  .wall i.p-song { background: var(--land); }
   .wall i.p-app { background: var(--ink); }
   .closing { margin-top: 2.5rem; }
   @media (max-width: 600px) {

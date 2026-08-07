@@ -134,46 +134,8 @@ const pilot = defineCollection({
   }),
 });
 
-// Songs: one of the three artistry pillars (1,000 essays + 1,000 songs +
-// 1,000 apps). Each song is an entry in src/content/songs/ with a Spotify or
-// SoundCloud link that drives the embed on /songs. The body is optional liner
-// notes. `number` is the odometer toward 1,000.
-const songs = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date().default(new Date('1970-01-01')),
-    number: z.number().int().nonnegative().optional(),
-
-    // --- The craft layer (the legos) ------------------------------------
-    // A song is a stack, not a single artifact. These fields let a song exist
-    // at ANY layer of the stack, so a chord progression with no recording is
-    // still a real entry. This is what makes 1,000 reachable: you ship the
-    // skeleton, then thicken it later.
-    key: z.string().optional(), // "A minor", "F# dorian"
-    tempo: z.number().int().positive().optional(), // BPM
-    // Harmonic skeleton, written plainly: "| Am | F | C | G |"
-    chords: z.string().optional(),
-    // What Adam actually played on it: drums, bass, guitar, piano, vocals.
-    instruments: z.array(z.string()).optional(),
-    // Where it sits in the stack. `sketch` is the floor and it COUNTS: a voice
-    // memo of a progression is a real song entry, the way a seedling is a real
-    // post. Only `released` implies a public link.
-    stage: z.enum(['sketch', 'demo', 'produced', 'released']).default('sketch'),
-    // The Ableton project folder on disk, so the entry points back at the work.
-    ableton: z.string().optional(),
-    // A self-hosted demo (voice memo, phone recording, rough bounce).
-    audio: z.string().optional(),
-
-    spotify: z.string().optional(), // Spotify URI, e.g. "track/XXXXXXXX"
-    soundcloud: z.string().optional(), // full SoundCloud URL
-    youtube: z.string().optional(), // YouTube video ID
-    blurb: z.string().optional(),
-    cover: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    draft: z.boolean().default(true),
-  }),
-});
+// Songs moved out to strummer.fun-songs (its own Astro site). See
+// SONGS-1000.md there for the model. Nothing songs-related lives here anymore.
 
 // Apps: the third artistry pillar. Each app is an entry in src/content/apps/
 // with a live url, a screenshot (cover), and a one-line thesis. The body is
@@ -219,7 +181,6 @@ export const collections = {
   episodes,
   vlogs,
   pilot,
-  songs,
   apps,
   cities,
 };
