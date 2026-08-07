@@ -66,6 +66,24 @@ one codebase and one design system.
   - Local-first is still the contract: the server is a backup and a cross-device
     merge, never the source of truth. Sync off, or offline, means the page saves
     to the device exactly as before.
+- **Seed prompts (`/api/daily/seeds`).** A rotating pick of 3 prompts from
+  `src/data/dailySeeds.ts`, sourced from `SEEDS-FARCASTER.md` / `SEEDS-OBSIDIAN.md`
+  / `src/content/inbox/`. Deterministic by `(date, round)`; "shuffle" just bumps
+  `round`. **Gated behind the same auth as sync, on purpose**: some seeds come
+  from private Obsidian notes, not just public Farcaster casts, so an
+  unauthenticated visitor gets no seed bar at all rather than a redacted one.
+  Never import `dailySeeds.ts` into client-shipped code.
+- **AI polish (`/api/daily/polish`).** Turns the day's rough spoken/typed page
+  into a claim-titled, 150-400 word draft via a single forced-tool-call request
+  to the Anthropic Messages API (raw `fetch`, model `claude-opus-5`, no SDK).
+  Adaptive thinking is left ON (not `disabled`) even though it is a quick task,
+  because disabling thinking on a forced `tool_choice` call risks the model
+  writing the tool call as plain text instead of a real `tool_use` block. Never
+  runs automatically; only on the "Polish into an essay" tap, which appears
+  once the page reaches 300 words and sync is authorized (same gate as seeds).
+  The result is local-only (`w300.polish.v1` in `localStorage`), never synced;
+  "Send to /write" prefers a polish for the viewed day when one exists, with a
+  "send raw instead" escape hatch.
 
 ## The /write editor (the main authoring path)
 

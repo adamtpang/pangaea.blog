@@ -25,6 +25,16 @@ import Base from '../layouts/Base.astro';
       <button type="button" id="backBtn">&larr; Back to today</button>
     </p>
 
+    <div class="seedbar" id="seedbar" hidden>
+      <div class="seedbar-head">
+        <span class="seedbar-label">Today's prompts</span>
+        <button type="button" class="linkbtn" id="seedShuffle">shuffle</button>
+        <button type="button" class="linkbtn" id="seedClear">write freely</button>
+      </div>
+      <div class="seedchips" id="seedchips"></div>
+      <p class="seedactive" id="seedActive" hidden></p>
+    </div>
+
     <div class="sheet">
       <div class="sheet-head">
         <span class="sheet-date" id="dateLabel">Today</span>
@@ -53,12 +63,24 @@ import Base from '../layouts/Base.astro';
 
     <div class="actions">
       <button type="button" class="btn" id="sendBtn">Send to /write &rarr;</button>
+      <a href="#" class="linkbtn" id="sendRawLink" hidden>send raw instead</a>
+      <button type="button" class="btn ghost" id="polishBtn" hidden>Polish into an essay &#10022;</button>
       <button type="button" class="btn ghost" id="micBtn" aria-pressed="false">
         <span class="recdot" aria-hidden="true"></span><span id="micLabel">Speak</span>
       </button>
       <button type="button" class="btn ghost" id="copyBtn"><span id="copyLabel">Copy</span></button>
       <button type="button" class="btn ghost" id="dlBtn">.md</button>
       <p id="statusLine"><span id="status" role="status"></span> <span id="interim"></span></p>
+    </div>
+
+    <div class="polish" id="polishPanel" hidden>
+      <div class="polish-head">
+        <span class="polish-label">Polished draft</span>
+        <button type="button" class="linkbtn" id="polishDiscard">discard</button>
+      </div>
+      <p class="polish-title" id="polishTitle"></p>
+      <p class="polish-blurb" id="polishBlurb"></p>
+      <div class="polish-body" id="polishBody"></div>
     </div>
 
     <div class="syncbar">
@@ -109,6 +131,50 @@ import Base from '../layouts/Base.astro';
 
 <style>
   .daily { max-width: 42rem; }
+
+  /* --- seed prompts -------------------------------------------------- */
+  .seedbar {
+    margin-bottom: 1rem;
+    padding: 0.7rem 0.9rem 0.8rem;
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .seedbar-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.55rem;
+  }
+  .seedbar-label {
+    font-family: var(--display);
+    font-size: 0.86rem;
+    font-weight: 560;
+    color: var(--ink-soft);
+  }
+  .seedchips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .seedchip {
+    font: inherit;
+    font-size: 0.86rem;
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.4em 0.7em;
+    color: var(--ink-soft);
+    cursor: pointer;
+    max-width: 100%;
+  }
+  .seedchip:hover { border-color: var(--accent); color: var(--ink); }
+  .seedchip.active { border-color: var(--accent); background: var(--accent-tint); color: var(--ink); }
+  .seedactive {
+    margin: 0.6rem 0 0;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--ink-mute);
+    line-height: 1.5;
+  }
 
   /* --- the sheet --------------------------------------------------- */
   .sheet {
@@ -261,6 +327,50 @@ import Base from '../layouts/Base.astro';
     margin: 0.35rem 0 0;
   }
   .heard { color: var(--ink-soft); }
+
+  /* --- polish ---------------------------------------------------------- */
+  .polish {
+    margin-top: 1rem;
+    padding: 1rem 1.1rem 1.1rem;
+    background: var(--surface);
+    border: 1px solid var(--accent-tint);
+    border-radius: 3px;
+  }
+  .polish-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .polish-label {
+    font-family: var(--display);
+    font-size: 0.86rem;
+    font-weight: 560;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+  }
+  .polish-title {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 560;
+    letter-spacing: -0.015em;
+    margin: 0 0 0.3rem;
+  }
+  .polish-blurb {
+    font-style: italic;
+    color: var(--ink-mute);
+    font-size: 0.95rem;
+    margin: 0 0 0.8rem;
+  }
+  .polish-body {
+    font-family: var(--serif);
+    font-size: 1rem;
+    line-height: 1.72;
+    color: var(--ink-soft);
+    white-space: pre-wrap;
+  }
 
   .backline {
     display: none;
@@ -522,7 +632,9 @@ import Base from '../layouts/Base.astro';
     }
 
     /* ---------- meter ---------- */
+    var lastWords = 0;
     function updateMeter(words) {
+      lastWords = words;
       wc.textContent = words;
       fill.style.width = Math.min(100, (words / GOAL) * 100) + '%';
       if (words >= GOAL) {
@@ -534,6 +646,7 @@ import Base from '../layouts/Base.astro';
         wcState.className = '';
         stamp.classList.remove('show');
       }
+      refreshPolishVisibility();
     }
 
     var saveTimer = null;
@@ -590,8 +703,8 @@ import Base from '../layouts/Base.astro';
       }
       document.getElementById('micBtn').style.display =
         isToday && speechAvailable ? '' : 'none';
-      document.getElementById('sendBtn').textContent =
-        isToday ? 'Send to /write →' : 'Send this page to /write →';
+      renderPolishForView();
+      refreshPolishVisibility();
       if (!isToday) stopListening();
     }
     document.getElementById('backBtn').addEventListener('click', function () {
@@ -808,15 +921,196 @@ import Base from '../layouts/Base.astro';
     });
 
     /* ---------- send to /write ---------- */
-    document.getElementById('sendBtn').addEventListener('click', function () {
-      var text = currentText();
-      if (!text) { setStatus('Nothing to send yet, write your page first.'); return; }
+    function sendToWrite(useRaw) {
+      var polished = !useRaw && polishMap[viewK];
+      var text, title;
+      if (polished) {
+        text = polished.body;
+        title = polished.title;
+      } else {
+        text = currentText();
+        if (!text) { setStatus('Nothing to send yet, write your page first.'); return; }
+        var first = (text.split(/\n/)[0] || '').trim();
+        title = (first.split(/[.!?]/)[0] || first).split(/\s+/).slice(0, 9).join(' ');
+      }
       saveNow();
-      var first = (text.split(/\n/)[0] || '').trim();
-      var title = (first.split(/[.!?]/)[0] || first).split(/\s+/).slice(0, 9).join(' ');
       // Same origin now, so a plain navigation works: no popup, nothing blocked.
       window.location.href = '/write?from=daily&title=' +
         encodeURIComponent(title) + '&seed=' + encodeURIComponent(text);
+    }
+    document.getElementById('sendBtn').addEventListener('click', function () { sendToWrite(false); });
+    document.getElementById('sendRawLink').addEventListener('click', function (ev) {
+      ev.preventDefault();
+      sendToWrite(true);
+    });
+
+    /* ---------- polish: AI-edit today's words into a mini essay ----------
+       Never automatic. Only runs when Adam taps the button, and only once
+       there is something worth polishing. The raw page is always what gets
+       saved locally; polish is a derived, disposable artifact kept in its
+       own localStorage key so it is never sent through /api/daily/sync. */
+    var POLISH_KEY = 'w300.polish.v1';
+    function loadPolishMap() {
+      try {
+        var v = JSON.parse(localStorage.getItem(POLISH_KEY));
+        return v && typeof v === 'object' && !Array.isArray(v) ? v : {};
+      } catch (e) { return {}; }
+    }
+    function savePolishMap() {
+      try { localStorage.setItem(POLISH_KEY, JSON.stringify(polishMap)); } catch (e) {}
+    }
+    var polishMap = loadPolishMap();
+
+    var polishBtn = document.getElementById('polishBtn');
+    var polishPanel = document.getElementById('polishPanel');
+    var polishTitleEl = document.getElementById('polishTitle');
+    var polishBlurbEl = document.getElementById('polishBlurb');
+    var polishBodyEl = document.getElementById('polishBody');
+    var sendBtnEl = document.getElementById('sendBtn');
+    var sendRawLinkEl = document.getElementById('sendRawLink');
+
+    function refreshPolishVisibility() {
+      // Polish costs a real API call, so only offer it once there is enough
+      // to work with, and only when sync/auth confirms the endpoint can
+      // actually authorize the request (it is gated the same way as sync).
+      polishBtn.hidden = !(typeof syncOn === 'function' && syncOn() && lastWords >= GOAL);
+    }
+
+    function renderPolishForView() {
+      var p = polishMap[viewK];
+      var isToday = viewK === todayK;
+      if (p) {
+        polishPanel.hidden = false;
+        polishTitleEl.textContent = p.title;
+        polishBlurbEl.textContent = p.blurb;
+        polishBodyEl.textContent = p.body;
+        sendBtnEl.textContent = 'Send polished essay to /write →';
+        sendRawLinkEl.hidden = false;
+      } else {
+        polishPanel.hidden = true;
+        sendBtnEl.textContent = isToday ? 'Send to /write →' : 'Send this page to /write →';
+        sendRawLinkEl.hidden = true;
+      }
+    }
+
+    polishBtn.addEventListener('click', function () {
+      var t = currentText();
+      if (!t) { setStatus('Nothing to polish yet, write your page first.'); return; }
+      polishBtn.disabled = true;
+      setStatus('Polishing…');
+      var headers = { 'content-type': 'application/json' };
+      if (!signedInAs && syncKey) headers['x-daily-key'] = syncKey;
+      fetch('/api/daily/polish', {
+        method: 'POST',
+        headers: headers,
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          text: t,
+          seedTitle: activeSeed ? activeSeed.suggestedTitle : undefined,
+          seedPrompt: activeSeed ? activeSeed.prompt : undefined
+        })
+      })
+        .then(function (r) { return r.json().then(function (d) { return { status: r.status, d: d }; }); })
+        .then(function (res) {
+          polishBtn.disabled = false;
+          if (res.status !== 200) {
+            setStatus((res.d && res.d.error) || 'Polish failed. Your words are still saved.');
+            return;
+          }
+          polishMap[viewK] = {
+            title: res.d.title,
+            blurb: res.d.blurb,
+            body: res.d.body,
+            tags: res.d.tags || [],
+            seedId: activeSeed ? activeSeed.id : null,
+            at: Date.now()
+          };
+          savePolishMap();
+          renderPolishForView();
+          setStatus('Polished. Review it, then Send to /write.');
+        })
+        .catch(function () {
+          polishBtn.disabled = false;
+          setStatus('Could not reach the polish endpoint. Your raw words are safe.');
+        });
+    });
+
+    document.getElementById('polishDiscard').addEventListener('click', function () {
+      delete polishMap[viewK];
+      savePolishMap();
+      renderPolishForView();
+    });
+
+    /* ---------- seed prompts ----------
+       Gated the same way as sync: some of these come from private notes, so
+       an anonymous visitor to /daily gets no seed bar at all, never a
+       redacted one. "Shuffle" just bumps a round counter and re-derives a
+       different deterministic pick; no server state to keep in sync. */
+    var seedbar = document.getElementById('seedbar');
+    var seedchips = document.getElementById('seedchips');
+    var seedActiveEl = document.getElementById('seedActive');
+    var SEED_ROUND_KEY = 'w300.seedRound';
+    var activeSeed = null;
+
+    function seedRound() {
+      try { return parseInt(localStorage.getItem(SEED_ROUND_KEY), 10) || 0; } catch (e) { return 0; }
+    }
+    function bumpSeedRound() {
+      try { localStorage.setItem(SEED_ROUND_KEY, String(seedRound() + 1)); } catch (e) {}
+    }
+
+    function setActiveSeed(seed, chipEl) {
+      activeSeed = seed;
+      if (seed) {
+        seedActiveEl.hidden = false;
+        seedActiveEl.textContent = seed.prompt;
+      } else {
+        seedActiveEl.hidden = true;
+      }
+      Array.prototype.forEach.call(seedchips.children, function (c) { c.classList.remove('active'); });
+      if (chipEl) chipEl.classList.add('active');
+    }
+
+    function renderSeedChips(seeds) {
+      seedchips.innerHTML = '';
+      seeds.forEach(function (s) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'seedchip';
+        b.textContent = s.suggestedTitle || (s.prompt.length > 42 ? s.prompt.slice(0, 42) + '…' : s.prompt);
+        b.title = s.prompt;
+        b.addEventListener('click', function () {
+          setActiveSeed(s, b);
+          if (viewK === todayK) page.focus();
+        });
+        seedchips.appendChild(b);
+      });
+    }
+
+    function loadSeeds() {
+      if (typeof syncOn !== 'function' || !syncOn()) { seedbar.hidden = true; return; }
+      var headers = {};
+      if (!signedInAs && syncKey) headers['x-daily-key'] = syncKey;
+      fetch('/api/daily/seeds?date=' + encodeURIComponent(todayK) + '&round=' + seedRound(), {
+        credentials: 'same-origin',
+        headers: headers
+      })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || !d.seeds || !d.seeds.length) { seedbar.hidden = true; return; }
+          seedbar.hidden = false;
+          renderSeedChips(d.seeds);
+        })
+        .catch(function () { seedbar.hidden = true; });
+    }
+
+    document.getElementById('seedShuffle').addEventListener('click', function () {
+      bumpSeedRound();
+      setActiveSeed(null, null);
+      loadSeeds();
+    });
+    document.getElementById('seedClear').addEventListener('click', function () {
+      setActiveSeed(null, null);
     });
 
     /* ---------- history ---------- */
@@ -1025,6 +1319,8 @@ import Base from '../layouts/Base.astro';
         if (!confirm('Turn off sync on this device? Your pages stay saved here, and stay on the server.')) return;
         writeKey(null);
         refreshSyncUI();
+        refreshPolishVisibility();
+        seedbar.hidden = true;
         return;
       }
       unlockBox.classList.add('show');
@@ -1041,7 +1337,9 @@ import Base from '../layouts/Base.astro';
       keyInput.value = '';
       unlockBox.classList.remove('show');
       refreshSyncUI();
+      refreshPolishVisibility();
       pushNow();
+      loadSeeds();
     });
     keyInput.addEventListener('keydown', function (ev) {
       if (ev.key === 'Enter') { ev.preventDefault(); document.getElementById('unlockSave').click(); }
@@ -1053,6 +1351,8 @@ import Base from '../layouts/Base.astro';
         .then(function () {
           signedInAs = null;
           refreshSyncUI();
+          refreshPolishVisibility();
+          seedbar.hidden = true;
           setSync('', 'Signed out. This device keeps its own copy.');
         });
     });
@@ -1080,9 +1380,10 @@ import Base from '../layouts/Base.astro';
         canOauth = !!me.oauth;
         canPassphrase = !!me.passphrase;
         refreshSyncUI();
-        if (syncOn()) pushNow();
+        refreshPolishVisibility();
+        if (syncOn()) { pushNow(); loadSeeds(); }
       })
-      .catch(function () { if (syncOn()) pushNow(); });
+      .catch(function () { if (syncOn()) { pushNow(); loadSeeds(); } });
 
     // Surface the result of a GitHub redirect, then tidy the URL.
     (function reportAuthRedirect() {
