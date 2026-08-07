@@ -273,6 +273,38 @@ of the emotional work in five of your real top tracks.**
 - **Done when:** you can play the loop and feel the one chord land different
   from the rest. `stage: sketch`.
 
+## Template G · "Banana Pancakes / A-Punk"
+**A whole song can run on four chords for its entire length if you commit to
+energy instead of adding harmony.**
+
+- **From:** two more real top artists (`strummer.fun/vibe`), each represented
+  by their best-known song rather than a confirmed personal top track —
+  Neon only cached 5 track-level records (see Template F); pulling more
+  requires the Spotify MCP's still-pending OAuth, so this is one level less
+  precise than Template F and that's said plainly, not smoothed over:
+  - Jack Johnson — *Banana Pancakes*, G major, four chords: `G`, `D`, `Am7`,
+    `C`. ~112-120bpm.
+  - Vampire Weekend — *A-Punk*, D major, four chords: `G`, `D`, `A`, `F#m`.
+    ~172-176bpm (a half-time feel reads closer to 88).
+- **The honest pattern:** both songs' entire harmonic vocabulary is four
+  chords, one of them a minor chord a step or two off the tonic, and neither
+  song ever leaves that palette for a bridge or key change. What differs is
+  what each does with it: Jack Johnson sits back around 114bpm and lets the
+  loop feel unhurried; Vampire Weekend takes a same-shaped loop and runs it
+  past 170bpm until it feels frantic. Same size of harmonic decision,
+  opposite feeling, purely from tempo and energy.
+- **Tempo:** two ends on purpose — roughly 114 and 176 (or 88 half-time).
+  Pick whichever end you're avoiding.
+- **The drill:** take your 4-chord loop from Template F (or a fresh one).
+  Don't add a fifth chord. Record it twice — once relaxed, once nearly
+  double-time. Notice how little the harmony has to do once tempo is doing
+  the work. This is the direct answer to "solve my perfectionism
+  artistically": the fix was never more chords.
+- **Budget:** 20 to 30 minutes — a tempo/arrangement drill, not a new
+  progression to learn.
+- **Done when:** you've recorded the same loop at two different tempos and
+  can still hear it's the same four chords. `stage: sketch`.
+
 ## The speed round (the Clairo method)
 
 Verified, not folklore: Clairo made *Pretty Girl* in about two hours in
