@@ -305,6 +305,42 @@ energy instead of adding harmony.**
 - **Done when:** you've recorded the same loop at two different tempos and
   can still hear it's the same four chords. `stage: sketch`.
 
+## Template H · "iPop" (K-pop structure, internet-native sound)
+**Steal the editing discipline, not the palette. K-pop's real trick isn't a
+sound, it's refusing to let any section overstay its welcome.**
+
+- **From:** not your own top tracks like F and G, said plainly. No K-pop act
+  is in your real top-12 artist list from `strummer.fun/vibe`, so this
+  template is a deliberate reach, not a mined pattern. It's built from
+  production/arrangement conventions, structure only, no lyrics:
+  - a single song moves through genuinely different genres section to
+    section, treated as normal rather than a mistake
+  - the pre-chorus is written as its own hook-bearing event, not a ramp to
+    the real chorus
+  - sections get cut the instant they stop earning attention, not padded to
+    a "normal" length
+  - one small repeatable gesture, a vocal ad-lib or a rhythmic stab, becomes
+    the thing you remember, separate from the melody itself
+  - dense, maximalist sound design paired with tight arrangement discipline,
+    the two treated as compatible instead of opposites
+- **The thesis (iPop):** same structural aggression, aimed at internet-native
+  texture instead of K-pop's own palette. Glitch stabs, hyperpop-adjacent
+  synths, chiptune, meme-length timing. A genre defined by editing decisions,
+  not by instrumentation.
+- **Tempo:** deliberately not one number. Let it shift section to section,
+  roughly 130-170, the shift itself is part of the technique.
+- **The drill:** write three 4 to 8 bar sections that sound like three
+  different genres, using whatever's already loaded in Live. One gesture
+  (a vocal chop, a stab, a fill) must repeat identically in all three so
+  they read as one song, not three demos. Cut each section the moment it
+  stops earning attention, no bar added "because that's how long it should
+  be."
+- **Budget:** 45 to 60 minutes. Higher complexity than a single-loop
+  template, still not a full production.
+- **Done when:** you can play the three sections back to back, the jump
+  doesn't feel like a mistake, and the repeated gesture is what ties it
+  together. `stage: sketch`.
+
 ## The speed round (the Clairo method)
 
 Verified, not folklore: Clairo made *Pretty Girl* in about two hours in
