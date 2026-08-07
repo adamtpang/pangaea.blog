@@ -46,3 +46,11 @@ scripts/*/.venv/
 # Separated audio stems (big, derived, not source)
 stems/
 .env*
+
+# Demucs local install: model weights cache to ~/.cache/huggingface, but the
+# venv and any separated output / test audio dropped in scripts/demucs/ stay
+# local. See scripts/README-demucs.md.
+scripts/demucs/separated/
+scripts/demucs/*.wav
+scripts/demucs/*.mp3
+scripts/demucs/*.flac
