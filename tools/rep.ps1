@@ -34,7 +34,7 @@ Get-ChildItem $postDir -Filter *.md -ErrorAction SilentlyContinue | ForEach-Obje
   $c = Get-Content $_.FullName -Raw
   if (-not $c.Contains($STUB)) { return }
   $num = if ($c -match '(?m)^number:\s*(\d+)') { [int]$Matches[1] } else { 999999 }
-  $title = if ($c -match "(?m)^title:\s*'?(.+?)'?\s*$") { $Matches[1] } else { $_.BaseName }
+  $title = if ($c -match "(?m)^title:\s*'?(.+?)'?\s*$") { $Matches[1] -replace "''", "'" } else { $_.BaseName }
   $stubs += [pscustomobject]@{ Num = $num; Title = $title; Path = $_.FullName }
 }
 
