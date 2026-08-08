@@ -1,15 +1,28 @@
 # The 1,000 queue
 
-The running order. № 000-002 are published. Everything below is a real claim
-derived from a real seed of yours, not a topic word. Work top down; the daily
-5:07 AM drafter reads this file and takes the next unwritten one.
+The running order. № 000-002 are published, № 195 shipped outside this queue
+(a Behind the Track post). Everything below is a real claim derived from a
+real seed of yours, not a topic word. Work top down; the daily 5:07 AM drafter
+reads this file and takes the next unwritten one.
 
 **Rule:** a queue entry is a CLAIM, not a subject. "Money" is not an essay.
 "Companies Are Fictions" is.
 
-**Honest count:** 192 claims below. The remaining slots to 1,000 fill from the
-~1,000 unmined Keep notes, the X archive, and from living. Do not pad this file
-to 1,000. A queue you trust beats a queue that is full.
+**Honest count:** 432 claims below (№ 003-435, minus the one that shipped
+early). RUN 15-18 were mined in one pass from real source material that
+existed but had not been read yet: 1,784 Google Keep notes (the takeout zip
+in Downloads), the 1,266-tweet X archive already sitting in
+`adamanack/sources/twitter/`, and a second, more thorough pass over
+`src/content/inbox/`'s 140 files. Each one is grounded in something you
+actually wrote, quoted in the mining record; nothing here was invented from
+a bare topic word. The remaining slots to 1,000 still fill from, in order:
+what's left unmined in Keep (~1,300 notes were skipped as logistics, diary,
+or too private), and from living. Do not pad this file to 1,000. A queue you
+trust beats a queue that is full.
+
+Every title below already has a stub file in `src/content/posts/` (draft:
+true, unwritten body). RUN 1-14 stubs are the older batch; RUN 15-18 stubs
+were created in the same pass as this update.
 
 ---
 
@@ -18,7 +31,7 @@ to 1,000. A queue you trust beats a queue that is full.
 Promote from `src/content/inbox/`. Re-title by the claim, strip em dashes, date it, ship.
 
 003. Permission Was The Product *(drafted, sharpened from "Academia Is a Credential Cartel")*
-004. Acceleration Is a Moral Position
+004. Acceleration Is a Moral Position *(drafted, video_ready → summon.guide script mode)*
 005. Accountability Is a Gift You Ask For
 006. Addiction Is Misrouted Wanting
 007. Adventure Is a Scheduling Problem
@@ -249,16 +262,269 @@ Promote from `src/content/inbox/`. Re-title by the claim, strip em dashes, date 
 193. Be Reliable · do what you said, it is the whole reputation
 194. Zoom Out And Post More · the civilizational pulse argument for visibility
 
+## RUN 15 · Mined from Google Keep (real notes, business/hustle era)
+
+196. Untangling Is A Superpower
+197. The Best Work Is You-Shaped
+198. A Quest Needs A Moral Component
+199. Money Follows Service
+200. Curating Your Audience Serves The Art
+201. Showmanship Is Salesmanship
+202. Many Small Risks Beat One Big Risk
+203. Quality Of Leisure Determines Quality Of Work
+204. A Corrected Error Is Just As Good As A Success
+205. Stasis Is The Worst Error
+206. The Danger Is Dogma, Not Mistakes
+207. Pay It Forward, Not Backward
+208. Do Only What Wouldn't Happen Without You
+209. Creativity Is Disobedience
+210. Self-Discipline Is A Patch
+211. Personal Branding Is Awareness Routing
+212. You Can't Feel Sleazy Selling What You're Proud Of
+213. Durability Beats Growth
+214. Your Play Is My Hard Work
+215. Criticism Is A Gift
+216. There Are No First Principles
+217. Forgiveness Is A Skill
+218. Humility Is Changing Your Mind
+219. The Best Thing Money Buys Is Peace Of Mind
+220. Withholding Help Is Not Humility
+221. Conviction Is Convincing
+222. Trust Ideas You Cannot Break
+223. History Gives You The Slope
+224. The Best Culture Merges To Main
+225. You Were Dead For Billions Of Years
+226. Self-Obsession Is The Root Of All Unhappiness
+227. If It Doesn't Break The Laws Of Physics, It's Possible
+228. Early Investors Deserve More Of You Later
+
+## RUN 16 · Mined from Google Keep (real notes, reflective/philosophy era)
+
+229. Nothing Still Wins
+230. It's Slope, Not Y-Intercept
+231. The Bad Is Next To The Good
+232. Matter And What Matters, Both Matter
+233. You Beat Entropy With Radical Ignorance
+234. You Can't Get Wealthy Renting Out Your Time
+235. Teach To The Problem, Not The Tool
+236. You Can't Solve A Short-Term Problem With A Long-Term Solution
+237. Never Depend On One Shot
+238. Don't Take Criticism From Someone You Wouldn't Take Advice From
+239. If There Is Doubt, There Is No Doubt
+240. You Don't Control The Ocean, Only Your Sail
+241. Avoid What You Can, Summon The Rest
+242. Growth Isn't A Cure-All, But Stagnation Is A Kill-All
+243. Predisposed, Not Predestined
+244. We Are The Keys To Each Other's Locks
+245. What's Obvious To You Is Genius To Others
+246. Judge Yourself By Inputs, Not Outputs
+247. Just In Time Beats Just In Case
+248. The Best Books Resist Summary
+249. Some People Are Better At Being Themselves
+250. The Internet Gave Back What It Took
+251. 80 Percent Fast Beats 99 Percent Slow
+252. Hard Is The Moat
+253. Errors Are State, Not Trait
+254. Do Not Kill The Ideal, Do Not Kill The Fool
+255. The Fastest Way To Do Something Is To Not Do It At All
+256. If You Know, Go. If You Don't, Grow.
+257. A Desire Can Be Another Desire's Obstacle
+258. The Net Is Always Bigger Than The Catch
+259. Compare Yourself Only To Yesterday
+260. Violence Is A Zero-Sum Signal
+
+## RUN 17 · Mined from the real X archive (original tweets, not RTs or replies)
+
+261. Techno-Optimism Is A Proto-Religion
+262. Every Place Is A Bubble That Magnifies You
+263. People Are The Best Search Engines
+264. An Unbroken Chain To The First Lifeform
+265. Journaling Reveals The Scripts You Live From
+266. One Place Doesn't Need To Have Everything
+267. The Internet Dream Is The New American Dream
+268. The Spirit Of A Place Matters More Than Its Manifestation
+269. Containerize Experiments, Then Scale The Winners
+270. If You Can Ignore It, It's Not A Problem
+271. Free Yourself From The Shackles Of Expectation
+272. Optimism Is Turning On The Tap
+273. Creativity Lives In The Prompt
+274. Twitter Is Planetary Slack
+275. Your Blind Spots Are Invisible To You
+276. The Ship Of Theseus Still Arrives
+277. Artist-Art-Audience Fit Is Product-Market Fit
+278. The Internet Is The Most Populous Country
+279. We Are Earth Made Conscious
+280. Plant Like A Madman
+281. You Could Be A Future Fossil
+282. The Side Quest Has The Reward
+283. Make It For You, The Audience Comes Last
+284. There's No Free Lunch, But Cheap Lunch Exists
+285. Virtue Pointed Wrong Is Vice
+286. Failure Is Irrelevant Unless Catastrophic
+287. Everything You Do Polarizes Someone
+288. X Is Where Your Mind Has Been, IG Is Where Your Body Has Been
+289. Minimalism Optimizes The Past
+290. Religions Are Different Languages For The Same Thing
+291. Every Business Is A Lifestyle Business
+292. Openness Is Variation, Conscientiousness Is Selection
+293. Non-Users Are The Control Group
+294. We Cooperate Without Even Liking Each Other
+295. Experiments Can't Fail, They Only Inform
+296. The Rosetta Stone Had Great Product, Terrible Marketing
+297. Sow Specifically, Reap Generally
+298. Originality Is In The Combination
+299. The Internet Made The Loneliness Crisis And Solves It
+
+## RUN 18 · Mined from src/content/inbox/ (topic stubs, one or more claims per file)
+
+300. Delete The Idea And See What Returns
+301. Follow The Pagerank Of Ideas
+302. Your Skillstack Is Your Moat
+303. You Pay For Knowledge, Not Products
+304. Knowledge Is Wealth Lagged
+305. The Closer You Are To Source, The Less You Memorize
+306. Fandoms Are Generational, Not Permanent
+307. Words Are Memes
+308. You Understand More Than You Can Say
+309. Babel Is Unanimous, Therefore Fragile
+310. Pain Is Plasticity
+311. There Are Laws Of People, Too
+312. Don't Ask Others To Do What You Wouldn't Do
+313. Markets Select For Benevolent Dictators
+314. Micromanage Only The Bottleneck
+315. Tiny Inputs, Colossal Outputs
+316. Hardship Reveals Dark Capability
+317. No One Wins Every Dimension
+318. Exploration Is A Birthright, Not A Luxury
+319. Marketing Is Downstream Of Product
+320. Your Product Is Fire, Find The Dry Trees
+321. Everybody Needs You, They Just Don't Know It
+322. Masculinity Is Intrinsic, Not Performed
+323. Build A Life, Don't Force Dating
+324. Meaning Is What Outlives You
+325. You Unlearn By Learning More
+326. Boredom Means You Already Learned
+327. Status Is Against Your Past And Future Self
+328. Depression Is Anti-Flow
+329. Therapy Is Secular Confession
+330. Copy Deliberately, Not Automatically
+331. Love Has No Speed Limit
+332. Lyrics Don't Matter Much
+333. The Instrumental Should Stand Alone
+334. Music Is How You Get To Know Someone
+335. Opportunities Are Not Guarantees
+336. Climb The Ladder, Then Send It Back Down
+337. Watch What People Do, Not What They Say
+338. A Worthy Mission Makes The Cost Easy
+339. Life Is A Budget You Spend
+340. Depression Is A Narrowing Of Possibilities
+341. Skills Beat Credentials
+342. Markets Are Error-Correcting Machines
+343. Capitalism Is Effective Altruism
+344. Housing Should Not Be The Economic Base
+345. The Power Law's Shape Never Changes
+346. A Degree Is A Luxury Brand
+347. You Are A Startup
+348. There Are No Adults
+349. Wisdom Avoids Disaster, Genius Creates Upside
+350. The Biggest Mistake Is Building What Doesn't Need To Exist
+351. Kids Are A Stake In The Future
+352. Good Movies Are Modern Parables
+353. Flow Is Thought Fused To Action
+354. Love The Ugliest Part Too
+355. Errors Mark The Frontier Of Understanding
+356. Pick The Right Game First
+357. When You Win, Stop Playing
+358. Games Are Microcosms Of Life
+359. You Didn't Choose Your Genes, But You Use Them
+360. If You Can't Found It, You Don't Deserve To Inherit It
+361. Governance Unlocks Or Traps Human Potential
+362. The Best Government Gets Out Of The Way
+363. Stress Is Untaken Action
+364. Your Heroes Have Heroes Too
+365. History Is Reality Through Time
+366. Passionate Amateurs Change History
+367. Only The Fool Can Tell The King The Truth
+368. Nobody Would Be The Same If They Could Afford To Be Different
+369. You Don't Have To Be Well Known, Just Known Well
+370. You Can Invest In People, Not Just Companies
+371. Influence Runs Both Ways
+372. Lukewarm Safety Is Unattractive
+373. We Admire Difference, Not Sameness
+374. To Befriend Your Heroes, Be Heroic
+375. Follow The Incentives, Skip The Conspiracy
+376. Following Someone Is An Attention Faucet
+377. There Is No View From Nowhere
+378. If You Can Ignore The Solution, It Wasn't A Problem
+379. The Path To Peace Is Truth
+380. Meaning Beats Happiness
+381. Every Evil Is A Lack Of Knowledge
+382. Not Needing Is As Good As Having
+383. Capitalism Is A Great System, Terrible God
+384. It Has Never Been Easier For Philosophers To Become Kings
+385. Only Talk To People You Genuinely Want To Talk To
+386. Fish Can't See Their Own Water
+387. Decades Can Happen In Weeks
+388. You Learn Money By Having Had Both
+389. Begin With The Problem, Not The Ground Up
+390. Online Fame Is A Problem Of Degree, Not Kind
+391. Larp Until It's Not A Larp
+392. Leverage Is One Decision That Acts Without You
+393. Hard Work Can Compensate For Missing Clarity
+394. Psychedelics Are The Nuclear Option Of Psychonautics
+395. Anxiety Is Future Problems, Depression Is Past Ones
+396. People Fear Tests Because Tests Reveal Them
+397. The Adult Grows Around The Child
+398. Misunderstanding Is The Default State
+399. Every App Is A One-Line Thesis
+400. Interview Your Future Self
+401. We Are Writing The Next Testament
+402. Christianity Was A Different Algorithm
+403. Sales Is Applied Empathy
+404. Ask If You'd Buy It Yourself
+405. Selling Is Helping, Not Hurting
+406. Dopamine Is The First Economy
+407. The Dose Makes The Poison
+408. We Are A Superorganism
+409. Science Fiction Is Science Faction
+410. Violence Is Blind
+411. Soccer Is A Microcosm Of Life
+412. The Ball Moves Faster Than You Do
+413. Founding Is A Method, Not A Goal
+414. Only Start What You Can't Buy
+415. Startup Ideas Hide In Your Monthly Burn
+416. Startups Are Like Building A Fire
+417. Statistics Doesn't Work On A Sample Size Of One
+418. Beautiful Inputs, Beautiful Outputs
+419. Stoicism Is Christianity's Older Branch
+420. Profits Are Proof Of Societal Service
+421. Deleting Should Be Easier Than Adding
+422. Problems Are Theory Conflicts
+423. Vulnerability Breeds Trust
+424. Vice-Signaling Beats Virtue-Signaling
+425. Generate, Curate, Excavate
+426. Wisdom Is Wanting The Right Things
+427. A Bad Man Is A Good Man's Job
+428. The Closer To Truth, The More Silent
+429. Money Is For Freedom, Not Happiness
+430. Children Have Always Worked
+431. Never Let Cowardice Be A Bottleneck
+432. Writing Is Thinking
+433. Each Tweet Is A Blog, Each Blog A Tweet
+434. Writing Is Clarity-Smithing
+435. Broadcasting Is Still Self-Notetaking
+
 ---
 
-## The remaining ~815 slots
+## The remaining ~565 slots
 
 They fill from, in order of yield:
 
-1. **~1,000 untitled Keep notes** (`Downloads/takeout-...zip`), never content-mined
-2. **The X archive** (not yet downloaded, x.com/settings → Download an archive)
-3. **The 123 topic stubs** in `src/content/inbox/`, each of which can carry
-   several distinct claims once you pick an angle
-4. **Living.** Most of the last few hundred essays have not happened to you yet.
+1. **The rest of the Keep notes.** ~1,300 were skipped this pass (logistics,
+   diary-grade, or too private for a public claim). What's left is thinner,
+   but not zero.
+2. **The rest of the X archive.** 392 original (non-RT, non-reply) tweets
+   were mined; the rest were retweets, replies, or too short to stand alone.
+3. **Living.** Most of the last few hundred essays have not happened to you yet.
 
 Do not pre-write those slots. An empty slot is not a debt.
