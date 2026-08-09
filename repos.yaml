@@ -1,0 +1,20 @@
+# repos.yaml v0 — see github.com/adamtpang/repo-connect
+repo: pangaea.blog
+is: Personal essay site and hub for the life loop. Two pillars live here directly (1000 essays via ESSAYS-1000.md, 1000 apps via src/content/apps/); the third, songs, spun out into its own repo.
+cluster: 1000-life-loop
+
+provides:
+  - id: apps-pillar
+    what: The "1000 apps" content collection, already a working home for every app/project Adam has shipped or is building, no separate repo needed for this pillar
+    at: src/content/apps/
+  - id: essays-pillar
+    what: The 1000-essays framework and progress tracking
+    at: ESSAYS-1000.md
+
+stack: [astro, typescript]
+
+kin:
+  - repo: strummer.fun-songs
+    why: The songs pillar of the same three-pillar life loop (essays and apps live here, songs lives there). Migrated out on 2026-08-08 so the songs pipeline could ship as its own site.
+  - repo: ships
+    why: thedojo.fun (the ships repo's live domain) is the chosen home for the apps pillar going forward, replacing vercel.school in that role. The apps pillar here (src/content/apps/) is hand-maintained markdown; whether it migrates to thedojo.fun the way songs migrated to strummer.fun-songs is an open question, not yet decided.
