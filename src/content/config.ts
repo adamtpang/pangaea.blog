@@ -137,6 +137,31 @@ const pilot = defineCollection({
 // Songs moved out to strummer.fun-songs (its own Astro site). See
 // SONGS-1000.md there for the model. Nothing songs-related lives here anymore.
 
+// Reels: short-form essay/book video, the spoken pillar's shortest unit (see
+// reels/README.md — "essays and books to video," vertical, ~30-90s). Each
+// reel is authored as a script at reels/{slug}.md (hook/beats/CTA, not
+// synced here); this collection is the PUBLISHED metadata once a script is
+// rendered (or queued): where the video lives, its poster, and its source
+// essay. `rendered: false` reels show as "in production" — a real, honest
+// state, not a placeholder pretending to be ready.
+const reels = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date().default(new Date('1970-01-01')),
+    number: z.number().int().nonnegative().optional(),
+    // The essay/post this reel adapts, e.g. "/posts/agency-is-the-only-skill" or an external URL.
+    source: z.string().optional(),
+    length: z.string().optional(), // e.g. "35s", author's own estimate from the script
+    blurb: z.string().optional(),
+    rendered: z.boolean().default(false),
+    video: z.string().optional(), // public/ path to the mp4, only when rendered
+    poster: z.string().optional(), // public/ path to a poster frame
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().default(true),
+  }),
+});
+
 // Apps: the third artistry pillar. Each app is an entry in src/content/apps/
 // with a live url, a screenshot (cover), and a one-line thesis. The body is
 // optional build-log notes. `number` is the odometer toward 1,000.
@@ -180,6 +205,7 @@ export const collections = {
   inbox,
   episodes,
   vlogs,
+  reels,
   pilot,
   apps,
   cities,

@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const reels = (await getCollection('reels', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const rendered = reels.filter((r) => r.data.rendered);
+const inProduction = reels.filter((r) => !r.data.rendered);
+---
+
+<Base
+  title="Reels · Pangaea"
+  description="Essays and books, cut to short-form video."
+>
+  <h1>Reels</h1>
+
+  {reels.length === 0 && (
+    <>
+      <p class="meta">Essays and books, cut to short-form video. Coming soon.</p>
+      <p>
+        If you want a ping when the first one ships, drop a note via{' '}
+        <a href="https://adampang.com/hi">adampang.com/hi</a>.
+      </p>
+    </>
+  )}
+
+  {rendered.length > 0 && (
+    <>
+      <p class="meta">{rendered.length} rendered{inProduction.length > 0 ? `, ${inProduction.length} in production` : ''}.</p>
+      <ul class="media-grid">
+        {rendered.map((r) => (
+          <li>
+            <a href={`/reels/${r.slug}/`} class="media-card">
+              {r.data.poster && (
+                <div class="media-thumb">
+                  <img src={r.data.poster} alt={r.data.title} loading="lazy" />
+                </div>
+              )}
+              <div class="media-body">
+                {r.data.number !== undefined && (
+                  <span class="media-num">Reel {r.data.number}</span>
+                )}
+                <h2 class="media-title">{r.data.title}</h2>
+                {r.data.blurb && <p class="media-blurb">{r.data.blurb}</p>}
+                {r.data.length && <span class="media-date">{r.data.length}</span>}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+
+  {inProduction.length > 0 && (
+    <>
+      <h2 class="sec">In production</h2>
+      <p class="meta">Scripts written, queued for render — not fake placeholders, just honest about the state.</p>
+      <ul class="reel-queue">
+        {inProduction.map((r) => (
+          <li>
+            <span class="rq-title">{r.data.title}</span>
+            {r.data.blurb && <span class="rq-blurb">{r.data.blurb}</span>}
+            {r.data.length && <span class="rq-len">{r.data.length}</span>}
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+</Base>
+
+<style>
+  .sec { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 2.25rem 0 0.75rem; font-weight: 600; }
+  .reel-queue { list-style: none; padding: 0; margin: 0; }
+  .reel-queue li { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; padding: 0.75rem 0; border-bottom: 1px solid var(--rule); }
+  .rq-title { font-weight: 600; }
+  .rq-blurb { color: var(--muted); font-size: 0.85rem; margin-right: auto; }
+  .rq-len { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+</style>

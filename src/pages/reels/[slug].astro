@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const reels = await getCollection('reels', ({ data }) => !data.draft && data.rendered);
+  return reels.map((r) => ({ params: { slug: r.slug }, props: { reel: r } }));
+}
+
+interface Props {
+  reel: CollectionEntry<'reels'>;
+}
+
+const { reel } = Astro.props;
+const { Content } = await reel.render();
+const { data } = reel;
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title={`${data.title} · Pangaea`} description={data.blurb}>
+  <article class="post">
+    <header>
+      <h1>{data.title}</h1>
+      <p class="post-meta">
+        {data.number !== undefined && <span class="num">Reel {data.number}</span>}
+        {fmt(data.date)}
+        {data.length && <> &middot; {data.length}</>}
+      </p>
+    </header>
+
+    {data.video && (
+      <div class="prose reel-video">
+        <video controls preload="metadata" poster={data.poster} src={data.video}>
+          <a href={data.video}>Download the video</a>
+        </video>
+      </div>
+    )}
+
+    {data.blurb && <p class="prose blurb-line"><em>{data.blurb}</em></p>}
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {data.source && (
+      <p class="meta">
+        Adapted from{' '}
+        {data.source.startsWith('http') ? (
+          <a href={data.source}>{data.source}</a>
+        ) : (
+          <a href={data.source}>the essay</a>
+        )}
+        .
+      </p>
+    )}
+
+    <hr />
+    <p class="meta">
+      <a href="/reels/">&larr; All reels</a> &nbsp; · &nbsp;
+      <a href="https://adampang.com/hi">Tell me what you think</a>
+    </p>
+  </article>
+</Base>
+
+<style>
+  .reel-video video { width: 100%; max-width: 380px; border-radius: 8px; display: block; margin: 0 auto; }
+</style>
