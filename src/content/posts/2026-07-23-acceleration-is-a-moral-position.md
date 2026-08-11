@@ -6,6 +6,13 @@ blurb: Going faster is not a productivity preference; it is a claim about who de
 tags: [progress, ethics]
 status: seedling
 draft: true
+video_ready: true
+spoken_seconds: 105
+beats:
+  - "Speed is not temperament. Every schedule is a decision about who waits."
+  - "The cost of slowness is paid by strangers you never meet, which is why caution feels free."
+  - "Treat pace as ethics, not aesthetics. There is no speed limit on the seeds you can plant."
+pull_quote: There is no speed limit on the seeds you can plant.
 ---
 
 Speed gets treated as a personality trait. Some people are fast, some are careful, and we file it under temperament. That is a dodge. Every schedule is a decision about who waits.
