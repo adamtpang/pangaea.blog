@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+// SSR: renders unpublished drafts, so this must never be a static file on the
+// public CDN. Same gate as /studio, on purpose: reuses the same cookie, so
+// unlocking one unlocks the other.
+export const prerender = false;
+
+const PASSWORD = import.meta.env.WRITE_PASSWORD ?? process.env.WRITE_PASSWORD ?? '';
+const url = new URL(Astro.request.url);
+const supplied = url.searchParams.get('key') ?? Astro.cookies.get('pangaea_studio')?.value ?? '';
+const authed = PASSWORD.length > 0 && supplied === PASSWORD;
+
+if (authed && url.searchParams.get('key')) {
+  Astro.cookies.set('pangaea_studio', PASSWORD, {
+    httpOnly: true, sameSite: 'lax', path: '/', secure: url.protocol === 'https:',
+  });
+}
+
+// Drafted essays only (written, not stubs, not yet published), same "furthest
+// stage" logic /visualize uses: has a real body, still draft: true.
+const STUB = '[Stub. Open this in /studio';
+let drafts: CollectionEntry<'posts'>[] = [];
+let rendered: { entry: CollectionEntry<'posts'>; Content: any }[] = [];
+if (authed) {
+  const all = await getCollection('posts', ({ data, body }) => data.draft && !body.includes(STUB));
+  drafts = all.sort((a, b) => (a.data.number ?? 999999) - (b.data.number ?? 999999));
+  rendered = await Promise.all(
+    drafts.map(async (entry) => ({ entry, Content: (await entry.render()).Content }))
+  );
+}
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title="Preview · Pangaea" description="Read every drafted essay in real reading type before deciding what publishes.">
+  {!authed && (
+    <div class="lock">
+      <h1>Preview</h1>
+      <p class="meta">
+        Backstage. This reads unpublished drafts, so it stays behind the key
+        (same one as /studio).
+      </p>
+      <form method="get" class="lock-form">
+        <input type="password" name="key" placeholder="WRITE_PASSWORD" autofocus required />
+        <button type="submit" class="btn">Unlock</button>
+      </form>
+      {PASSWORD.length === 0 && (
+        <p class="lock-warn">
+          No <code>WRITE_PASSWORD</code> is configured on this deployment, so
+          preview is sealed.
+        </p>
+      )}
+    </div>
+  )}
+
+  {authed && (
+    <>
+      <div class="preview-head">
+        <h1>Preview</h1>
+        <p class="meta">
+          {drafts.length} drafted essay{drafts.length === 1 ? '' : 's'}, in
+          the same reading type as a published post. Nothing here is public;
+          approve by editing <code>draft: false</code> yourself, or ask me to.
+        </p>
+      </div>
+
+      <nav class="toc">
+        <ol>
+          {drafts.map((d) => (
+            <li>
+              <a href={`#p${d.data.number ?? d.slug}`}>
+                {d.data.number !== undefined && <span class="num">№{String(d.data.number).padStart(3, '0')}</span>}
+                {d.data.title}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      {rendered.map(({ entry, Content }) => (
+        <article class="post preview-post" id={`p${entry.data.number ?? entry.slug}`}>
+          <header>
+            <h1>{entry.data.title}</h1>
+            <p class="post-meta">
+              {entry.data.number !== undefined && (
+                <span class="num">№ {String(entry.data.number).padStart(3, '0')}</span>
+              )}
+              {fmt(entry.data.date)}
+              {entry.data.tags && entry.data.tags.length > 0 && (
+                <span class="tags"> &middot; {entry.data.tags.join(', ')}</span>
+              )}
+            </p>
+          </header>
+          {entry.data.blurb && <p class="prose blurb-line"><em>{entry.data.blurb}</em></p>}
+          <div class="prose">
+            <Content />
+          </div>
+          <p class="meta preview-actions">
+            <a href={`/studio?key=${PASSWORD}#`}>Edit in /studio</a>
+            &nbsp;&middot;&nbsp;
+            <a href="#top">Back to top</a>
+          </p>
+        </article>
+      ))}
+    </>
+  )}
+</Base>
+
+<style>
+  .lock { max-width: 26rem; }
+  .lock-form { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
+  .lock-form input { flex: 1; padding: 0.55rem 0.7rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--surface); color: var(--ink); font-family: var(--sans); }
+  .lock-form input:focus { outline: none; border-color: var(--accent); }
+  .lock-warn { margin-top: 1rem; font-family: var(--sans); font-size: 0.8rem; color: #9e3c1b; line-height: 1.5; }
+
+  .preview-head { margin-bottom: 1.5rem; }
+  .preview-head h1 { margin-bottom: 0.25rem; }
+
+  .toc { border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 3rem; background: var(--surface); }
+  .toc ol { margin: 0; padding-left: 1.2rem; columns: 2; column-gap: 2rem; }
+  .toc li { font-family: var(--sans); font-size: 0.85rem; margin-bottom: 0.4rem; break-inside: avoid; }
+  .toc a { color: var(--ink); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+  .toc .num { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); margin-right: 0.4rem; }
+  @media (max-width: 640px) { .toc ol { columns: 1; } }
+
+  .preview-post { margin: 0 0 4rem; padding-bottom: 3rem; border-bottom: 1px solid var(--rule); scroll-margin-top: 1.5rem; }
+  .preview-post:last-child { border-bottom: none; }
+  .post-meta .tags { color: var(--muted); }
+  .preview-actions { margin-top: 1.5rem; font-size: 0.8rem; }
+</style>
