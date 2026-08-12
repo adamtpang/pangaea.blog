@@ -22,11 +22,13 @@ const ACCENT = '#b34a2f';
 const GOLD = '#8a6d34';
 
 export interface DocBeat {
-  layout: 'quote' | 'title' | 'tiles' | 'timeline' | 'grid';
+  layout: 'quote' | 'title' | 'tiles' | 'timeline' | 'grid' | 'photo';
   text: string;
   quote?: string | null;
   source?: string | null;
   progress?: number;
+  photo?: string;
+  photoCredit?: string;
   audio: string;
   seconds: number;
 }
@@ -193,12 +195,86 @@ const TimelineSlide: React.FC<{ beat: DocBeat; title: string; entrance: number }
   </AbsoluteFill>
 );
 
+const PhotoSlide: React.FC<{ beat: DocBeat; title: string; entrance: number }> = ({ beat, title, entrance }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const t = Math.min(1, frame / Math.max(1, durationInFrames));
+  const scale = 1.0 + t * 0.12;
+  const panX = -20 + t * 40;
+
+  return (
+    <AbsoluteFill style={{ backgroundColor: '#000' }}>
+      <FontLink />
+      <AbsoluteFill style={{ overflow: 'hidden' }}>
+        <img
+          src={staticFile(beat.photo ?? '')}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            filter: 'sepia(0.35) contrast(1.05)',
+            transform: `scale(${scale}) translateX(${panX}px)`,
+          }}
+        />
+        <AbsoluteFill style={{ background: 'linear-gradient(180deg, rgba(28,25,23,0.15) 0%, rgba(28,25,23,0.05) 40%, rgba(28,25,23,0.75) 100%)' }} />
+      </AbsoluteFill>
+      <svg width="1920" height="1080" style={{ position: 'absolute', top: 0, left: 0 }} viewBox="0 0 1920 1080">
+        <HandDrawnCircle cx={1560} cy={260} r={110} color="#e8cfc3" seed={11} />
+      </svg>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 90,
+          left: 0,
+          right: 0,
+          padding: '0 160px',
+          textAlign: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'Fraunces', Georgia, serif",
+            fontWeight: 480,
+            fontSize: 46,
+            color: '#fbf7f0',
+            marginBottom: beat.quote ? 20 : 0,
+            opacity: Math.min(1, entrance),
+          }}
+        >
+          {beat.text}
+        </div>
+        {beat.quote && (
+          <div
+            style={{
+              fontFamily: "'Newsreader', Georgia, serif",
+              fontStyle: 'italic',
+              fontSize: 28,
+              color: '#e8cfc3',
+              lineHeight: 1.5,
+              opacity: Math.min(1, Math.max(0, entrance - 0.2) * 1.5),
+            }}
+          >
+            &ldquo;{beat.quote}&rdquo;
+          </div>
+        )}
+      </div>
+      {beat.photoCredit && (
+        <div style={{ position: 'absolute', bottom: 24, right: 32, fontFamily: "'Newsreader', Georgia, serif", fontSize: 14, color: 'rgba(251,247,240,0.55)' }}>
+          {beat.photoCredit}
+        </div>
+      )}
+    </AbsoluteFill>
+  );
+};
+
 const DocSlide: React.FC<{ beat: DocBeat; title: string }> = ({ beat, title }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const entrance = spring({ frame, fps, config: { damping: 200, stiffness: 120 } });
 
   switch (beat.layout) {
+    case 'photo':
+      return <PhotoSlide beat={beat} title={title} entrance={entrance} />;
     case 'title':
       return <TitleSlide beat={beat} title={title} entrance={entrance} />;
     case 'tiles':

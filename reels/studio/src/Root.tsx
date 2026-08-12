@@ -5,10 +5,12 @@ import { CrayonTest } from './CrayonTest';
 import { DocFilm } from './DocFilm';
 import agencyReel from './reels/agency-is-the-only-skill.json';
 import earlyReel from './reels/early-to-big-things.json';
+import rockefellerReel from './reels/rockefeller-the-flywheel.json';
 
 const FPS = 30;
 const totalSeconds = agencyReel.beats.reduce((sum, b) => sum + b.seconds, 0);
 const earlyTotalSeconds = earlyReel.beats.reduce((sum, b) => sum + b.seconds, 0);
+const rockefellerTotalSeconds = rockefellerReel.beats.reduce((sum, b) => sum + b.seconds, 0);
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -43,6 +45,18 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           title: earlyReel.title,
           beats: earlyReel.beats,
+        }}
+      />
+      <Composition
+        id="Rockefeller"
+        component={DocFilm}
+        durationInFrames={Math.round(rockefellerTotalSeconds * FPS)}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          title: rockefellerReel.title,
+          beats: rockefellerReel.beats,
         }}
       />
     </>
