@@ -1,22 +1,31 @@
 """
-Turn a Crayon-Capital-style research table into voice-over audio, free.
+Turn a Crayon-Capital-style research table into a voice-over, free.
 
 Input: a markdown table with columns | No | Topic & Link | Quotation |
 (exactly the shape of a script doc pulled from real sources before writing
 narration). Bold single-cell rows like | **ACT 1 - ...** | | | mark act
-breaks and are skipped for narration but kept in the cue sheet.
+breaks.
 
-Output, all in the given --out directory:
-  - 001.mp3, 002.mp3, ... one clip per row, in order
-  - full.mp3, every clip concatenated, for a quick full listen
-  - cue-sheet.md: row number, act, topic, real duration, cumulative
-    timestamp. This is what you cut b-roll or PowerPoint slides against;
-    the timestamps are real (from the actual generated audio), not guessed.
+Two modes:
+
+  --script-only   No audio at all. Writes teleprompter.md: the quotations
+                  only, act-grouped, numbered, stripped of table/link
+                  clutter, one clear block per line, ready to read aloud
+                  and record yourself. Use this when you're voicing it
+                  in your own voice.
+
+  (default)       Synthetic TTS mode. Writes, in --out:
+                  - 001.mp3, 002.mp3, ... one clip per row, in order
+                  - full.mp3, every clip concatenated
+                  - cue-sheet.md: row number, act, topic, real duration,
+                    cumulative timestamp, for cutting b-roll/slides against.
 
 Usage:
+  python gen_voiceover.py --in "script.md" --out "out/" --script-only
   python gen_voiceover.py --in "script.md" --out "out/" --voice en-US-AndrewNeural
 
-Requires: pip install edge-tts (already used elsewhere in this repo).
+Requires: pip install edge-tts (already used elsewhere in this repo, not
+needed at all for --script-only).
 Needs ffmpeg on PATH for full.mp3 concatenation (skipped if not found).
 """
 
@@ -26,8 +35,6 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
-
-import edge_tts
 
 
 def parse_table(md_text: str):
@@ -60,6 +67,8 @@ def parse_table(md_text: str):
 
 
 async def synth(text: str, voice: str, rate: str, out_path: Path, retries: int = 4) -> float:
+    import edge_tts  # lazy: --script-only mode never needs this installed
+
     last_err = None
     for attempt in range(retries):
         try:
@@ -89,12 +98,29 @@ def get_duration(path: Path) -> float:
         return 0.0
 
 
+def write_teleprompter(rows, outdir: Path) -> Path:
+    """Plain read-aloud script: quotations only, act-grouped, numbered.
+    No table, no links, no clutter -- just what your voice needs to say."""
+    lines = ["# Teleprompter script", ""]
+    current_act = None
+    for row in rows:
+        if row["act"] != current_act:
+            current_act = row["act"]
+            if current_act:
+                lines.append(f"\n## {current_act}\n")
+        lines.append(f"**{row['no']}.** {row['quote']}\n")
+    out_path = outdir / "teleprompter.md"
+    out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return out_path
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="infile", required=True)
     ap.add_argument("--out", dest="outdir", required=True)
     ap.add_argument("--voice", default="en-US-AndrewNeural")
     ap.add_argument("--rate", default="-4%")
+    ap.add_argument("--script-only", action="store_true", help="Write teleprompter.md only, no audio, no edge-tts needed.")
     args = ap.parse_args()
 
     outdir = Path(args.outdir).resolve()
@@ -104,6 +130,11 @@ def main():
     rows = parse_table(md_text)
     if not rows:
         print("No narration rows found. Expecting a | No | Topic & Link | Quotation | table.")
+        return
+
+    if args.script_only:
+        out_path = write_teleprompter(rows, outdir)
+        print(f"{len(rows)} lines written to {out_path}. Read it aloud and record yourself; no TTS involved.")
         return
 
     cue_lines = ["# Cue sheet", "", "| # | Act | Topic | Duration | Cumulative | File |", "|---|---|---|---|---|---|"]
