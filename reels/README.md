@@ -52,9 +52,41 @@ one a single YouTube video (not reel length, no 60s cap). Same beat
 structure, same rule on curated material: Adam's take on the chapter, one
 short attributed quote at most, credit the book and author up top.
 
+## The stack (locked, proven twice, $0)
+
+**Remotion** (composition + rendering) + **rough.js** (MIT, hand-drawn SVG
+annotations: circles, underlines, timelines, tile grids) + **edge-tts**
+(free Microsoft neural voice, narration) + **real Wikimedia Commons public
+domain photos** for anything biographical/historical. No paid AI generation
+service anywhere in this pipeline. Proven on two full renders (Early to Big
+Things, Rockefeller: The Flywheel), both zero cost. This is the default;
+don't reach for a paid tool (Higgsfield, ElevenLabs) unless a specific gap
+in this stack actually blocks the film, and say so explicitly when it does.
+
+Project lives in `reels/studio/` (self-contained Remotion app, own
+`package.json`). Two compositions: `BeatReel` (vertical reels) and `DocFilm`
+(landscape mini-films, 5 layouts: quote, title, tiles, timeline, grid,
+photo). New films add a `reels/studio/src/reels/{slug}.json` beat file and
+register a `<Composition>` in `Root.tsx`; the layout components are already
+built and reusable.
+
+**Format targets, locked:**
+- **Reels**: 60 seconds, vertical (1080x1920, 9:16). 5-6 beats (hook + 3-4
+  argument beats + outro). Already hit exactly on the first one (Agency Is
+  the Only Skill, 58s).
+- **Mini-films**: ~10 minutes, landscape (1920x1080, 16:9), Crayon Capital
+  style. The first two ran short (2:34 and 4:47) because the research
+  table wasn't deep enough to sustain 10 minutes honestly. Hitting 10
+  minutes for real means roughly 40-50 narration beats, each with its own
+  citation, not slower pacing or padded restatement. Depth of research is
+  the actual lever, not narration speed or beat count for its own sake: if
+  a figure's sourced corpus can't honestly support 40+ distinct claims,
+  the film should run short rather than pad, same discipline as the essay
+  length rule.
+
 ## Mini-films (long-form, source-cited)
 
-`reels/mini-films/{slug}.md`: 12-20 minute educational documentaries in the
+`reels/mini-films/{slug}.md`: ~10 minute educational documentaries in the
 Crayon Capital mold (narrated over motion graphics/archival photos, one
 historical figure or company per film), sourced from summon.guide's figure
 grounding (`summon.guide/src/lib/figureSources.ts`), which is itself built
@@ -69,7 +101,7 @@ citation, not a paraphrase from memory. Structure:
 ---
 title: The film's title
 source: which summon.guide figure + which sourced episodes/books it draws on
-length: 12-20 min, landscape
+length: ~10 min, landscape
 citation_rule: every quoted line is a real quote from the sourced material,
   nothing invented
 ---
