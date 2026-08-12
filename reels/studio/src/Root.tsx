@@ -3,6 +3,8 @@ import { Composition } from 'remotion';
 import { BeatReel } from './BeatReel';
 import { CrayonTest } from './CrayonTest';
 import { DocFilm } from './DocFilm';
+import { TranscriptFilm } from './TranscriptFilm';
+import permissionWords from './reels/permission-words.json';
 import agencyReel from './reels/agency-is-the-only-skill.json';
 import earlyReel from './reels/early-to-big-things.json';
 import rockefellerReel from './reels/rockefeller-the-flywheel.json';
@@ -71,6 +73,19 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           title: backyardReel.title,
           beats: backyardReel.beats,
+        }}
+      />
+      <Composition
+        id="PermissionTranscript"
+        component={TranscriptFilm}
+        durationInFrames={Math.round(93.1 * FPS)}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          title: 'Permission Was The Product',
+          words: permissionWords,
+          audio: 'permission-was-the-product/narration.mp3',
         }}
       />
     </>

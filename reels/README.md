@@ -84,6 +84,23 @@ built and reusable.
   the film should run short rather than pad, same discipline as the essay
   length rule.
 
+## Transcript reels (dead simple, no script needed)
+
+For essays that don't need a scripted 4-act treatment: read the essay
+verbatim, word-highlighted captions synced to real per-word timing.
+`TranscriptFilm.tsx` in `reels/studio/`. No research table, no beats.json,
+no diagrams: title pinned at top (Fraunces), 7 words on screen at a time,
+spoken words in ink, the current word in terracotta, upcoming words muted.
+
+The real timing comes from edge-tts's `WordBoundary` event stream (`boundary="WordBoundary"`
+on `edge_tts.Communicate`, not the default `SentenceBoundary`), which gives
+an exact start/duration per word, not an estimate. Generate audio + a
+`words.json` of `{text, start, duration}` in one Python pass, copy both into
+`reels/studio/public/{slug}/` and `reels/studio/src/reels/{slug}-words.json`,
+register a `<Composition>` with `durationInFrames` matching the real audio
+length. Use this whenever the essay itself, read straight, is the video;
+save mini-films for topics that need real research and citation.
+
 ## Mini-films (long-form, source-cited)
 
 `reels/mini-films/{slug}.md`: ~10 minute educational documentaries in the
