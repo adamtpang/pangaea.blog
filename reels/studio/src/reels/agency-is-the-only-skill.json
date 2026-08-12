@@ -1,0 +1,11 @@
+{
+  "title": "Agency Is the Only Skill",
+  "fps": 30,
+  "beats": [
+    { "text": "Everything has a tutorial.\nThis doesn't.", "audio": "agency-is-the-only-skill/hook.mp3", "seconds": 14.4 },
+    { "text": "Same resume.\nDifferent decade.", "audio": "agency-is-the-only-skill/beat1.mp3", "seconds": 12.336 },
+    { "text": "12 years of\nother people's problems.", "audio": "agency-is-the-only-skill/beat2.mp3", "seconds": 9.024 },
+    { "text": "Send the message.\nAsk the price.\nPublish it ugly.", "audio": "agency-is-the-only-skill/beat3.mp3", "seconds": 16.032 },
+    { "text": "Go get picked\nby yourself.", "audio": "agency-is-the-only-skill/outro.mp3", "seconds": 6.456 }
+  ]
+}

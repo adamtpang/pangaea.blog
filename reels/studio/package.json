@@ -1,0 +1,21 @@
+{
+  "name": "pangaea-reels-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Remotion renderer for Pangaea reels: essay/thread beats -> narrated vertical video.",
+  "scripts": {
+    "preview": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts BeatReel out/out.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0",
+    "roughjs": "^4.6.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "typescript": "^5.6.0"
+  }
+}

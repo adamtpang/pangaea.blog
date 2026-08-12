@@ -1,0 +1,11 @@
+file '01-hook.png'
+duration 14.400
+file '02-beat1.png'
+duration 12.336
+file '03-beat2.png'
+duration 9.024
+file '04-beat3.png'
+duration 16.032
+file '05-outro.png'
+duration 6.456
+file '05-outro.png'

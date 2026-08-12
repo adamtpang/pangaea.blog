@@ -1,0 +1,5 @@
+file 'hook.mp3'
+file 'beat1.mp3'
+file 'beat2.mp3'
+file 'beat3.mp3'
+file 'outro.mp3'

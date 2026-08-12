@@ -1,0 +1,22 @@
+{
+  "title": "Early to Big Things",
+  "fps": 30,
+  "beats": [
+    { "layout": "quote", "text": "A blog post. No launch event.", "quote": "Just a blog post from OpenAI announcing the availability.", "source": "History.com", "audio": "early-to-big-things/01-hook.mp3", "seconds": 13.44 },
+    { "layout": "title", "text": "EARLY TO BIG THINGS", "audio": "early-to-big-things/02-hook2.mp3", "seconds": 7.056 },
+    { "layout": "quote", "text": "1 million users, 5 days.", "quote": "A hundred million users within two months, a record at the time.", "source": "History.com", "audio": "early-to-big-things/03-p1a.mp3", "seconds": 5.784 },
+    { "layout": "quote", "text": "A 90-day pop-up. ~100 people.", "quote": "A largely uncompleted complex, Forest City, Johor.", "source": "Deeper Insights", "audio": "early-to-big-things/04-p1b.mp3", "seconds": 8.136 },
+    { "layout": "quote", "text": "Network School.", "quote": "That story is wrong.", "source": null, "audio": "early-to-big-things/05-p1c.mp3", "seconds": 16.68 },
+    { "layout": "tiles", "text": "The actual hit rate.", "quote": "Most of what you touch will be nothing. That is the cost, and it is cheap.", "source": "early-to-big-things.md", "audio": "early-to-big-things/06-p2a.mp3", "seconds": 4.656 },
+    { "layout": "tiles", "text": "Most of it goes nowhere.", "quote": "Being early is not about predicting the future.", "source": "early-to-big-things.md", "audio": "early-to-big-things/07-p2b.mp3", "seconds": 13.824 },
+    { "layout": "quote", "text": "A method, not a prediction.", "quote": null, "source": null, "audio": "early-to-big-things/08-p2c.mp3", "seconds": 9.24 },
+    { "layout": "timeline", "progress": 0.02, "text": "Lower the activation energy.", "quote": "Lowering your own activation energy to try the new thing before it is comfortable.", "source": "early-to-big-things.md", "audio": "early-to-big-things/09-p3a.mp3", "seconds": 7.032 },
+    { "layout": "timeline", "progress": 0.5, "text": "2020 to 2022.", "quote": "Graduated from App Academy in 2022 as a software engineer.", "source": "adampang.com/about", "audio": "early-to-big-things/10-p3b.mp3", "seconds": 8.52 },
+    { "layout": "timeline", "progress": 1, "text": "2024.", "quote": "Present at Network School's launch in 2024.", "source": "adampang.com/about", "audio": "early-to-big-things/11-p3c.mp3", "seconds": 15.12 },
+    { "layout": "quote", "text": "Neither felt historic yet.", "quote": "\"Go find out.\"", "source": null, "audio": "early-to-big-things/12-p3d.mp3", "seconds": 15.864 },
+    { "layout": "quote", "text": "Longtermer number two.", "quote": "I moved to Network School full-time and became longtermer number two.", "source": "pangaea.blog", "audio": "early-to-big-things/13-p4a.mp3", "seconds": 5.16 },
+    { "layout": "grid", "text": "9 apps. 5 live projects.", "quote": "strummer.fun, pangaea.blog, pokedex.life, optimism.fun, interneta.world", "source": "adampang.com/about", "audio": "early-to-big-things/14-p4b.mp3", "seconds": 3.96 },
+    { "layout": "quote", "text": "It compounds from a rate.", "quote": null, "source": null, "audio": "early-to-big-things/15-p4c.mp3", "seconds": 13.848 },
+    { "layout": "quote", "text": "You just showed up on day one.", "quote": "If you are early enough, often enough, people start to say you see the future. You do not. You just showed up on day one.", "source": "early-to-big-things.md", "audio": "early-to-big-things/16-outro.mp3", "seconds": 5.4 }
+  ]
+}
