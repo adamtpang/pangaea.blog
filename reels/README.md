@@ -86,8 +86,8 @@ built and reusable.
 
 ## Picking a topic
 
-The one real, validated principle behind why Crayon Capital-style videos
-work: **a name or event the viewer already half-recognizes, explained
+Logged as a favorite: `src/content/favorites/crayon-capital.md`. The one
+real, validated principle behind why Crayon Capital-style videos work: **a name or event the viewer already half-recognizes, explained
 properly.** People click because they recognize "Rockefeller" or "1929
 crash," they stay because the video actually teaches them something they
 didn't know about a thing they thought they understood. This is why
