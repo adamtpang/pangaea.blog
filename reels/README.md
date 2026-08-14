@@ -84,6 +84,31 @@ built and reusable.
   the film should run short rather than pad, same discipline as the essay
   length rule.
 
+## Picking a topic
+
+The one real, validated principle behind why Crayon Capital-style videos
+work: **a name or event the viewer already half-recognizes, explained
+properly.** People click because they recognize "Rockefeller" or "1929
+crash," they stay because the video actually teaches them something they
+didn't know about a thing they thought they understood. This is why
+Rockefeller and the WW2 Economics doc both work, and it's the bar for the
+next topic: not "an interesting fact," a name or event with real, existing
+public recognition.
+
+What this explicitly rules out as a shortcut, seen in a third-party
+tutorial on the same channel and rejected on purpose: generating the topic
+and full script from an LLM prompt with no real source underneath it. That
+produces a video that LOOKS like this format (recognizable name, documentary
+narration) but has no citation discipline behind it, which is the entire
+point of the research-table step above. Recognizable topic, real sources,
+in that order, never skip the second one.
+
+**Production note not yet built in:** low-volume background music under
+narration, mixed well under the voiceover, is a real, common technique in
+this genre worth adding to the Remotion pipeline (a quiet looping bed track,
+volume-ducked, not yet implemented in `DocFilm.tsx`) when a film's tone
+calls for it.
+
 ## Transcript reels (dead simple, no script needed)
 
 For essays that don't need a scripted 4-act treatment: read the essay
