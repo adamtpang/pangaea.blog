@@ -114,6 +114,42 @@ verbatim texture only from the opening of the first essay.
 4. Precision beats vagueness in self-disclosure. "Two decades" and "3 to 5
    years" land harder than "for a long time" or "recently."
 
+**A different register, same author: "0714 – consider the speedrunners"**
+(visakanv.com/1000/0714-consider-the-speedrunners), from his "1,000,000
+words" project — a numbered, deliberately unedited, stream-of-consciousness
+daily essay, distinct from the polished Substack pieces above.
+
+- Opens with a real personal callback (an old, abandoned blog series about
+  games from 2010) before the actual subject starts, not a cold open. The
+  essay is allowed to warm up on the page.
+- The bulk of the piece is granular, specific observation of someone else
+  doing a thing well: watching a Diablo 2 speedrunner, he lists concrete
+  mechanical differences (which enemies to farm, that potions stack, which
+  boss reliably drops a needed item) rather than a vague "he's just better."
+  Specificity is the entire persuasive engine here, same instinct as
+  Visakan's "3 to 5 years" over "a long time," just applied to someone
+  else's actions instead of his own.
+- Narrates the realization live, in real time ("I didn't know this!", "I
+  never considered it"), rather than presenting only the finished insight.
+  The thinking is visible on the page, not smoothed over afterward.
+- The turn: an external, nerdy observation (a stranger's speedrun) becomes a
+  direct question about his own life and work ("How do I get better at
+  speedrunning my own life?"). The essay's title states its method as
+  literally as possible: watch someone who has mastered a system, then ask
+  what your own version of that mastery would look like.
+- No tidy resolution at the end. He states real indecision plainly ("I don't
+  feel strongly about it. But I think I never will, so I have to decide and
+  commit.") rather than manufacturing a confident closing line.
+
+**What this adds:** this essay is itself a working example of the exact
+loop Adam wants to run generally: watch or read something someone has
+mastered, extract the concrete, specific differences (not vague admiration),
+and turn it into a question about your own practice. That's the same motion
+already used on Sivers, Visakan, and Ferriss in this file, and on Crayon
+Capital in `reels/README.md`'s "Picking a topic" section: consume with
+enough specificity to name what's actually different, then ask what that
+means for what gets made next.
+
 ## Tim Ferriss (tim.blog) — studied 2026-08
 
 Read: "The Self-Help Trap: What 20+ Years of 'Optimizing' Has Taught Me"

@@ -54,3 +54,7 @@ scripts/demucs/separated/
 scripts/demucs/*.wav
 scripts/demucs/*.mp3
 scripts/demucs/*.flac
+
+# firecrawl CLI scratch output: raw scraped copies of external pages, used
+# for research, never the source of truth for anything committed here.
+.firecrawl/
