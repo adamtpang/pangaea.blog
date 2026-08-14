@@ -12,6 +12,11 @@ keep it handy" (sive.rs/n0), "Obvious to you. Amazing to others."
 (sive.rs/obvious). One of Adam's own six named influences per
 adampang.com/about.
 
+Also read (2026-08-14, via firecrawl): his `/about` page (sive.rs/about) and
+"Spaghetti to Bento," an interview with Alexandre Petit (sive.rs/2025-07-petit),
+specifically for how he handles a personal, loaded question ("why have most
+of your best friends been women?") rather than an argued position.
+
 **The real pattern, observed across all three:**
 
 - Sentences almost always land solo in their own paragraph. White space is
@@ -31,6 +36,13 @@ adampang.com/about.
   checklist, never as decoration.
 - Signs off with a short, copy-paste-friendly URL (sive.rs/n0) — pieces are
   built to be quoted atomically, not just read in context.
+- The terseness holds even under a personal, potentially loaded question.
+  Asked directly why most of his best friends are women, his answer on
+  `/about` is one bullet, no defense, no hedge: "Almost all of my best
+  friends are women." Asked the same thing in the Petit interview, his
+  spoken answer is a single sentence naming a precise feeling and then
+  stopping, no follow-up justification. He treats an emotionally loaded
+  claim exactly like a technical one: state it accurately, don't pad it.
 
 **What this changes for Pangaea essays going forward:**
 
@@ -47,6 +59,10 @@ adampang.com/about.
 5. Endings: the "kicker, not a summary" instinct already shows up in several
    Pangaea essays (Early to Big Things, Both Sides Of The Deal) — worth
    naming explicitly as a rule rather than leaving it to instinct each time.
+6. For personal or potentially loaded material specifically: state it once,
+   accurately, and stop. Don't add a defensive paragraph to a claim that
+   doesn't need one just because it's personal; the instinct to over-explain
+   grows with how exposed a claim feels, and that's exactly backwards.
 
 ## Visakan Veerasamy (visakanv.com) — studied 2026-08
 
