@@ -1,0 +1,73 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const favorites = (await getCollection('favorites', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const CATEGORY_LABEL: Record<string, string> = {
+  music: 'Music',
+  video: 'Video',
+  person: 'People',
+  tool: 'Tools',
+  book: 'Books',
+  other: 'Other',
+};
+---
+
+<Base
+  title="Favorites · Pangaea"
+  description="A running record of what's actually taken root in Adam's mind: people, music, channels, tools. Not a ranked best-of, just what's real right now."
+>
+  <h1>Favorites</h1>
+  <p class="meta">
+    Not a ranked "best of." A running record of what's actually taken root,
+    built from real conversation, not a cold opinion. See
+    <a href="https://github.com/adamtpang/pangaea.blog/blob/main/FAVORITES.md">FAVORITES.md</a>
+    for how an entry gets made.
+  </p>
+
+  {favorites.length === 0 && (
+    <p class="meta">Nothing added yet.</p>
+  )}
+
+  <ul class="fav-grid">
+    {favorites.map((f) => (
+      <li>
+        <a class="fav-card" href={`/favorites/${f.slug}/`}>
+          {f.data.cover && (
+            <div class="fav-thumb"><img src={f.data.cover} alt={f.data.title} loading="lazy" /></div>
+          )}
+          <div class="fav-body">
+            <span class="fav-category">{CATEGORY_LABEL[f.data.category] ?? f.data.category}</span>
+            <span class="fav-title">{f.data.title}</span>
+            {f.data.blurb && <span class="fav-blurb">{f.data.blurb}</span>}
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .fav-grid {
+    list-style: none; padding: 0; margin: 1.5rem 0 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+  }
+  .fav-grid li { margin: 0; }
+  .fav-card {
+    display: block; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--rule); border-radius: 4px; overflow: hidden;
+    background: var(--surface); height: 100%;
+  }
+  .fav-card:hover .fav-title { color: var(--accent); }
+  .fav-thumb { aspect-ratio: 16 / 10; background: var(--rule); overflow: hidden; }
+  .fav-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .fav-body { padding: 0.9rem 1rem 1.1rem; }
+  .fav-category { display: block; font-family: var(--mono); font-size: 0.65rem; color: var(--gold); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .fav-title { font-weight: 600; font-size: 1.05rem; display: block; transition: color 0.1s; }
+  .fav-blurb { display: block; color: var(--muted); font-size: 0.92rem; margin-top: 0.3rem; font-style: italic; }
+  @media (max-width: 720px) { .fav-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .fav-grid { grid-template-columns: 1fr; } }
+</style>

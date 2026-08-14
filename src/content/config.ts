@@ -200,6 +200,28 @@ const cities = defineCollection({
   }),
 });
 
+// Favorites: a public running record of the people, art, and creators that
+// have actually taken root in Adam's mind, right now, not a ranked "best of"
+// list. Each entry gets built from a real interview (Claude asks, Adam
+// answers) plus whatever's already sitting in his Obsidian vault about it,
+// never written cold from Claude's own opinion of the thing. `category`
+// groups the list page; the body can use the same MDX embed kit as posts
+// (YouTube for a channel, Spotify for an artist) when there's something to
+// embed, or just be Adam's own writeup when there isn't.
+const favorites = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(), // the thing or person's name, e.g. "Aphex Twin"
+    date: z.coerce.date().default(new Date('1970-01-01')), // when added
+    category: z.enum(['music', 'video', 'person', 'tool', 'book', 'other']),
+    blurb: z.string().optional(), // one line, in Adam's own words, why this
+    url: z.string().optional(), // the thing's own site/channel/profile
+    cover: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().default(true),
+  }),
+});
+
 export const collections = {
   posts,
   inbox,
@@ -209,4 +231,5 @@ export const collections = {
   pilot,
   apps,
   cities,
+  favorites,
 };

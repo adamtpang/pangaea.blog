@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const favorites = await getCollection('favorites', ({ data }) => !data.draft);
+  return favorites.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'favorites'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { data } = entry;
+
+const CATEGORY_LABEL: Record<string, string> = {
+  music: 'Music',
+  video: 'Video',
+  person: 'People',
+  tool: 'Tools',
+  book: 'Books',
+  other: 'Other',
+};
+---
+
+<Base title={`${data.title} · Favorites · Pangaea`} description={data.blurb}>
+  <article class="post">
+    <header>
+      <p class="post-meta">
+        <span class="num">{CATEGORY_LABEL[data.category] ?? data.category}</span>
+      </p>
+      <h1>{data.title}</h1>
+      {data.url && (
+        <p class="meta"><a href={data.url} target="_blank" rel="noopener">{data.url.replace(/^https?:\/\//, '')}</a></p>
+      )}
+    </header>
+
+    {data.blurb && <p class="prose blurb-line"><em>{data.blurb}</em></p>}
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <hr />
+    <p class="meta">
+      <a href="/favorites/">&larr; All favorites</a>
+    </p>
+  </article>
+</Base>
