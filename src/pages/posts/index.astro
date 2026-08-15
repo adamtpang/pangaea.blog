@@ -101,15 +101,21 @@ const allTags = Array.from(
           data-tags={(p.data.tags ?? []).join(' ').toLowerCase()}
           data-date={p.data.date.toISOString()}
         >
-          <a href={`/posts/${p.slug}/`}>
-            <span class="title">
-              {p.data.number !== undefined && (
-                <span class="num">№ {String(p.data.number).padStart(3, '0')}</span>
-              )}
-              {p.data.title}
+          <a href={`/posts/${p.slug}/`} class="post-row">
+            {p.data.cover && (
+              <span class="thumb"><img src={p.data.cover} alt="" loading="lazy" /></span>
+            )}
+            <span class="post-row-body">
+              <span class="title">
+                {p.data.number !== undefined && (
+                  <span class="num">№ {String(p.data.number).padStart(3, '0')}</span>
+                )}
+                {p.data.title}
+                {p.data.song && <span class="note" aria-label="has a song attached">&#9834;</span>}
+              </span>
+              {p.data.blurb && <span class="blurb">{p.data.blurb}</span>}
+              <span class="date">{fmt(p.data.date)}</span>
             </span>
-            {p.data.blurb && <span class="blurb">{p.data.blurb}</span>}
-            <span class="date">{fmt(p.data.date)}</span>
           </a>
         </li>
       ))

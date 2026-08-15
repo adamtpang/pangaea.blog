@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { Spotify } from '../../components/embeds';
 
 export async function getStaticPaths() {
   const epoch = new Date('1971-01-01').valueOf();
@@ -39,6 +40,18 @@ const fmt = (d: Date) =>
     </header>
 
     {data.blurb && <p class="prose blurb-line"><em>{data.blurb}</em></p>}
+
+    {data.cover && (
+      <figure class="post-cover">
+        <img src={data.cover} alt="" loading="lazy" />
+      </figure>
+    )}
+
+    {data.song && (
+      <div class="post-song">
+        <Spotify uri={data.song} />
+      </div>
+    )}
 
     <div class="prose">
       <Content />

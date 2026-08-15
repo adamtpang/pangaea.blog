@@ -13,6 +13,11 @@ const posts = defineCollection({
     blurb: z.string().optional(),
     cover: z.string().optional(),
     image: z.string().optional(),
+    // The song attached to this essay: a Spotify URI, e.g. "track/0NeJj..."
+    // (same format Spotify.astro already takes). Every post is meant to
+    // eventually carry one picture (cover) and one song (song), the way a
+    // post on tynan.com carries a photo, three artifacts folded into one.
+    song: z.string().optional(),
     tags: z.array(z.string()).optional(),
     // Optional 3-9 key-takeaway bullets that render as a boxed grid at the
     // bottom of /share/{slug}/ (the screenshot-essay view). Auto-arranged
