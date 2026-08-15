@@ -3,6 +3,8 @@ title: 'Agency Is the Only Skill'
 number: 9
 date: 2026-08-04
 blurb: Every other skill has a tutorial; what no tutorial gives you is the decision to begin without being told.
+cover: /covers/agency-is-the-only-skill.svg
+song: track/7JIuqL4ZqkpfGKQhYlrirs
 tags: [agency, self-direction]
 status: seedling
 draft: true

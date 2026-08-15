@@ -3,6 +3,8 @@ title: Acceleration Is a Moral Position
 date: 2026-07-23
 number: 4
 blurb: Going faster is not a productivity preference; it is a claim about who deserves the solution sooner, and delay has a cost somebody pays.
+cover: /covers/acceleration-is-a-moral-position.svg
+song: track/36vmaZyO0iAE6FZ7287fg2
 tags: [progress, ethics]
 status: seedling
 draft: true

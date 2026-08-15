@@ -3,9 +3,18 @@ title: "Addiction Is a Game You've Already Won"
 date: 2026-07-24
 number: 6
 blurb: Addiction is not a lack of self-control, it is replaying a game you already beat because admitting the win means facing whatever you were avoiding.
+cover: /covers/addiction-is-a-game-youve-already-won.svg
+song: track/0g5B9kJUNdPzHFzEmrQiGT
 tags: [addiction, dopamine]
 status: seedling
 draft: true
+video_ready: true
+spoken_seconds: 114
+beats:
+  - "Addiction isn't too much desire, it's a game you already won and can't stop replaying."
+  - "2 to 3 years clean from porn, 8 months free from games, not from willpower but from asking why I wasn't getting what I needed from real life."
+  - "You are not broken. You are just still playing a game you won a long time ago."
+pull_quote: You are not broken. You are just still playing a game you won a long time ago.
 ---
 
 Reaching Legend in Hearthstone. A perfect Tetris score. The best FIFA squad money can build. Once you have won a game like that, the only move left is to keep playing it, which is not winning anymore, it is just refusing to leave the arcade. That is addiction. Not too much desire, a game you already won that you keep replaying because leaving means facing whatever is outside.

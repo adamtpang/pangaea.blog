@@ -3,6 +3,8 @@ title: 'Aging Is Optional Until It Isn''t'
 date: 2026-08-09
 number: 10
 blurb: Youth is a rate of change you keep choosing, not a number you were issued.
+cover: /covers/aging-is-optional-until-it-isnt.svg
+song: track/0GO8y8jQk1PkHzS31d699N
 tags: [aging, mortality]
 status: seedling
 draft: true

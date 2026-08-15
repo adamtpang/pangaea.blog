@@ -3,6 +3,8 @@ title: 'Accountability Is a Gift You Ask For'
 date: 2026-07-24
 number: 5
 blurb: Nobody can force accountability on you; you install a witness by asking, and that ask is the cheapest leverage on your own follow-through.
+cover: /covers/accountability-is-a-gift-you-ask-for.svg
+song: track/1qbmS6ep2hbBRaEZFpn7BX
 tags: [discipline, friendship]
 status: seedling
 draft: true

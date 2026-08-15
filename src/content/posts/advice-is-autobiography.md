@@ -3,6 +3,8 @@ title: 'Advice Is Autobiography'
 number: 8
 date: 2026-07-25
 blurb: When someone tells you what to do, they are usually telling you their own story in disguise.
+cover: /covers/advice-is-autobiography.svg
+song: track/0MUXBhPUDF8or0kfQ0EHwV
 tags: [advice, self-knowledge]
 status: seedling
 draft: true

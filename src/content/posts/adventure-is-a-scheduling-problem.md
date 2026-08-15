@@ -3,6 +3,8 @@ title: 'Adventure Is a Scheduling Problem'
 number: 7
 date: 2026-07-25
 blurb: The adventurous type is just a person who defends a block of time and books the flight.
+cover: /covers/adventure-is-a-scheduling-problem.svg
+song: track/5qHYXcVvc9xsFB2uH7GpMN
 tags: [adventure, time]
 status: seedling
 draft: true

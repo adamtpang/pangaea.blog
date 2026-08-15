@@ -3,6 +3,8 @@ title: Permission Was The Product
 date: 2026-07-22
 number: 3
 blurb: College does not sell you learning. It sells you permission, and permission is the one thing you can issue yourself.
+cover: /covers/permission-was-the-product.svg
+song: track/1z8fIjhXQScFYTorZvPNsc
 tags: [education, agency]
 status: seedling
 draft: true
