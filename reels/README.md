@@ -103,6 +103,18 @@ narration) but has no citation discipline behind it, which is the entire
 point of the research-table step above. Recognizable topic, real sources,
 in that order, never skip the second one.
 
+**A second, different way a topic qualifies:** searching YouTube for
+something and coming up empty. If the video you went looking for doesn't
+exist yet, that's not a dead end, it's a real signal that a gap is worth
+filling, validated by an actual search rather than a guess at demand.
+Different bar than "recognizable name" above (this one doesn't need
+existing public recognition of the subject, it needs a real search that
+turned up nothing good), but the same discipline once a topic qualifies
+this way: real sources, real citation table, before a word of narration.
+Log it wherever a Pangaea seed normally gets logged (`ESSAYS-1000.md` /
+Obsidian capture) the moment the search comes up empty, not after the
+fact.
+
 **Production note not yet built in:** low-volume background music under
 narration, mixed well under the voiceover, is a real, common technique in
 this genre worth adding to the Remotion pipeline (a quiet looping bed track,
