@@ -34,7 +34,7 @@ const fmt = (d: Date) =>
       <li class="arch-row">
         <a class="arch-link" href={`/posts/${p.slug}/`}>
           <span class="arch-num">
-            {p.data.number !== undefined ? `№ ${String(p.data.number).padStart(3, '0')}` : '·'}
+            {p.data.number !== undefined ? `${String(p.data.number).padStart(3, '0')}` : '·'}
           </span>
           <span class="arch-body">
             <span class="arch-title">{p.data.title}</span>

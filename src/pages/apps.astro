@@ -35,7 +35,7 @@ const remaining = Math.max(0, 1000 - apps.length);
           )}
           <div class="app-body">
             {a.data.number !== undefined && (
-              <span class="app-num">№ {String(a.data.number).padStart(3, '0')}</span>
+              <span class="app-num">{String(a.data.number).padStart(3, '0')}</span>
             )}
             <span class="app-title">{a.data.title}</span>
             {a.data.blurb && <span class="app-blurb">{a.data.blurb}</span>}

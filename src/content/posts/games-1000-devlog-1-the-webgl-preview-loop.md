@@ -1,10 +1,10 @@
 ---
-title: 'GAMES-1000 devlog #1: the WebGL preview loop, for real this time'
+title: "GAMES-1000 Devlog #1: The WebGL Preview Loop, For Real This Time"
 date: 2026-08-12
 blurb: 'two shipped games, three real bugs, and the build pipeline that finally let me play them in a browser'
 tags: [devlog, eyeland-cards, games-1000]
 status: seedling
-draft: false
+draft: true
 ---
 
 Two entries into GAMES-1000 (eyeland.cards's 1,000-games pillar), and the actual work tonight wasn't design, it was plumbing: getting from "code that should work" to "a build I can click into a browser and actually play."

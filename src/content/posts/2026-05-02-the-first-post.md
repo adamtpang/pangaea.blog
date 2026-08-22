@@ -1,5 +1,5 @@
 ---
-title: The first post
+title: The First Post
 date: 2026-05-02
 blurb: A supercontinent forms.
 draft: true

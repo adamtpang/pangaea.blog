@@ -50,7 +50,7 @@ const pillars = [
       <div class="pillar-head">
         <a href={p.href} class="pillar-name">{p.name}</a>
         <span class="pillar-count">
-          № {String(p.count).padStart(3, '0')} / 1,000
+          {String(p.count).padStart(3, '0')} / 1,000
         </span>
       </div>
       <div class="wall" aria-label={`${p.count} of 1,000 ${p.name.toLowerCase()} published`}>

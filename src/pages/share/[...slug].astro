@@ -311,7 +311,7 @@ const fmt = (d: Date) =>
         <span class="brand">Pangaea<span class="dot">.</span></span>
         <span>
           {data.number !== undefined && (
-            <span class="num">№ {String(data.number).padStart(3, '0')}</span>
+            <span class="num">{String(data.number).padStart(3, '0')}</span>
           )}
           {fmt(data.date)}
         </span>

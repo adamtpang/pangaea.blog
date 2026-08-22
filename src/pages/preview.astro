@@ -72,7 +72,7 @@ const fmt = (d: Date) =>
           {drafts.map((d) => (
             <li>
               <a href={`#p${d.data.number ?? d.slug}`}>
-                {d.data.number !== undefined && <span class="num">№{String(d.data.number).padStart(3, '0')}</span>}
+                {d.data.number !== undefined && <span class="num">{String(d.data.number).padStart(3, '0')}</span>}
                 {d.data.title}
               </a>
             </li>
@@ -86,7 +86,7 @@ const fmt = (d: Date) =>
             <h1>{entry.data.title}</h1>
             <p class="post-meta">
               {entry.data.number !== undefined && (
-                <span class="num">№ {String(entry.data.number).padStart(3, '0')}</span>
+                <span class="num">{String(entry.data.number).padStart(3, '0')}</span>
               )}
               {fmt(entry.data.date)}
               {entry.data.tags && entry.data.tags.length > 0 && (

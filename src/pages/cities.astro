@@ -21,7 +21,7 @@ const cities = (await getCollection('cities', ({ data }) => !data.draft))
       {cities.map((c) => (
         <li class="city">
           <div class="city-head">
-            <span class="city-num">№ {String(c.data.number ?? 0).padStart(3, '0')}</span>
+            <span class="city-num">{String(c.data.number ?? 0).padStart(3, '0')}</span>
             {c.data.url ? (
               <a class="city-title" href={c.data.url} target="_blank" rel="noopener">{c.data.title}</a>
             ) : (

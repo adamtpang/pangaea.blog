@@ -108,7 +108,7 @@ const allTags = Array.from(
             <span class="post-row-body">
               <span class="title">
                 {p.data.number !== undefined && (
-                  <span class="num">№ {String(p.data.number).padStart(3, '0')}</span>
+                  <span class="num">{String(p.data.number).padStart(3, '0')}</span>
                 )}
                 {p.data.title}
                 {p.data.song && <span class="note" aria-label="has a song attached">&#9834;</span>}

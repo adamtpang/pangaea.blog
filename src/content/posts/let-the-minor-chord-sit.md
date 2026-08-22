@@ -5,7 +5,7 @@ date: 2026-08-07
 blurb: I pulled my real top five songs instead of guessing, and one small move showed up in four of them.
 tags: [songwriting, practice]
 status: seedling
-draft: false
+draft: true
 ---
 
 For years I let Spotify tell me what I liked and did nothing with the information. Then I pulled my real top five tracks and looked up every chord chart, and one move showed up again and again: right before the chorus resolves home, the song lets a minor chord sit for a full bar instead of rushing past it.

@@ -71,10 +71,10 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
             <a
               class="slot filled"
               href={hit.href}
-              title={`№ ${String(n).padStart(3, '0')} — ${hit.label}`}
+              title={`${String(n).padStart(3, '0')} — ${hit.label}`}
             ></a>
           ) : (
-            <span class="slot empty" title={`№ ${String(n).padStart(3, '0')} — open`}></span>
+            <span class="slot empty" title={`${String(n).padStart(3, '0')} — open`}></span>
           );
         })}
       </div>
