@@ -514,6 +514,15 @@ Promote from `src/content/inbox/`. Re-title by the claim, strip em dashes, date 
 434. Writing Is Clarity-Smithing
 435. Broadcasting Is Still Self-Notetaking
 
+## RUN 19 · From living (the third source, now open)
+
+The queue's own rule for the remaining slots says they fill from what's
+left in Keep, what's left in the X archive, and **from living**. This is
+the first entry of the third kind: a claim that came out of a real
+conversation, not a mined note.
+
+436. The Ceiling Is Human *(drafted 2026-08-19, video_ready)*
+
 ---
 
 ## The remaining ~565 slots

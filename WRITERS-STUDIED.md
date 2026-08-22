@@ -150,6 +150,33 @@ Capital in `reels/README.md`'s "Picking a topic" section: consume with
 enough specificity to name what's actually different, then ask what that
 means for what gets made next.
 
+**The variance principle (added 2026-08-19, Adam's own catch).** Bad
+writers optimize to minimize negative variance: no bad sentences, nothing
+embarrassing, nothing anyone can attack. Good writers optimize to maximize
+positive variance: some things land enormously, and the cost of that is
+that plenty of others miss. These are different objective functions, and
+the first one caps you at inoffensive. Adam named this as his own
+recurring mistake.
+
+The antidote, in his words: **"focus on what you want to see more of."**
+That matches a real line in *Friendly Ambitious Nerd* almost exactly, from
+the "Imagination deficits rule everything around me" section, where
+Visakan argues that reading the junk on a timeline and concluding that's
+what you should post too is a failure of imagination, and that you should
+be posting what you yourself want to see more of.
+
+Note on sourcing: the "what you want to see more of" line is confirmed in
+the book. The negative/positive variance framing is Adam's attribution to
+Visa and was not found in the pages read for this file, so treat it as
+attributed rather than cited until someone finds the original.
+
+**What this changes concretely:** it is a direct argument against the
+polish-until-safe instinct, which is exactly what an AI editing pass is
+most likely to encourage. Any editor tool built for Pangaea should be
+tuned to ask "what is the most alive sentence here, and can more of the
+piece be like that" before it asks "what is wrong here." Sanding is how a
+piece loses its best line.
+
 ## Tim Ferriss (tim.blog) — studied 2026-08
 
 Read: "The Self-Help Trap: What 20+ Years of 'Optimizing' Has Taught Me"
