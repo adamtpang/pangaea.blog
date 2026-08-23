@@ -7,20 +7,57 @@ idea to published №. Work the queue top-down: promote a seed from
 
 ## The count
 
+Reset 2026-08-23: every post is unpublished on purpose (see
+`WEEKLY-DROP.md`). The pipeline below is unchanged; only the published
+number went to zero.
+
 | Stage | Count | Where |
 |---|---|---|
-| Published | 3 | `src/content/posts/` (№000-002) |
-| Finished drafts | 2 | The Backyard + The first post, one flip from live |
-| Nearly-ready essays (almanack era, ~700 words each) | 10 | `src/content/inbox/` |
-| Topic seeds (raw shorthand, recovered from git history) | 123 | `src/content/inbox/` |
-| Thesis seeds (recovered from adampang.com) | 7 | `src/content/inbox/` |
-| Farcaster casts (your own voice, sorted by theme) | 97 | `SEEDS-FARCASTER.md` |
-| Obsidian "write about" essay seeds | 9 | `SEEDS-OBSIDIAN.md` |
-| **Total accounted (essays)** | **251** | **25.1% of 1,000** |
-| Open slots | 749 | future capture |
+| Published | 0 | deliberate reset, republish via the weekly drop |
+| Post files on disk | 440 | `src/content/posts/` |
+| Of those, real drafts (a written body) | 58 | the pickable pool |
+| Of those, empty stubs (title only) | 382 | not eligible for a drop |
+| Claims queued | 432 | `ESSAYS-1000.md` |
+| Slots to 1,000 with no claim yet | ~565 | future capture |
 
-Adjacent pillars now seeded too: **31 song projects** (Ableton, on disk) and
-**~8 app ideas** (Obsidian), both listed in `SEEDS-OBSIDIAN.md`.
+Two different gaps hide inside "1,000 essays." The **writing gap** is 58
+real bodies against 440 files. The **sourcing gap** is 432 claims against
+1,000. `ESSAYS-1000.md` holds the rule for the second: do not pad the file
+to 1,000, a queue you trust beats a queue that is full.
+
+## The craft tiering
+
+Added 2026-08-23. Scores the 58 real drafts on four signals that describe
+the writing: **honest length** (150-450 words), **a bold thesis line**, **a
+blurb**, and **an ending kicker** (last paragraph 25 words or fewer).
+
+Deliberately excludes `cover`, `song`, and `video_ready`. A first pass
+included them and produced a nonsense ranking, because that metadata was
+backfilled in bulk by an agent, so it scored which files got touched
+rather than which essays are good.
+
+| tier | meaning | count |
+|---|---|---|
+| S | 4 of 4 | 2 |
+| A | 3 of 4 | 8 |
+| B | 2 of 4 | 33 |
+| C | 0 or 1 | 15 |
+
+S: The Ceiling Is Human, Pangaea Girls.
+
+**The finding, which matters more than the tiers.** What is missing is
+uniform: **55 of 58 have no bold thesis line**, **42 of 58 do not end on a
+kicker**, and 22 sit outside honest length. Both of the first two are the
+Sivers techniques already recorded in `WRITERS-STUDIED.md` as the most
+copyable of the three writers studied. Written down, never applied.
+
+So the daily work is finishing, not writing: find the sentence already
+carrying the claim, bold it, swap a summary ending for a kicker. Ten
+minutes an essay. That is what makes a daily cadence survivable against a
+58-draft runway.
+
+The tiering cannot tell whether a claim is true, whether Adam still
+believes it, or whether he has something left to say. Those stay his.
 
 ## Tier 1 — nearly ready (promote these first)
 
@@ -74,8 +111,9 @@ plausibly 300+ essays, not 123.
 
 ## Blocked / still on Adam
 
-- **X archive**: not on disk (no `twitter-*.zip`). Request at x.com/settings →
-  Your account → Download an archive; drop the .zip here. Highest remaining yield.
+- ~~**X archive**: not on disk.~~ RESOLVED. 1,266 tweets now sit in
+  `adamanack/sources/twitter/`; 392 originals were mined into claims per
+  `ESSAYS-1000.md`. The rest are retweets, replies, or too short to stand.
 - **Google Keep deep-mine**: ~1,000 untitled timestamp notes need reading, not
   just titles. Say the word and I'll sweep them for essay lines.
 - **SoundCloud**: track titles for the songs pillar (export steps in chat).
@@ -85,6 +123,7 @@ plausibly 300+ essays, not 123.
 
 ## The math
 
-At daily cadence: 145 seeds ≈ 5 months of runway before writing from scratch.
-1,000 essays ≈ 2.7 years daily. The ledger's job is to make sure there is
-never a blank-page morning; the queue always has a next item.
+At a daily cadence the 58 real drafts are 58 days, and that only holds
+because the work is finishing rather than starting. After that it is 382
+stubs, which are titles, not runway. The ledger's job is to make sure
+there is never a blank-page morning.
