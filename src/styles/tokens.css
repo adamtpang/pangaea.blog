@@ -23,7 +23,18 @@
    - Color is never the only affordance: links stay underlined.
    - Type: Fraunces (display) over Newsreader (body). Serif throughout,
      the way a writing tool should feel. Mono only for numbers and code.
-   - All text tokens clear WCAG AA on paper.
+   - All text tokens clear WCAG AA on paper, in BOTH themes.
+
+   STRUCTURE (added 2026-08-23): this file now carries shadcn/ui's token
+   ARCHITECTURE with Pangaea's own values. Three things came from shadcn
+   and one deliberately did not:
+     - semantic pairs (--background/--foreground, --card, --muted, --ring)
+       so any shadcn-shaped component or snippet drops in already on-brand
+     - a radius scale derived from a single --radius source
+     - the three-state theme pattern, which is how dark mode arrived
+   NOT adopted: shadcn's 0.625rem radius and its card shadow. DESIGN.md
+   is explicit that Pangaea is flat with 0-2px corners, and a reading
+   page is not a dashboard. Architecture from shadcn, values from here.
    ============================================================ */
 
 :root {
@@ -50,6 +61,14 @@
   /* --- Hairlines ------------------------------------------ */
   --rule: #d9cfbe;
   --rule-soft: #e7decf;
+
+  /* --- Page texture ---------------------------------------- */
+  /* Two warm washes; pulled out as tokens so the dark theme can dim
+     them instead of leaving a light-theme glow on a dark ground. */
+  --wash-1: rgba(179, 74, 47, 0.035);
+  --wash-2: rgba(138, 109, 52, 0.045);
+  --tint-gold: rgba(138, 109, 52, 0.05); /* the cadence band */
+  --tint-ink: rgba(0, 0, 0, 0.04); /* code and pre backgrounds */
 
   /* --- The three threads ---------------------------------- */
   /* Topic markers ONLY (tag chips, thread labels). Never body text,
@@ -78,18 +97,180 @@
   /* --- Measure --------------------------------------------- */
   --measure: 36rem;
   --column: 640px;
+
+  /* --- Radius ---------------------------------------------- */
+  /* shadcn's pattern: one source, the rest derived. Pangaea's value:
+     2px, because DESIGN.md says 0-2px and hairline corners are part
+     of why the page reads as paper rather than as an app. */
+  --radius: 2px;
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+
+  /* --- shadcn semantic pairs -------------------------------- */
+  /* Aliases, not new colors. Every one resolves to a Pangaea token
+     above, so the brand cannot drift, and a component written against
+     shadcn's names is on-brand the moment it lands. */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper-2);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--accent);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-3);
+  --secondary-foreground: var(--ink-soft);
+  --muted-bg: var(--paper-2);
+  --muted-foreground: var(--ink-mute);
+  --accent-bg: var(--paper-3);
+  --accent-foreground: var(--ink);
+  --destructive: #a3341f;
+  --destructive-foreground: var(--paper);
+  --border: var(--rule);
+  --input: var(--rule);
+  --ring: var(--accent);
+
+  /* Charts and the /graph canvas. Threads first, then the two
+     identity hues, so a five-series chart still speaks Pangaea. */
+  --chart-1: var(--music);
+  --chart-2: var(--philosophy);
+  --chart-3: var(--tech);
+  --chart-4: var(--gold);
+  --chart-5: var(--accent);
+
+  color-scheme: light;
+}
+
+/* ============================================================
+   Dark theme. Three states, because the viewer has three:
+   an explicit dark stamp, an explicit light stamp, and the default
+   "system" with no stamp at all, where only the media query decides.
+
+   These redefine the BASE tokens rather than only the shadcn aliases,
+   which is what makes every existing rule in global.css and pilot.css
+   follow along without being touched.
+
+   Every value below was checked against the #14110f ground:
+   ink 15.87:1, ink-soft 11.84:1, ink-mute 6.62:1, accent 6.03:1,
+   gold 8.65:1. All clear WCAG AA.
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #14110f;
+    --paper-2: #1b1714;
+    --paper-3: #221d19;
+    --surface: #1b1714;
+
+    --ink: #f2ebdf;
+    --ink-soft: #d6ccbc;
+    --ink-mute: #a2988a;
+
+    /* Terracotta and gold both lift on a dark ground: the light-theme
+       values sink to roughly 2:1 there and stop being readable. */
+    --accent: #dd7551;
+    --accent-deep: #ea8b68;
+    --accent-tint: #4a2a1d;
+
+    --gold: #cfab63;
+    --gold-soft: #8a7444;
+
+    --rule: #332b25;
+    --rule-soft: #292118;
+
+    --wash-1: rgba(221, 117, 81, 0.05);
+    --wash-2: rgba(207, 171, 99, 0.045);
+    --tint-gold: rgba(207, 171, 99, 0.07);
+    --tint-ink: rgba(255, 255, 255, 0.055);
+
+    --music: #a98cbd;
+    --philosophy: #86a894;
+    --tech: #7fa3b5;
+
+    --primary-foreground: #14110f;
+    --destructive: #e2705a;
+    --destructive-foreground: #14110f;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --paper: #14110f;
+  --paper-2: #1b1714;
+  --paper-3: #221d19;
+  --surface: #1b1714;
+
+  --ink: #f2ebdf;
+  --ink-soft: #d6ccbc;
+  --ink-mute: #a2988a;
+
+  --accent: #dd7551;
+  --accent-deep: #ea8b68;
+  --accent-tint: #4a2a1d;
+
+  --gold: #cfab63;
+  --gold-soft: #8a7444;
+
+  --rule: #332b25;
+  --rule-soft: #292118;
+
+  --wash-1: rgba(221, 117, 81, 0.05);
+  --wash-2: rgba(207, 171, 99, 0.045);
+  --tint-gold: rgba(207, 171, 99, 0.07);
+  --tint-ink: rgba(255, 255, 255, 0.055);
+
+  --music: #a98cbd;
+  --philosophy: #86a894;
+  --tech: #7fa3b5;
+
+  --primary-foreground: #14110f;
+  --destructive: #e2705a;
+  --destructive-foreground: #14110f;
+
+  color-scheme: dark;
 }
 
 /* The paper has a tooth to it: two barely-there warm washes plus a
-   fractal-noise grain. Subtle enough to read as texture, not pattern. */
+   fractal-noise grain. Subtle enough to read as texture, not pattern.
+   The washes are tokens now, so the dark theme dims them rather than
+   leaving a light-theme glow sitting on a dark ground. */
 .paper-grain {
   background-image:
-    radial-gradient(circle at 18% 22%, rgba(179, 74, 47, 0.035), transparent 42%),
-    radial-gradient(circle at 88% 78%, rgba(138, 109, 52, 0.045), transparent 46%),
+    radial-gradient(circle at 18% 22%, var(--wash-1), transparent 42%),
+    radial-gradient(circle at 88% 78%, var(--wash-2), transparent 46%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
 }
 
 ::selection {
   background: var(--accent-tint);
   color: var(--ink);
+}
+
+/* Focus, shadcn's treatment: a soft ring in the accent rather than the
+   browser default outline. Keyboard only, so a mouse click stays quiet. */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Digits that sit in columns should line up: issue numbers, counts,
+   the cadence widget, any table of figures. */
+.tabular,
+time,
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
