@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Privacy Policy · Pangaea"
+  description="How Pangaea handles analytics, fonts, embeds, cookies, local writing data, feeds, forms, and links to external services."
+>
+  <h1>Privacy</h1>
+
+  <p class="meta">Last updated: 29 August 2026.</p>
+
+  <p>
+    Pangaea is Adam Pang's personal publication. This policy describes the data behavior of
+    pangaea.blog as it is currently built, including the public reading pages and the authoring
+    tools on the same domain. Questions about this policy use the <a href="/contact/">Pangaea
+    contact path</a>.
+  </p>
+
+  <h2>Public reading</h2>
+  <p>
+    Public pages do not provide reader accounts, comments, newsletter signup, an on-site contact
+    form, advertising pixels, or a paid subscription. The initial public response does not set a
+    Pangaea cookie. Vercel hosts the site and processes ordinary request information needed to
+    serve pages, protect the service, and operate its infrastructure.
+  </p>
+
+  <h2>Analytics</h2>
+  <p>
+    Pangaea uses Vercel Web Analytics for aggregate page views and basic traffic information such
+    as page path, referrer, country, device type, operating system, and browser. Vercel states that
+    Web Analytics uses no cookies, stores anonymized data, and resets its request-derived visitor
+    hash after 24 hours. Pangaea does not define custom analytics events in this repository. See
+    <a href="https://vercel.com/docs/analytics/privacy-policy">Vercel's analytics privacy documentation</a>.
+  </p>
+
+  <h2>Fonts, media, and embeds</h2>
+  <p>
+    Pages load Fraunces and Newsreader from Google Fonts, so a browser connects to
+    fonts.googleapis.com and fonts.gstatic.com and sends the technical request information needed
+    to return those files. Some essays or episode pages contain lazy-loaded YouTube, Spotify, or
+    SoundCloud players. Those services receive a request only when a page containing their player
+    loads, and their own terms and privacy policies apply. YouTube players use the
+    youtube-nocookie.com embed domain.
+  </p>
+
+  <h2>Authoring tools and local storage</h2>
+  <p>
+    The Daily writing page stores drafts and preferences in browser localStorage on the device.
+    Daily text stays on that device unless the author enables sync, requests the server-side polish
+    tool, or sends text to the Write editor. When sync is enabled, the selected writing data is sent
+    to Pangaea's server and stored in a private GitHub repository branch. Publishing through Write
+    sends the chosen post content to GitHub so it can become part of the site.
+  </p>
+
+  <h2>Authentication and cookies</h2>
+  <p>
+    GitHub sign-in for author-only tools uses a short-lived state cookie and, after an allowed
+    account signs in, an HMAC-signed session cookie. The session cookie is Secure on HTTPS,
+    HttpOnly, and SameSite=Lax. Password-gated preview and studio pages can set their own Secure,
+    HttpOnly, SameSite=Strict access cookie. These cookies support author access and are not used
+    for advertising. GitHub receives information when its sign-in flow is used.
+  </p>
+
+  <h2>Feeds and external links</h2>
+  <p>
+    The RSS feed is a public document and does not require an account. Links can lead to Adam's
+    site, published projects, source material, or media services. Following an external link sends
+    the destination the normal request information produced by a browser. Pangaea does not control
+    how those independent sites handle data.
+  </p>
+</Base>

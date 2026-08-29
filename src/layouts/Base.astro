@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Dino from '../components/Dino.astro';
+import SiteSchema from '../components/SiteSchema.astro';
 
 interface Props {
   title: string;
@@ -19,7 +20,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="author" content="Adam Pang" />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="author" href="https://adampang.com/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,6 +39,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:site_name" content="Pangaea" />
     <meta name="twitter:card" content="summary" />
     <link rel="alternate" type="application/rss+xml" title="Pangaea" href="/rss.xml" />
+    <SiteSchema />
   </head>
   <body>
     <header class="site">
@@ -64,7 +68,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <span>
         <a href="/start/">Start</a> · <a href="/vlog/">Vlog</a> ·
         by <a href="https://adampang.com">Adam Pang</a> ·
-        <a href="https://adampang.com/hi">Hi</a> · <a href="/rss.xml">RSS</a>
+        <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a> ·
+        <a href="/rss.xml">RSS</a>
       </span>
     </footer>
   </body>

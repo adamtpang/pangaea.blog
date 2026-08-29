@@ -56,17 +56,45 @@ const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
 ---
 
 <PilotLayout
-  title="Pangaea"
-  description="A body of work in four pillars: essays, apps, conversations, city-states."
+  title="Pangaea: Essays, Apps, Podcasts, and City-States"
+  description="Pangaea is Adam Pang's personal publication: free essays, apps, podcasts, and city-state projects, made in public."
 >
   <h1 class="wordmark">PANGAEA</h1>
 
   <p class="about">
-    A body of work, made in public and owned forever. Four pillars, a thousand
-    pieces each: the written word, the built word, the spoken word, the
-    governed word. Songs live at <a href="https://strummer.fun">strummer.fun</a>
-    now. What gets measured gets managed.
+    Pangaea is <a href="https://adampang.com/">Adam Pang</a>'s independent personal
+    publication: a body of work made in public and kept on an owned URL. Four
+    pillars hold a thousand pieces each: the written word, the built word, the
+    spoken word, and the governed word. Songs live at
+    <a href="https://strummer.fun">strummer.fun</a>. What gets measured gets managed.
   </p>
+
+  <section class="publication" aria-labelledby="publication-title">
+    <h2 class="sec" id="publication-title">The publication</h2>
+    <p>
+      Pangaea brings essays, software, recorded conversations, and city-state
+      experiments onto one map. The common thread is worldbuilding: each entry
+      begins with a claim, a working artifact, or a conversation worth keeping,
+      then points to the other pieces that make the idea more useful.
+    </p>
+    <p>
+      Every published article is free to read. Pangaea has no paid plan,
+      subscription, trial, or paywall, and the site does not sell access to the
+      archive. Readers can browse the work, follow the RSS feed, or use Adam's
+      public contact path for corrections and questions about the publication.
+    </p>
+    <p>
+      The homepage is a working ledger, not a claim that every slot is finished.
+      Public counts show what has shipped; the in-hand counts show unfinished
+      material without presenting it as published work. Start with the essays
+      for the written side, or open the Pilot for the spoken side.
+    </p>
+    <p class="publication-actions">
+      <a href="/posts/">Start reading the essays</a>
+      <span aria-hidden="true">·</span>
+      <a href="/contact/">Contact Adam about Pangaea</a>
+    </p>
+  </section>
 
   <!-- THE LEDGER: the counter. Shipped is what is public; in hand is the pile. -->
   <h2 class="sec">The ledger</h2>
@@ -138,6 +166,16 @@ const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
       <span class="project-meta">the guided path</span>
     </li>
   </ul>
+
+  <nav class="trust-links" aria-label="Publication information">
+    <a href="/about/">About</a>
+    <span aria-hidden="true">·</span>
+    <a href="/contact/">Contact</a>
+    <span aria-hidden="true">·</span>
+    <a href="/privacy/">Privacy</a>
+    <span aria-hidden="true">·</span>
+    <a href="/rss.xml">RSS</a>
+  </nav>
 </PilotLayout>
 
 <style>
@@ -151,6 +189,19 @@ const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
     border-bottom: 1px solid var(--rule);
   }
   .note { font-size: 0.85rem; color: var(--muted); margin: 0 0 1.25rem; }
+  .publication p { font-size: 0.95rem; }
+  .publication-actions { display: flex; flex-wrap: wrap; gap: 0.35rem 0.65rem; }
+  .trust-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 0.65rem;
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
 
   table { width: 100%; border-collapse: collapse; font-family: var(--serif); }
 

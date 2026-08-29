@@ -1,0 +1,41 @@
+---
+const siteUrl = 'https://pangaea.blog/';
+const organizationId = `${siteUrl}#organization`;
+const websiteId = `${siteUrl}#website`;
+const personId = 'https://adampang.com/#person';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': organizationId,
+      name: 'Pangaea',
+      url: siteUrl,
+      description:
+        "Pangaea is Adam Pang's personal publication for essays, apps, podcasts, and city-state projects.",
+      founder: { '@id': personId },
+    },
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: 'Adam Pang',
+      url: 'https://adampang.com/',
+      sameAs: ['https://github.com/adamtpang'],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      url: siteUrl,
+      name: 'Pangaea',
+      description:
+        "Adam Pang's personal publication for essays, apps, podcasts, and city-state projects.",
+      inLanguage: 'en',
+      creator: { '@id': personId },
+      publisher: { '@id': organizationId },
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(schema)}></script>

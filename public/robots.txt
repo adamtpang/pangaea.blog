@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pangaea.blog/rss.xml
+Sitemap: https://pangaea.blog/sitemap.xml
