@@ -23,6 +23,14 @@ export interface DailySeed {
 
 export const DAILY_SEEDS: DailySeed[] = [
   {
+    id: 'the-funny-criterion',
+    thread: 'philosophy',
+    source: 'inbox',
+    prompt:
+      "Why is humor an antidote to dread, and what does that reveal about David Deutsch's fun criterion? Start from your own line: reciprocal opening, flow and joy and play, beats reciprocal narrowing, depression and despair and dread.",
+    suggestedTitle: 'The Funny Criterion',
+  },
+  {
     id: 'ten-awesome-people',
     thread: 'philosophy',
     source: 'farcaster',

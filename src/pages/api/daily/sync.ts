@@ -32,6 +32,8 @@ const DATA_PATH = 'daily/entries.json';
 interface Entry {
   text: string;
   words: number;
+  title?: string;
+  question?: string;
   updatedAt?: number;
   doneAt?: number;
 }
@@ -70,6 +72,8 @@ function clean(raw: unknown): Entries {
     out[k] = {
       text: e.text,
       words: typeof e.words === 'number' && e.words >= 0 ? Math.floor(e.words) : 0,
+      ...(typeof e.title === 'string' ? { title: e.title.slice(0, 180) } : {}),
+      ...(typeof e.question === 'string' ? { question: e.question.slice(0, 700) } : {}),
       ...(typeof e.updatedAt === 'number' ? { updatedAt: e.updatedAt } : {}),
       ...(typeof e.doneAt === 'number' ? { doneAt: e.doneAt } : {}),
     };

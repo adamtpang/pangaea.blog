@@ -25,6 +25,107 @@ import Base from '../layouts/Base.astro';
       <button type="button" id="backBtn">&larr; Back to today</button>
     </p>
 
+    <section class="craft-table" aria-labelledby="craft-heading">
+      <div class="craft-head">
+        <div>
+          <p class="craft-kicker">Craft table</p>
+          <h1 id="craft-heading">One idea, all the way out.</h1>
+        </div>
+        <ol class="craft-stages" aria-label="Essay stages">
+          <li class="active" data-stage="seed"><span>1</span>Seed</li>
+          <li data-stage="draft"><span>2</span>Draft</li>
+          <li data-stage="shape"><span>3</span>Shape</li>
+          <li data-stage="ship"><span>4</span>Ship</li>
+        </ol>
+      </div>
+
+      <div class="craft-fields">
+        <label class="craft-field" for="essayTitle">
+          <span>Essay</span>
+          <input id="essayTitle" type="text" value="The Funny Criterion" maxlength="180" />
+        </label>
+        <label class="craft-field" for="essayQuestion">
+          <span>Question</span>
+          <textarea id="essayQuestion" rows="2" maxlength="700">Why is humor an antidote to dread, and what does that reveal about David Deutsch's fun criterion?</textarea>
+        </label>
+      </div>
+
+      <details class="research-shelf" id="researchShelf">
+        <summary>
+          <span>Research shelf</span>
+          <small id="researchSummaryMeta">5 findings, 3 questions, sources attached</small>
+        </summary>
+
+        <div class="research-inner">
+          <div id="featuredResearch">
+            <div class="conjecture">
+              <span>Working conjecture</span>
+              <p>Dread insists there is only one frame. A joke does not erase the problem; it proves another frame is possible. That restored freedom to reinterpret may be the funny cousin of Deutsch's fun criterion.</p>
+            </div>
+
+            <ol class="research-findings" id="starterResearch">
+            <li>
+              <strong>Fun is epistemic, not frivolous.</strong>
+              Deutsch describes fun as knowledge creation in which explicit, inexplicit, conscious, and unconscious ideas can criticize one another. Lack of fun is a criticism to investigate, not an automatic stop rule.
+              <a href="https://www.dwarkesh.com/p/david-deutsch" target="_blank" rel="noopener">Deutsch with Dwarkesh Patel</a>
+            </li>
+            <li>
+              <strong>Humor can loosen mortality's grip.</strong>
+              In a 2019 experiment with 556 participants, coping humor buffered the effect of mortality salience on death-thought accessibility. The humor induction mattered most for people low in coping humor.
+              <a href="https://gala.gre.ac.uk/id/eprint/24839/" target="_blank" rel="noopener">Morgan, Smith, and Singh</a>
+            </li>
+            <li>
+              <strong>A funny frame can outperform a serious one.</strong>
+              In a 57-person study, humorous reappraisal was harder to generate than serious reappraisal, but reduced negative emotion and increased positive emotion more effectively. Some benefits remained one week later.
+              <a href="https://ejop.psychopen.eu/index.php/ejop/article/view/730" target="_blank" rel="noopener">Samson, Glassco, Lee, and Gross</a>
+            </li>
+            <li>
+              <strong>Amusement helps the body reopen.</strong>
+              After anxiety induction, amusing and contentment films produced faster cardiovascular recovery than neutral or sad films in a 170-person experiment. The authors connect recovery to a wider range of possible thoughts and actions.
+              <a href="https://peplab.web.unc.edu/wp-content/uploads/sites/18901/2018/11/fredricksonmancusobranigantugade2000.pdf" target="_blank" rel="noopener">Fredrickson, Mancuso, Branigan, and Tugade</a>
+            </li>
+            <li>
+              <strong>Even anticipated threat can become less total.</strong>
+              In a small 1990 lab study, participants expecting an electric shock reported less anxiety when they heard a humorous tape. It is suggestive, not proof that comedy cures dread.
+              <a href="https://pubmed.ncbi.nlm.nih.gov/2326429/" target="_blank" rel="noopener">Yovetich, Dale, and Hudak</a>
+            </li>
+            </ol>
+
+            <div class="research-questions">
+              <span>Write into these</span>
+              <ul>
+                <li>Is a joke the smallest proof that another interpretation exists?</li>
+                <li>When does gallows humor restore agency, and when does it merely avoid pain?</li>
+                <li>Could the funny criterion be this: does the joke reopen thought without denying reality?</li>
+              </ul>
+            </div>
+
+            <div class="vault-notes">
+              <span>From your vault</span>
+              <p>“humor is awesome, the fool and the king”</p>
+              <p>“humor has truths too”</p>
+              <p>“reciprocal opening (flow and joy and play) &gt; reciprocal narrowing (depression and despair and dread)”</p>
+            </div>
+          </div>
+
+          <div class="generated-research" id="generatedResearch" hidden>
+            <div class="generated-head">
+              <span>Fresh research</span>
+              <button type="button" class="linkbtn" id="researchClear">clear</button>
+            </div>
+            <div class="generated-memo" id="researchMemo"></div>
+            <ol class="generated-sources" id="researchSources"></ol>
+          </div>
+
+          <div class="research-actions">
+            <button type="button" class="linkbtn" id="useFeaturedBtn" hidden>Load The Funny Criterion</button>
+            <button type="button" class="btn ghost" id="researchBtn" hidden>Research this essay</button>
+            <span id="researchState" role="status"></span>
+          </div>
+        </div>
+      </details>
+    </section>
+
     <div class="seedbar" id="seedbar" hidden>
       <div class="seedbar-head">
         <span class="seedbar-label">Today's prompts</span>
@@ -62,9 +163,9 @@ import Base from '../layouts/Base.astro';
     </div>
 
     <div class="actions">
-      <button type="button" class="btn" id="sendBtn">Send to /write &rarr;</button>
+      <button type="button" class="btn" id="sendBtn">Ship to Pangaea &rarr;</button>
       <a href="#" class="linkbtn" id="sendRawLink" hidden>send raw instead</a>
-      <button type="button" class="btn ghost" id="polishBtn" hidden>Polish into an essay &#10022;</button>
+      <button type="button" class="btn ghost" id="polishBtn" hidden>Shape with Claude &#10022;</button>
       <button type="button" class="btn ghost" id="micBtn" aria-pressed="false">
         <span class="recdot" aria-hidden="true"></span><span id="micLabel">Speak</span>
       </button>
@@ -99,10 +200,8 @@ import Base from '../layouts/Base.astro';
     </div>
 
     <p class="tip">
-      Prefer to speak? Click into the page and use
-      <a href="https://handy.computer" rel="noopener" target="_blank">Handy</a>, or the
-      mic button. When the page is ready, <strong>Send to /write</strong> carries it
-      into the editor as a seedling draft to title, trim, and publish.
+      Speak with <a href="https://handy.computer" rel="noopener" target="_blank">Handy</a>
+      or the mic, reach 300, shape the draft, then ship it to Pangaea.
     </p>
 
     <p class="warn" id="storageWarn">
@@ -131,6 +230,182 @@ import Base from '../layouts/Base.astro';
 
 <style>
   .daily { max-width: 42rem; }
+
+  /* --- craft table -------------------------------------------------- */
+  .craft-table {
+    margin-bottom: 1.15rem;
+    padding: 0.25rem 0 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .craft-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .craft-kicker {
+    margin: 0 0 0.2rem;
+    color: var(--gold);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .craft-head h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(1.35rem, 3.5vw, 1.8rem);
+    font-weight: 560;
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+  .craft-stages {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    color: var(--ink-mute);
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+  .craft-stages li { display: inline-flex; gap: 0.28rem; align-items: center; }
+  .craft-stages li + li::before {
+    content: '/';
+    margin-right: 0.35rem;
+    color: var(--rule);
+  }
+  .craft-stages span {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 0.64rem;
+  }
+  .craft-stages .active { color: var(--accent); font-weight: 600; }
+  .craft-fields { display: grid; gap: 0.8rem; }
+  .craft-field { display: grid; gap: 0.2rem; }
+  .craft-field > span,
+  .conjecture > span,
+  .research-questions > span,
+  .vault-notes > span,
+  .generated-head > span {
+    color: var(--ink-mute);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .craft-field input,
+  .craft-field textarea {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    border-radius: 0;
+    outline: none;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    padding: 0.2rem 0 0.35rem;
+  }
+  .craft-field input {
+    font-family: var(--display);
+    font-size: 1.18rem;
+    font-weight: 560;
+  }
+  .craft-field textarea {
+    min-height: 3.1rem;
+    resize: vertical;
+    line-height: 1.45;
+  }
+  .craft-field input:focus,
+  .craft-field textarea:focus { border-color: var(--accent); }
+  .craft-field input[readonly],
+  .craft-field textarea[readonly] { color: var(--ink-mute); }
+
+  .research-shelf { margin-top: 0.9rem; border-top: 1px solid var(--rule-soft); }
+  .research-shelf summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 0.7rem 0 0;
+    color: var(--accent);
+    font-size: 0.88rem;
+    font-weight: 560;
+  }
+  .research-shelf summary::marker { color: var(--accent); }
+  .research-shelf summary small {
+    color: var(--ink-mute);
+    font-size: 0.76rem;
+    font-weight: 400;
+  }
+  .research-inner { padding-top: 0.9rem; }
+  .conjecture {
+    border-left: 3px solid var(--gold-soft);
+    padding-left: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .conjecture p { margin: 0.2rem 0 0; line-height: 1.52; }
+  .research-findings {
+    list-style: none;
+    counter-reset: finding;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .research-findings li {
+    counter-increment: finding;
+    padding: 0.8rem 0 0.8rem 2rem;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    position: relative;
+  }
+  .research-findings li::before {
+    content: counter(finding, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.86rem;
+    color: var(--gold);
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 0.68rem;
+  }
+  .research-findings strong { color: var(--ink); font-weight: 600; }
+  .research-findings a {
+    display: inline;
+    margin-left: 0.25rem;
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-tint);
+    text-underline-offset: 0.14em;
+  }
+  .research-questions,
+  .vault-notes { margin-top: 1rem; }
+  .research-questions ul { margin: 0.35rem 0 0; padding-left: 1.1rem; }
+  .research-questions li { margin: 0.25rem 0; line-height: 1.5; }
+  .vault-notes {
+    padding: 0.8rem 0.9rem;
+    background: var(--paper-2);
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .vault-notes p { margin: 0.3rem 0 0; color: var(--ink-soft); font-style: italic; }
+  .generated-research { margin-top: 1.1rem; border-top: 1px solid var(--rule); padding-top: 0.9rem; }
+  .generated-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .generated-memo {
+    margin-top: 0.6rem;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.58;
+    white-space: pre-wrap;
+  }
+  .generated-sources { margin: 0.8rem 0 0; padding-left: 1.25rem; font-size: 0.82rem; }
+  .generated-sources li { margin: 0.3rem 0; }
+  .generated-sources a { color: var(--accent); text-decoration: underline; }
+  .research-actions { display: flex; align-items: center; gap: 0.7rem; margin-top: 1rem; }
+  #researchState { color: var(--ink-mute); font-size: 0.82rem; font-style: italic; }
 
   /* --- seed prompts -------------------------------------------------- */
   .seedbar {
@@ -528,6 +803,10 @@ import Base from '../layouts/Base.astro';
     .bar-fill { transition: none; }
   }
   @media (max-width: 540px) {
+    .craft-head { align-items: flex-start; flex-direction: column; }
+    .craft-stages { width: 100%; justify-content: space-between; gap: 0.25rem; }
+    .craft-stages li + li::before { margin-right: 0.1rem; }
+    .research-shelf summary { align-items: flex-start; flex-direction: column; gap: 0.1rem; }
     .stats { gap: 1.25rem; }
     .actions .btn { font-size: 0.82rem; }
   }
@@ -548,6 +827,11 @@ import Base from '../layouts/Base.astro';
     var stamp = document.getElementById('stamp');
     var statusEl = document.getElementById('status');
     var interimEl = document.getElementById('interim');
+    var essayTitleInput = document.getElementById('essayTitle');
+    var essayQuestionInput = document.getElementById('essayQuestion');
+    var FEATURED_TITLE = 'The Funny Criterion';
+    var FEATURED_QUESTION =
+      "Why is humor an antidote to dread, and what does that reveal about David Deutsch's fun criterion?";
 
     function setStatus(html) { statusEl.innerHTML = html || ''; }
     function setInterim(html) { interimEl.innerHTML = html || ''; }
@@ -647,6 +931,15 @@ import Base from '../layouts/Base.astro';
         stamp.classList.remove('show');
       }
       refreshPolishVisibility();
+      renderCraftStage();
+    }
+
+    function renderCraftStage() {
+      var stage = lastWords === 0 ? 'seed' : lastWords < GOAL ? 'draft' : 'shape';
+      if (typeof polishMap !== 'undefined' && polishMap && polishMap[viewK]) stage = 'ship';
+      Array.prototype.forEach.call(document.querySelectorAll('.craft-stages li'), function (item) {
+        item.classList.toggle('active', item.getAttribute('data-stage') === stage);
+      });
     }
 
     var saveTimer = null;
@@ -658,9 +951,15 @@ import Base from '../layouts/Base.astro';
       if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
       if (viewK !== todayK) return; // never write over the archive
       var t = page.value;
-      if (!t && !entries[todayK]) return;
+      var craftTitle = essayTitleInput.value.trim();
+      var craftQuestion = essayQuestionInput.value.trim();
+      if (!t && !entries[todayK] && !craftTitle && !craftQuestion) return;
       var e = entries[todayK] || (entries[todayK] = {});
-      e.text = t; e.words = countWords(t); e.updatedAt = Date.now();
+      e.text = t;
+      e.words = countWords(t);
+      e.title = craftTitle;
+      e.question = craftQuestion;
+      e.updatedAt = Date.now();
       persist();
       renderStreak();
       renderHistory();
@@ -685,11 +984,17 @@ import Base from '../layouts/Base.astro';
       var text = e.text || '';
       var words = e.words || countWords(text);
       var isToday = viewK === todayK;
+      var hasSavedCraft = !!(e.title || e.question);
 
       document.getElementById('dateLabel').textContent =
         (isToday ? 'Today, ' : '') + prettyDate(viewK);
       page.value = text;
       page.readOnly = !isToday;
+      essayTitleInput.value = e.title || (isToday && !text && !hasSavedCraft ? FEATURED_TITLE : '');
+      essayQuestionInput.value = e.question ||
+        (isToday && !text && !hasSavedCraft ? FEATURED_QUESTION : '');
+      essayTitleInput.readOnly = !isToday;
+      essayQuestionInput.readOnly = !isToday;
       page.setAttribute('aria-label', isToday
         ? "Today's page, write or dictate here"
         : 'Page from ' + prettyDate(viewK) + ', read only');
@@ -704,6 +1009,7 @@ import Base from '../layouts/Base.astro';
       document.getElementById('micBtn').style.display =
         isToday && speechAvailable ? '' : 'none';
       renderPolishForView();
+      renderResearchForView();
       refreshPolishVisibility();
       if (!isToday) stopListening();
     }
@@ -712,6 +1018,11 @@ import Base from '../layouts/Base.astro';
       renderView();
       page.focus();
     });
+    essayTitleInput.addEventListener('input', function () {
+      scheduleSave();
+      renderResearchForView();
+    });
+    essayQuestionInput.addEventListener('input', scheduleSave);
 
     /* ---------- day rollover ---------- */
     function checkDay() {
@@ -908,7 +1219,13 @@ import Base from '../layouts/Base.astro';
           var cur = entries[k];
           // Keep whichever version has more writing; never silently shrink a day.
           if (!cur || (inc.words || 0) > (cur.words || 0)) {
-            entries[k] = { text: inc.text, words: inc.words || 0, updatedAt: inc.updatedAt || Date.now() };
+            entries[k] = {
+              text: inc.text,
+              words: inc.words || 0,
+              title: typeof inc.title === 'string' ? inc.title : '',
+              question: typeof inc.question === 'string' ? inc.question : '',
+              updatedAt: inc.updatedAt || Date.now()
+            };
             added++;
           }
         }
@@ -930,8 +1247,9 @@ import Base from '../layouts/Base.astro';
       } else {
         text = currentText();
         if (!text) { setStatus('Nothing to send yet, write your page first.'); return; }
+        var named = essayTitleInput.value.trim();
         var first = (text.split(/\n/)[0] || '').trim();
-        title = (first.split(/[.!?]/)[0] || first).split(/\s+/).slice(0, 9).join(' ');
+        title = named || (first.split(/[.!?]/)[0] || first).split(/\s+/).slice(0, 9).join(' ');
       }
       saveNow();
       // Same origin now, so a plain navigation works: no popup, nothing blocked.
@@ -942,6 +1260,107 @@ import Base from '../layouts/Base.astro';
     document.getElementById('sendRawLink').addEventListener('click', function (ev) {
       ev.preventDefault();
       sendToWrite(true);
+    });
+
+    /* ---------- research desk --------------------------------------
+       Research is derived and disposable, like polish. It stays in its own
+       localStorage key and never enters the private daily sync blob. */
+    var RESEARCH_KEY = 'w300.research.v1';
+    function loadResearchMap() {
+      try {
+        var v = JSON.parse(localStorage.getItem(RESEARCH_KEY));
+        return v && typeof v === 'object' && !Array.isArray(v) ? v : {};
+      } catch (e) { return {}; }
+    }
+    function saveResearchMap() {
+      try { localStorage.setItem(RESEARCH_KEY, JSON.stringify(researchMap)); } catch (e) {}
+    }
+    var researchMap = loadResearchMap();
+    var researchBtn = document.getElementById('researchBtn');
+    var researchState = document.getElementById('researchState');
+    var generatedResearch = document.getElementById('generatedResearch');
+    var researchMemo = document.getElementById('researchMemo');
+    var researchSources = document.getElementById('researchSources');
+
+    function renderResearchForView() {
+      var result = researchMap[viewK];
+      var currentTitle = essayTitleInput.value.trim();
+      var isFeatured = currentTitle.toLowerCase() === FEATURED_TITLE.toLowerCase();
+      var showFeatured = isFeatured || !currentTitle;
+      document.getElementById('featuredResearch').hidden = !showFeatured;
+      document.getElementById('useFeaturedBtn').hidden = isFeatured || viewK !== todayK;
+      generatedResearch.hidden = !result;
+      document.getElementById('researchSummaryMeta').textContent = result
+        ? (showFeatured ? 'starter brief plus fresh research' : 'fresh research and sources attached')
+        : (showFeatured ? '5 findings, 3 questions, sources attached' : 'research this essay when ready');
+      researchMemo.textContent = result ? result.memo || '' : '';
+      researchSources.innerHTML = '';
+      if (result && Array.isArray(result.sources)) {
+        result.sources.forEach(function (source) {
+          if (!source || !source.url) return;
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.href = source.url;
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.textContent = source.title || source.url;
+          li.appendChild(a);
+          researchSources.appendChild(li);
+        });
+      }
+    }
+
+    document.getElementById('useFeaturedBtn').addEventListener('click', function () {
+      essayTitleInput.value = FEATURED_TITLE;
+      essayQuestionInput.value = FEATURED_QUESTION;
+      scheduleSave();
+      renderResearchForView();
+      page.focus();
+      researchState.textContent = 'The Funny Criterion is on the table.';
+    });
+
+    researchBtn.addEventListener('click', function () {
+      var title = essayTitleInput.value.trim();
+      var question = essayQuestionInput.value.trim();
+      if (!title && !question) {
+        researchState.textContent = 'Name the essay or its question first.';
+        essayTitleInput.focus();
+        return;
+      }
+      researchBtn.disabled = true;
+      researchState.textContent = 'Researching primary sources...';
+      var headers = { 'content-type': 'application/json' };
+      if (!signedInAs && syncKey) headers['x-daily-key'] = syncKey;
+      fetch('/api/daily/research', {
+        method: 'POST',
+        headers: headers,
+        credentials: 'same-origin',
+        body: JSON.stringify({ title: title, question: question })
+      })
+        .then(function (r) { return r.json().then(function (d) { return { status: r.status, d: d }; }); })
+        .then(function (result) {
+          researchBtn.disabled = false;
+          if (result.status !== 200) {
+            researchState.textContent = (result.d && result.d.error) || 'Research failed. Try again.';
+            return;
+          }
+          researchMap[viewK] = result.d;
+          saveResearchMap();
+          renderResearchForView();
+          document.getElementById('researchShelf').open = true;
+          researchState.textContent = 'Fresh research added to the shelf.';
+        })
+        .catch(function () {
+          researchBtn.disabled = false;
+          researchState.textContent = 'Could not reach the research desk. Try again.';
+        });
+    });
+
+    document.getElementById('researchClear').addEventListener('click', function () {
+      delete researchMap[viewK];
+      saveResearchMap();
+      renderResearchForView();
+      researchState.textContent = 'Fresh research cleared. The starter brief remains.';
     });
 
     /* ---------- polish: AI-edit today's words into a mini essay ----------
@@ -974,6 +1393,7 @@ import Base from '../layouts/Base.astro';
       // to work with, and only when sync/auth confirms the endpoint can
       // actually authorize the request (it is gated the same way as sync).
       polishBtn.hidden = !(typeof syncOn === 'function' && syncOn() && lastWords >= GOAL);
+      researchBtn.hidden = !(viewK === todayK && typeof syncOn === 'function' && syncOn());
     }
 
     function renderPolishForView() {
@@ -984,13 +1404,14 @@ import Base from '../layouts/Base.astro';
         polishTitleEl.textContent = p.title;
         polishBlurbEl.textContent = p.blurb;
         polishBodyEl.textContent = p.body;
-        sendBtnEl.textContent = 'Send polished essay to /write →';
+        sendBtnEl.textContent = 'Ship polished essay to Pangaea →';
         sendRawLinkEl.hidden = false;
       } else {
         polishPanel.hidden = true;
-        sendBtnEl.textContent = isToday ? 'Send to /write →' : 'Send this page to /write →';
+        sendBtnEl.textContent = isToday ? 'Ship to Pangaea →' : 'Ship this page to Pangaea →';
         sendRawLinkEl.hidden = true;
       }
+      renderCraftStage();
     }
 
     polishBtn.addEventListener('click', function () {
@@ -1006,8 +1427,8 @@ import Base from '../layouts/Base.astro';
         credentials: 'same-origin',
         body: JSON.stringify({
           text: t,
-          seedTitle: activeSeed ? activeSeed.suggestedTitle : undefined,
-          seedPrompt: activeSeed ? activeSeed.prompt : undefined
+          seedTitle: essayTitleInput.value.trim() || (activeSeed ? activeSeed.suggestedTitle : undefined),
+          seedPrompt: essayQuestionInput.value.trim() || (activeSeed ? activeSeed.prompt : undefined)
         })
       })
         .then(function (r) { return r.json().then(function (d) { return { status: r.status, d: d }; }); })
@@ -1027,7 +1448,7 @@ import Base from '../layouts/Base.astro';
           };
           savePolishMap();
           renderPolishForView();
-          setStatus('Polished. Review it, then Send to /write.');
+          setStatus('Shaped. Review it, then ship it to Pangaea.');
         })
         .catch(function () {
           polishBtn.disabled = false;
@@ -1064,6 +1485,11 @@ import Base from '../layouts/Base.astro';
       if (seed) {
         seedActiveEl.hidden = false;
         seedActiveEl.textContent = seed.prompt;
+        if (viewK === todayK) {
+          essayTitleInput.value = seed.suggestedTitle || essayTitleInput.value;
+          essayQuestionInput.value = seed.prompt || essayQuestionInput.value;
+          scheduleSave();
+        }
       } else {
         seedActiveEl.hidden = true;
       }
