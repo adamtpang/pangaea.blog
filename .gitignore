@@ -38,7 +38,10 @@ Thumbs.db
 src/content/drafts/
 src/content/inbox/
 src/content/pilot/
-adamanack/sources/twitter/
+adamanack/sources/
+adamanack/corpus/raw.txt
+adamanack/corpus/all_triage.tsv
+adamanack/corpus/shortlist.txt
 
 # scripts/ holds real, committed setup docs (README-*-mcp.md, install
 # scripts, the vendored Ableton remote script) - only scratch clones under it
