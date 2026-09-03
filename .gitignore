@@ -36,6 +36,8 @@ Thumbs.db
 
 # Local-only working files synced via OneDrive (not part of the public site)
 src/content/drafts/
+src/content/inbox/
+src/content/pilot/
 
 # scripts/ holds real, committed setup docs (README-*-mcp.md, install
 # scripts, the vendored Ableton remote script) - only scratch clones under it
