@@ -16,7 +16,6 @@ const staticPaths = [
   '/contact/',
   '/favorites/',
   '/graph/',
-  '/pilot/',
   '/podcast/',
   '/posts/',
   '/privacy/',
@@ -39,11 +38,10 @@ const escapeXml = (value: string) =>
   });
 
 export const GET: APIRoute = async () => {
-  const [posts, episodes, vlogs, pilot, favorites, reels] = await Promise.all([
+  const [posts, episodes, vlogs, favorites, reels] = await Promise.all([
     getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= EPOCH),
     getCollection('episodes', ({ data }) => !data.draft),
     getCollection('vlogs', ({ data }) => !data.draft),
-    getCollection('pilot', ({ data }) => !data.draft),
     getCollection('favorites', ({ data }) => !data.draft),
     getCollection('reels', ({ data }) => !data.draft && data.rendered),
   ]);
@@ -52,7 +50,6 @@ export const GET: APIRoute = async () => {
     ...posts.map((entry) => `/posts/${entry.slug}/`),
     ...episodes.map((entry) => `/podcast/${entry.slug}/`),
     ...vlogs.map((entry) => `/vlog/${entry.slug}/`),
-    ...pilot.map((entry) => `/pilot/${entry.slug}/`),
     ...favorites.map((entry) => `/favorites/${entry.slug}/`),
     ...reels.map((entry) => `/reels/${entry.slug}/`),
   ];

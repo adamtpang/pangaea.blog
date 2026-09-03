@@ -1,6 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
+  "redirects": [
+    {
+      "source": "/pilot",
+      "destination": "/podcast/",
+      "statusCode": 301
+    },
+    {
+      "source": "/pilot/:path*",
+      "destination": "/podcast/",
+      "statusCode": 301
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
