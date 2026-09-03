@@ -2,7 +2,7 @@
 title: "Time Capsule: Braxton"
 date: 2026-07-18
 episode: 1
-youtube: YoY8NJs-ytY
+youtube: X4M6sP45UAc
 guest: Braxton
 blurb: Your work works on you more than you work on it. A descent through systems, language, religion, and geometry.
 tags: [podcast, philosophy, craft]
