@@ -9,9 +9,8 @@ export async function GET(context: APIContext) {
   ).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
-    title: 'Pangaea',
-    description:
-      'A hub for the spoken & the written word. By Adam Pang. Music, philosophy, business: all of it on one map.',
+    title: 'Pangaea Essays',
+    description: 'Essays across time, by Adam Pang.',
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,

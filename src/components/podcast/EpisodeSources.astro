@@ -1,0 +1,41 @@
+---
+type SourceKind = 'quotation' | 'fact' | 'interpretation';
+
+interface SourceNote {
+  kind: SourceKind;
+  label: string;
+  url?: string;
+  note?: string;
+}
+
+interface Props {
+  sources: SourceNote[];
+}
+
+const { sources } = Astro.props;
+const kindLabels: Record<SourceKind, string> = {
+  quotation: 'Verified quotation',
+  fact: 'Historical fact',
+  interpretation: 'Generated interpretation',
+};
+---
+
+<section class="episode-section source-notes" aria-labelledby="source-notes-title">
+  <h2 id="source-notes-title">Source notes</h2>
+  <p class="section-note">
+    Labels separate words found in the record, facts supported by the record,
+    and the simulation's generated interpretation.
+  </p>
+  <ol>
+    {sources.map((source) => (
+      <li>
+        <span class="source-kind">{kindLabels[source.kind]}</span>
+        <span>
+          {source.url ? <a href={source.url}>{source.label}</a> : source.label}
+          {source.note && <span class="source-note"> {source.note}</span>}
+        </span>
+      </li>
+    ))}
+  </ol>
+</section>
+

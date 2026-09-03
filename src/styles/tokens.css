@@ -233,14 +233,10 @@
   color-scheme: dark;
 }
 
-/* The paper has a tooth to it: two barely-there warm washes plus a
-   fractal-noise grain. Subtle enough to read as texture, not pattern.
-   The washes are tokens now, so the dark theme dims them rather than
-   leaving a light-theme glow sitting on a dark ground. */
+/* The paper has a faint fractal-noise tooth. Keep it subtle enough to
+   read as texture, not pattern. */
 .paper-grain {
   background-image:
-    radial-gradient(circle at 18% 22%, var(--wash-1), transparent 42%),
-    radial-gradient(circle at 88% 78%, var(--wash-2), transparent 46%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
 }
 

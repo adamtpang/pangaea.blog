@@ -7,7 +7,7 @@ canon: ECOSYSTEM.md
 provides:
   - id: apps-pillar
     what: The "1000 apps" content collection, already a working home for every app/project Adam has shipped or is building, no separate repo needed for this pillar
-    at: src/content/apps/
+    at: src/content/config.ts
   - id: essays-pillar
     what: The 1000-essays framework and progress tracking
     at: ESSAYS-1000.md
@@ -22,8 +22,8 @@ kin:
     why: The songs pillar of the same three-pillar life loop (essays and apps live here, songs lives there). Migrated out to strummer.fun-songs on 2026-08-08 so the songs pipeline could ship as its own site, then folded into strummer.fun/songs/ on 2026-08-09 when strummer.fun-songs was retired.
   - repo: thedojo.fun
     why: thedojo.fun (renamed from "ships" on 2026-08-09 to match its live domain) is the chosen home for the apps pillar going forward, replacing vercel.school in that role. The apps pillar here (src/content/apps/) is hand-maintained markdown; whether it migrates to thedojo.fun the way songs migrated is an open question, not yet decided.
-  - repo: archimedes.life
-    why: This site's own CLAUDE.md names /podcast as the spoken-word pillar (Pangaea is a hub for the spoken AND the written word, /posts is the writing, /podcast is the spoken side, YouTube-hosted episodes), parallel to how strummer.fun is kin for the songs pillar. Corrected 2026-08-13, this edge previously named a placeholder repo "podcast-pipeline" that never existed as its own folder. The real production tool is archimedes.life's fulcrum-media agent (lib/fulcrum/media-jobs.ts): it transcribes, proposes cuts, and packages a podcast episode (title/description/chapters), which is exactly the Time Capsule production step /podcast is meant to host. Not yet wired into a provides/at path here since /podcast has no dedicated content collection yet, this edge names the relationship ahead of that build-out.
+  - repo: footage.center
+    why: pangaea.blog owns approved public Time Capsule episode pages and show notes. footage.center owns the private production ledger, source assets, cuts, consent gates, final QA, and delivery packages for the five recorded episodes.
   - repo: eyeland.cards
     why: A fourth 1000-life-loop pillar, "1000 games" (speedrun-built games), named by Adam on 2026-08-10 alongside the existing essays/songs/apps pillars. Now has its own GAMES-1000.md tracking file (same convention as ESSAYS-1000.md here), 2 entries shipped as of 2026-08-10.
   - repo: wonderhall.live
@@ -31,4 +31,14 @@ kin:
   - repo: 300words.app
     why: The origin product for the daily-capture pillar (see provides.daily-capture above). Consolidated in here on 2026-08-02 so capture (speak/type 300 words at /daily) and publish (essays via /write) share one codebase and one design system. 300words.app is now just the marketing landing page and domain; its /app route 308-redirects to /daily here.
   - repo: pokedex.life
-    why: pokedex.life's own CLAUDE.md names this site directly as the vehicle for its "hunt" mode ("The vehicle is pangaea.blog (remote podcasts - interview your way up; each guest is a warm-intro node toward the next tier)", see pokedex.life/docs/the-hunt.md). pokedex.life's targeting engine decides WHO to reach (the greatest living humans, laddered bottom-up via warm-intro paths); /podcast here is HOW that reach actually happens, one interview at a time. Same relationship shape as the archimedes.life edge above (spoken-word production), but this edge is about who gets invited on, not how the episode gets cut.
+    why: pokedex.life's own CLAUDE.md names this site directly as the vehicle for its "hunt" mode ("The vehicle is pangaea.blog (remote podcasts - interview your way up; each guest is a warm-intro node toward the next tier)", see pokedex.life/docs/the-hunt.md). pokedex.life's targeting engine decides WHO to reach (the greatest living humans, laddered bottom-up via warm-intro paths); /podcast here is HOW that reach actually happens, one interview at a time. The footage.center edge above owns production; this edge is about who gets invited on.
+
+exchanges:
+  - id: package-reviewed-episode
+    with: footage.center
+    trigger: manual
+    asks: package one human-reviewed podcast source for the publishing lane
+    returns: consent-aware transcript cuts title description chapters final assets and explicit publish blockers
+    permission: propose-change
+    approval: human-required
+    at: CLAUDE.md

@@ -1,0 +1,30 @@
+---
+import { YouTube } from '../embeds';
+
+interface Props {
+  title: string;
+  audioUrl?: string;
+  youtube?: string;
+}
+
+const { title, audioUrl, youtube } = Astro.props;
+---
+
+<section class="episode-media" aria-label="Episode player">
+  {audioUrl ? (
+    <audio controls preload="metadata" src={audioUrl}>
+      Your browser does not support the audio player.
+    </audio>
+  ) : youtube ? (
+    <YouTube id={youtube} title={title} />
+  ) : (
+    <p class="episode-media-empty">No recording is attached to this episode yet.</p>
+  )}
+
+  {audioUrl && youtube && (
+    <p class="episode-watch-link">
+      <a href={`https://www.youtube.com/watch?v=${youtube}`}>Watch on YouTube</a>
+    </p>
+  )}
+</section>
+

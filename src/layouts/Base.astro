@@ -9,9 +9,11 @@ interface Props {
 }
 
 const DEFAULT_DESCRIPTION =
-  'Pangaea: a hub for the spoken & the written word, by Adam Pang. Music, philosophy, business, all of it on one map.';
+  'Essays and conversations across time. By Adam Pang.';
 const { title, description = DEFAULT_DESCRIPTION } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+const isCurrent = (prefix: string) => path === prefix || path.startsWith(prefix + '/');
 ---
 
 <!doctype html>
@@ -38,23 +40,17 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:site_name" content="Pangaea" />
     <meta name="twitter:card" content="summary" />
-    <link rel="alternate" type="application/rss+xml" title="Pangaea" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Pangaea Essays" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Pangaea Pod" href="/podcast.xml" />
     <SiteSchema />
   </head>
   <body>
     <header class="site">
       <a class="brand" href="/">Pangaea<span class="dot">.</span></a>
-      <nav>
-        <a href="/daily/">Daily</a>
-        <a href="/work/">Work</a>
-        <a href="/posts/">Essays</a>
-        <a href="/apps/">Apps</a>
-        <a href="/favorites/">Favorites</a>
-        <a href="/podcast/">Podcast</a>
-        <a href="/cities/">City-states</a>
-        <a href="/archive/">Archive</a>
-        <a href="/graph/">Graph</a>
-        <a href="/about/">About</a>
+      <nav aria-label="Primary">
+        <a href="/posts/" aria-current={isCurrent('/posts') ? 'page' : undefined}>Read</a>
+        <a href="/podcast/" aria-current={isCurrent('/podcast') ? 'page' : undefined}>Listen</a>
+        <a href="/about/" aria-current={isCurrent('/about') ? 'page' : undefined}>About</a>
       </nav>
     </header>
     <main>
@@ -63,13 +59,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <footer class="site">
       <span class="footer-mark">
         <Dino height={20} />
-        Pangaea · a hub for the spoken &amp; the written word.
+        Pangaea. Essays and conversations across time.
       </span>
       <span>
-        <a href="/start/">Start</a> · <a href="/vlog/">Vlog</a> ·
-        by <a href="https://adampang.com">Adam Pang</a> ·
+        <a href="/archive/">Archive</a> · <a href="/graph/">Graph</a> ·
         <a href="/contact/">Contact</a> · <a href="/privacy/">Privacy</a> ·
-        <a href="/rss.xml">RSS</a>
+        <a href="/rss.xml">Essay RSS</a> · <a href="/podcast.xml">Podcast RSS</a>
       </span>
     </footer>
   </body>

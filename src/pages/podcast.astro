@@ -1,62 +1,78 @@
 ---
 import Base from '../layouts/Base.astro';
+import EpisodeLabel from '../components/podcast/EpisodeLabel.astro';
 import { getCollection } from 'astro:content';
+import {
+  EPISODE_FORMATS,
+  FORMAT_META,
+  PODCAST_PROMISE,
+  PODCAST_TITLE,
+} from '../lib/podcast';
 
 const episodes = (await getCollection('episodes', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-const thumb = (id: string) =>
-  `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const fmt = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
-<Base
-  title="Listen · Pangaea"
-  description="The spoken side of Pangaea. Long-form conversations, on YouTube."
->
-  <h1>Listen</h1>
+<Base title={PODCAST_TITLE + ' | Pangaea'} description={PODCAST_PROMISE}>
+  <header class="podcast-intro">
+    <p class="section-kicker">Listen</p>
+    <h1>{PODCAST_TITLE}</h1>
+    <p class="podcast-promise">{PODCAST_PROMISE}</p>
+    <p class="podcast-feed-link"><a href="/podcast.xml">Podcast RSS</a></p>
+  </header>
 
-  {episodes.length === 0 && (
-    <>
-      <p class="meta">The spoken side of Pangaea. Coming soon.</p>
-      <p>
-        Conversations on memetics, relationships, and the shape of attention. Each episode
-        ships as a YouTube embed with show notes. If you want a ping when the first one drops,
-        say so via <a href="https://adampang.com/hi">adampang.com/hi</a>.
-      </p>
-    </>
-  )}
+  <section class="format-key" aria-labelledby="format-key-title">
+    <h2 id="format-key-title">Three forms, one feed</h2>
+    <dl>
+      {EPISODE_FORMATS.map((format) => (
+        <div>
+          <dt>{FORMAT_META[format].label}</dt>
+          <dd>{FORMAT_META[format].description}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
 
-  {episodes.length > 0 && (
-    <>
-      <p class="meta">{episodes.length} episode{episodes.length === 1 ? '' : 's'}.</p>
-      <ul class="media-grid">
-        {episodes.map((ep) => (
-          <li>
-            <a href={`/podcast/${ep.slug}/`} class="media-card">
-              {ep.data.youtube && (
-                <div class="media-thumb">
-                  <img src={thumb(ep.data.youtube)} alt={ep.data.title} loading="lazy" />
-                </div>
-              )}
-              <div class="media-body">
-                {ep.data.episode !== undefined && (
-                  <span class="media-num">Ep. {ep.data.episode}</span>
-                )}
-                <h2 class="media-title">{ep.data.title}</h2>
-                {ep.data.blurb && <p class="media-blurb">{ep.data.blurb}</p>}
-                <span class="media-date">
-                  {fmt(ep.data.date)}
-                  {ep.data.guest && <span> · with {ep.data.guest}</span>}
-                </span>
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </>
-  )}
+  {EPISODE_FORMATS.map((format) => {
+    const entries = episodes.filter((episode) => episode.data.format === format);
+    const meta = FORMAT_META[format];
+
+    return (
+      <section class="format-section" aria-labelledby={format + '-title'}>
+        <header>
+          <h2 id={format + '-title'}>{meta.label}</h2>
+          <p>{meta.description}</p>
+        </header>
+
+        {entries.length > 0 ? (
+          <ol class="episode-list">
+            {entries.map((episode) => (
+              <li>
+                <a href={'/podcast/' + episode.slug + '/'}>
+                  <EpisodeLabel
+                    format={episode.data.format}
+                    number={episode.data.format_number}
+                  />
+                  <span class="episode-list-title">{episode.data.title}</span>
+                  {episode.data.blurb && (
+                    <span class="episode-list-blurb">{episode.data.blurb}</span>
+                  )}
+                  <span class="episode-list-meta">
+                    {fmt(episode.data.date)}
+                    {episode.data.series && <span> · {episode.data.series}</span>}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p class="format-empty">No {meta.label} episodes are public yet.</p>
+        )}
+      </section>
+    );
+  })}
 </Base>

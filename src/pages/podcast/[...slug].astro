@@ -1,54 +1,118 @@
 ---
 import Base from '../../layouts/Base.astro';
+import EpisodeChapters from '../../components/podcast/EpisodeChapters.astro';
+import EpisodeDisclosure from '../../components/podcast/EpisodeDisclosure.astro';
+import EpisodeLabel from '../../components/podcast/EpisodeLabel.astro';
+import EpisodeMedia from '../../components/podcast/EpisodeMedia.astro';
+import EpisodeSources from '../../components/podcast/EpisodeSources.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { YouTube } from '../../components/embeds';
+import { episodeDisplayTitle, PODCAST_TITLE } from '../../lib/podcast';
 
 export async function getStaticPaths() {
-  const episodes = await getCollection('episodes', ({ data }) => !data.draft);
-  return episodes.map((episode) => ({
+  const episodes = (await getCollection('episodes', ({ data }) => !data.draft)).sort(
+    (a, b) => a.data.date.valueOf() - b.data.date.valueOf()
+  );
+
+  return episodes.map((episode, index) => ({
     params: { slug: episode.slug },
-    props: { episode },
+    props: {
+      episode,
+      previous: index > 0 ? episodes[index - 1] : null,
+      next: index < episodes.length - 1 ? episodes[index + 1] : null,
+    },
   }));
 }
 
 interface Props {
   episode: CollectionEntry<'episodes'>;
+  previous: CollectionEntry<'episodes'> | null;
+  next: CollectionEntry<'episodes'> | null;
 }
 
-const { episode } = Astro.props;
+const { episode, previous, next } = Astro.props;
 const { Content } = await episode.render();
 const { data } = episode;
-const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const displayTitle = episodeDisplayTitle(data);
+const fmt = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
-<Base title={`${data.title} · Pangaea Podcast`} description={data.blurb}>
-  <article class="post">
-    <header>
+<Base title={displayTitle + ' | ' + PODCAST_TITLE} description={data.blurb}>
+  <article class="episode-page">
+    <header class="episode-header">
+      <p><a href="/podcast/">{PODCAST_TITLE}</a></p>
+      <EpisodeLabel format={data.format} number={data.format_number} />
       <h1>{data.title}</h1>
-      <p class="post-meta">
-        {data.episode !== undefined && <span class="num">Ep. {data.episode}</span>}
-        {fmt(data.date)}
-        {data.guest && <span> · with {data.guest}</span>}
-      </p>
+      {data.blurb && <p class="episode-dek">{data.blurb}</p>}
+
+      <dl class="episode-metadata">
+        <div>
+          <dt>Released</dt>
+          <dd>{fmt(data.date)}</dd>
+        </div>
+        {data.recorded_date && (
+          <div>
+            <dt>Recorded</dt>
+            <dd>{fmt(data.recorded_date)}</dd>
+          </div>
+        )}
+        {data.series && (
+          <div>
+            <dt>Series</dt>
+            <dd>{data.series}</dd>
+          </div>
+        )}
+        {data.duration && (
+          <div>
+            <dt>Duration</dt>
+            <dd>{data.duration}</dd>
+          </div>
+        )}
+      </dl>
     </header>
 
-    {data.youtube && (
-      <div class="prose">
-        <YouTube id={data.youtube} title={data.title} />
-      </div>
+    {data.format === 'summon' && <EpisodeDisclosure continueUrl={data.summon_url} />}
+
+    <EpisodeMedia title={displayTitle} audioUrl={data.audio_url} youtube={data.youtube} />
+
+    {data.signature_quote && (
+      <blockquote class="episode-quote">
+        <p>“{data.signature_quote}”</p>
+        {data.quote_attribution && <cite>{data.quote_attribution}</cite>}
+      </blockquote>
     )}
 
-    {data.blurb && <p class="prose blurb-line"><em>{data.blurb}</em></p>}
-
-    <div class="prose">
+    <div class="prose episode-notes">
       <Content />
     </div>
 
-    <hr />
-    <p class="meta">
-      <a href="/podcast/">&larr; All episodes</a> &nbsp; · &nbsp;
-      <a href="/contact/">Tell me what you think</a>
-    </p>
+    {data.chapters?.length && (
+      <EpisodeChapters chapters={data.chapters} verified={data.chapters_verified} />
+    )}
+
+    {data.sources?.length && <EpisodeSources sources={data.sources} />}
+
+    {data.transcript_url && (
+      <p class="episode-transcript"><a href={data.transcript_url}>Read the transcript</a></p>
+    )}
+
+    <nav class="episode-adjacent" aria-label="Episode navigation">
+      {previous ? (
+        <a href={'/podcast/' + previous.slug + '/'}>
+          <span>Previous</span>
+          {episodeDisplayTitle(previous.data)}
+        </a>
+      ) : (
+        <span></span>
+      )}
+      {next ? (
+        <a href={'/podcast/' + next.slug + '/'}>
+          <span>Next</span>
+          {episodeDisplayTitle(next.data)}
+        </a>
+      ) : (
+        <span></span>
+      )}
+    </nav>
   </article>
 </Base>

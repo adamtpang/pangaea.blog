@@ -31,30 +31,40 @@ function flattenSchema(value) {
   return [value, ...(Array.isArray(value['@graph']) ? value['@graph'].flatMap(flattenSchema) : [])];
 }
 
-test('homepage has complete metadata, identity schema, useful content, and real actions', async () => {
+test('homepage is the minimal masthead: metadata, identity schema, two entryways, and trust links', async () => {
   const html = await read('.vercel/output/static/index.html');
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1] ?? '';
   const description = metaContent(html, 'description');
   const canonical = html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)/i)?.[1] ?? '';
-  const h1Count = (html.match(/<h1\b/gi) ?? []).length;
+  const h1Count = (html.match(/<h1[ >]/gi) ?? []).length;
   const visibleText = textFromHtml(html);
-  const paragraphTexts = [...html.matchAll(/<p\b[^>]*>([^]*?)<\/p>/gi)].map((match) => textFromHtml(match[1]));
-  const chunkable = paragraphTexts.filter((paragraph) => {
-    const count = words(paragraph).length;
-    return count >= 25 && count <= 120 && !/^(it|this|that|these|they|he|she|we|you)\b/i.test(paragraph);
-  });
 
-  assert.ok(title.length >= 20 && title.length <= 65, `title length was ${title.length}`);
-  assert.ok(description.length >= 70 && description.length <= 170, `description length was ${description.length}`);
+  // The homepage is deliberately a masthead, not an essay. The site name is the
+  // whole title; the promise line and byline carry the description.
+  assert.equal(title, 'Pangaea');
+  assert.match(description, /Essays and conversations across time\./);
+  assert.match(description, /By Adam Pang\./);
+  assert.ok(description.length >= 20 && description.length <= 170, `description length was ${description.length}`);
   assert.equal(canonical, 'https://pangaea.blog/');
   assert.equal(h1Count, 1);
-  assert.ok(words(visibleText).length >= 250, `homepage had ${words(visibleText).length} visible words`);
-  assert.ok(chunkable.length / paragraphTexts.length >= 0.35, 'at least 35% of paragraphs must stand alone');
-  assert.match(html, /href="\/about\/"/);
-  assert.match(html, /href="\/contact\/"/);
-  assert.match(html, /href="\/privacy\/"/);
-  assert.match(visibleText, /Start reading the essays/i);
-  assert.match(visibleText, /no paid plan, subscription, trial, or paywall/i);
+  assert.match(visibleText, /PANGAEA Essays and conversations across time\. By Adam Pang\./);
+  assert.ok(words(visibleText).length <= 80, `homepage grew to ${words(visibleText).length} visible words; it is meant to stay a masthead`);
+
+  // Exactly two entryways: read the essays, listen to the pod.
+  const entryways = [...html.matchAll(/<nav[^>]+class="entryways"[^>]*>([^]*?)<\/nav>/gi)];
+  assert.equal(entryways.length, 1, 'one entryways nav');
+  const entryLinks = [...entryways[0][1].matchAll(/<a [^>]*href="([^"]+)"/gi)].map((match) => match[1]);
+  assert.deepEqual(entryLinks, ['/posts/', '/podcast/']);
+  assert.match(visibleText, /Read Essays/);
+  assert.match(visibleText, /Listen Pangaea Pod/);
+
+  // Trust links and both feeds stay reachable from the home footer.
+  for (const path of ['/about/', '/contact/', '/privacy/', '/rss.xml', '/podcast.xml']) {
+    assert.ok(html.includes(`href="${path}"`), `missing link to ${path}`);
+  }
+
+  // The page makes no commercial claims it cannot back.
+  assert.doesNotMatch(visibleText, /subscribe|subscription|paywall|pricing|sign up/i);
 
   const jsonLd = [...html.matchAll(/<script[^>]+type="application\/ld\+json"[^>]*>([^]*?)<\/script>/gi)]
     .flatMap((match) => flattenSchema(JSON.parse(match[1])));

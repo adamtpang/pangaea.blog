@@ -35,6 +35,11 @@ const payload = drafts
     tags: d.data.tags ?? [],
     number: d.data.number ?? null,
     status: d.data.status ?? 'seedling',
+    // Video-ready pipeline fields (Voice Studio → summon.guide script mode)
+    video_ready: d.data.video_ready ?? false,
+    spoken_seconds: d.data.spoken_seconds ?? null,
+    beats: d.data.beats ?? [],
+    pull_quote: d.data.pull_quote ?? '',
     body: d.body,
   }));
 ---
@@ -97,7 +102,7 @@ const payload = drafts
         <div class="bar"><div class="fill" id="wc-fill"></div></div>
         <div class="sub">
           <span id="sc">0</span> sentences · avg <span id="avg">0</span> w ·
-          <span id="rt">0</span> min read
+          <span id="rt">0</span> min read · <span id="spoken-sec">0s if spoken</span>
         </div>
         <label class="goal">
           goal
@@ -126,6 +131,8 @@ const payload = drafts
   type Draft = {
     slug: string; title: string; blurb: string; date: string;
     tags: string[]; number: number | null; status: string; body: string;
+    video_ready: boolean; spoken_seconds: number | null;
+    beats: string[]; pull_quote: string;
   };
 
   const $ = <T extends Element = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -240,6 +247,14 @@ const payload = drafts
     $('sc').textContent = String(prose.length);
     $('avg').textContent = prose.length ? String(Math.round(total / prose.length)) : '0';
     $('rt').textContent = String(Math.max(1, Math.round(total / 220)));
+    // Spoken estimate for video-ready handoff (~150 wpm).
+    const spokenEl = document.getElementById('spoken-sec');
+    if (spokenEl) {
+      const sec = Math.max(1, Math.round((total / 150) * 60));
+      spokenEl.textContent = current?.video_ready
+        ? `${sec}s spoken · video-ready`
+        : `${sec}s if spoken`;
+    }
     const pct = Math.min(100, Math.round((total / goal) * 100));
     const fill = $('wc-fill');
     fill.style.width = pct + '%';
@@ -254,6 +269,19 @@ const payload = drafts
       { ok: blurbInput.value.trim().length > 0, label: 'Blurb states the claim' },
       { ok: !prose.some((l) => words(l.text) > 30), label: 'No sentence over 30 words' },
       { ok: prose.length > 0 && words(prose[prose.length - 1].text) <= 18, label: 'Ends on a line that lands' },
+      ...(current?.video_ready
+        ? [
+            { ok: current.beats.length === 3, label: '3-beat video outline' },
+            { ok: !!current.pull_quote.trim(), label: 'IG pull-quote set' },
+            {
+              ok: (() => {
+                const sec = Math.round((total / 150) * 60);
+                return sec >= 60 && sec <= 150;
+              })(),
+              label: 'Spoken length 60 to 150s',
+            },
+          ]
+        : []),
     ];
     $('checklist').innerHTML = checks
       .map((c) => `<li class="${c.ok ? 'ok' : 'no'}">${c.ok ? '✓' : '○'} ${c.label}</li>`)
@@ -272,6 +300,18 @@ const payload = drafts
 
   function buildMdx() {
     if (!current) return '';
+    const proseWords = lines
+      .filter((l) => !l.locked)
+      .reduce((n, l) => n + words(l.text), 0);
+    // Re-estimate spoken length from current body (~150 wpm) when video_ready.
+    const spoken =
+      current.video_ready
+        ? Math.max(1, Math.round((proseWords / 150) * 60))
+        : current.spoken_seconds;
+    const beatsBlock =
+      current.video_ready && current.beats.length
+        ? ['beats:', ...current.beats.map((b) => `  - ${JSON.stringify(b)}`)]
+        : [];
     const fm = [
       '---',
       `title: ${titleInput.value}`,
@@ -281,12 +321,24 @@ const payload = drafts
       current.tags.length ? `tags: [${current.tags.join(', ')}]` : null,
       `status: ${current.status}`,
       'draft: true',
+      current.video_ready ? 'video_ready: true' : null,
+      current.video_ready && spoken != null ? `spoken_seconds: ${spoken}` : null,
+      ...beatsBlock,
+      current.video_ready && current.pull_quote
+        ? `pull_quote: ${JSON.stringify(current.pull_quote)}`
+        : null,
       '---',
       '',
     ].filter((x) => x !== null).join('\n');
     // Locked blocks keep their own paragraph; sentences rejoin into paragraphs.
     const body = lines.map((l) => l.text.trim()).filter(Boolean).join('\n\n');
-    return fm + body + '\n';
+    let out = fm + body + '\n';
+    if (current.video_ready) {
+      const ig = current.pull_quote || '';
+      out += `\n<!-- NEXT: paste body + beats into summon.guide script mode -->\n`;
+      if (ig) out += `<!-- IG: ${ig} -->\n`;
+    }
+    return out;
   }
 
   function load(slug: string) {

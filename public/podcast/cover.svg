@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1400" role="img" aria-labelledby="title description">
+  <title id="title">Pangaea Pod</title>
+  <desc id="description">A minimal typographic cover on warm paper.</desc>
+  <rect width="1400" height="1400" fill="#fbf7f0"/>
+  <rect x="96" y="96" width="1208" height="1208" fill="none" stroke="#1c1917" stroke-width="3"/>
+  <rect x="96" y="96" width="1208" height="20" fill="#8a6d34"/>
+  <text x="700" y="610" fill="#1c1917" font-family="Georgia, 'Times New Roman', serif" font-size="190" text-anchor="middle">PANGAEA</text>
+  <text x="700" y="785" fill="#b34a2f" font-family="Georgia, 'Times New Roman', serif" font-size="112" font-style="italic" text-anchor="middle">POD</text>
+  <line x1="420" y1="875" x2="980" y2="875" stroke="#d9cfbe" stroke-width="3"/>
+  <text x="700" y="955" fill="#403a34" font-family="Georgia, 'Times New Roman', serif" font-size="42" text-anchor="middle">ESSAYS AND CONVERSATIONS ACROSS TIME</text>
+</svg>

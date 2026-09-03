@@ -1,0 +1,15 @@
+---
+import { episodeCode, type EpisodeFormat } from '../../lib/podcast';
+
+interface Props {
+  format: EpisodeFormat;
+  number: number;
+}
+
+const { format, number } = Astro.props;
+---
+
+<span class={`episode-label episode-label-${format}`}>
+  {episodeCode(format, number)}
+</span>
+

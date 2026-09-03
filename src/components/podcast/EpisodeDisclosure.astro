@@ -1,0 +1,20 @@
+---
+import { SUMMON_DISCLOSURE } from '../../lib/podcast';
+
+interface Props {
+  continueUrl?: string;
+}
+
+const { continueUrl } = Astro.props;
+---
+
+<aside class="summon-disclosure" aria-labelledby="summon-disclosure-title">
+  <h2 id="summon-disclosure-title">About this simulation</h2>
+  <p>{SUMMON_DISCLOSURE}</p>
+  {continueUrl && (
+    <p class="summon-continue">
+      <a href={continueUrl}>Continue this line of inquiry on summon.guide</a>
+    </p>
+  )}
+</aside>
+

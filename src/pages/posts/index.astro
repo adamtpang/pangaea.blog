@@ -40,13 +40,14 @@ const allTags = Array.from(
 ).sort();
 ---
 
-<Base title="Posts · Pangaea">
-  <h1>Posts</h1>
+<Base title="Essays | Pangaea" description="Essays across time, by Adam Pang.">
+  <p class="section-kicker">Read</p>
+  <h1>Essays</h1>
 
   {posts.length > 0 && (
     <div class="cadence">
       <div class="cadence-row">
-        <span><strong>{posts.length}</strong> / 1,000 posts</span>
+        <span><strong>{posts.length}</strong> / 1,000 essays</span>
         <span>·</span>
         <span><strong>{thisYear}</strong> this year</span>
         <span>·</span>
@@ -63,17 +64,19 @@ const allTags = Array.from(
     </div>
   )}
 
-  {posts.length === 0 && <p class="meta">Nothing here yet.</p>}
+  {posts.length === 0 && <p class="meta">No essays are public yet.</p>}
 
   {posts.length > 0 && (
     <div class="posts-controls">
+      <label class="sr-only" for="posts-search">Search essays</label>
       <input
         type="search"
         id="posts-search"
-        placeholder="Search title, blurb, or tag..."
+        placeholder="Search title, blurb, or tag"
         autocomplete="off"
         spellcheck="false"
       />
+      <label class="sr-only" for="posts-sort">Sort essays</label>
       <select id="posts-sort">
         <option value="date-desc">Newest first</option>
         <option value="date-asc">Oldest first</option>
@@ -198,7 +201,7 @@ const allTags = Array.from(
       render();
     });
 
-    // Keyboard shortcut: "/" focuses search
+    // The slash key focuses search from anywhere outside an input.
     document.addEventListener('keydown', (e) => {
       if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') {
         e.preventDefault();

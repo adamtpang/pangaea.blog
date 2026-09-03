@@ -1,263 +1,129 @@
 ---
 import PilotLayout from '../layouts/PilotLayout.astro';
-import { getCollection } from 'astro:content';
-
-const epoch = new Date('1971-01-01').valueOf();
-
-const posts = await getCollection('posts');
-const apps = await getCollection('apps');
-const eps = await getCollection('episodes');
-const cities = await getCollection('cities');
-
-const pub = (c: any[]) => c.filter((i) => !i.data.draft);
-const wip = (c: any[]) => c.filter((i) => i.data.draft);
-
-// Posts additionally hide anything at the sentinel epoch date.
-const livePosts = posts.filter((p) => !p.data.draft && p.data.date.valueOf() >= epoch);
-
-const pillars = [
-  { label: 'Essays', href: '/posts/', live: livePosts.length, wip: posts.length - livePosts.length },
-  { label: 'Apps', href: '/apps/', live: pub(apps).length, wip: wip(apps).length },
-  { label: 'Podcasts', href: '/podcast/', live: pub(eps).length, wip: wip(eps).length },
-  { label: 'City-states', href: '/cities/', live: pub(cities).length, wip: wip(cities).length },
-];
-
-const shipped = pillars.reduce((n, p) => n + p.live, 0);
-const inHand = pillars.reduce((n, p) => n + p.wip, 0);
-
-// The subcomponents. A piece is a stack, so measure the layers, not just the
-// finished count. These are the numbers that say what to do next.
-const has = (c: any[], f: (d: any) => boolean) => c.filter((i) => f(i.data)).length;
-
-const parts = [
-  {
-    label: 'Essays',
-    total: posts.length,
-    legos: [
-      { n: 'has a claim title', v: posts.length },
-      { n: 'blurb', v: has(posts, (d) => Boolean(d.blurb)) },
-      { n: 'tagged', v: has(posts, (d) => Boolean(d.tags?.length)) },
-      { n: 'published', v: livePosts.length },
-    ],
-  },
-  {
-    label: 'Apps',
-    total: apps.length,
-    legos: [
-      { n: 'live url', v: has(apps, (d) => Boolean(d.url)) },
-      { n: 'one-line thesis', v: has(apps, (d) => Boolean(d.blurb)) },
-      { n: 'cover', v: has(apps, (d) => Boolean(d.cover)) },
-      { n: 'published', v: pub(apps).length },
-    ],
-  },
-];
-
-const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
+import { PODCAST_PROMISE } from '../lib/podcast';
 ---
 
-<PilotLayout
-  title="Pangaea: Essays, Apps, Podcasts, and City-States"
-  description="Pangaea is Adam Pang's personal publication: free essays, apps, podcasts, and city-state projects, made in public."
->
-  <h1 class="wordmark">PANGAEA</h1>
+<PilotLayout title="Pangaea" description={PODCAST_PROMISE + ' By Adam Pang.'}>
+  <header class="home-masthead">
+    <h1 class="wordmark">PANGAEA</h1>
+    <p class="publication-promise">{PODCAST_PROMISE}</p>
+    <p class="publication-byline">By Adam Pang.</p>
+  </header>
 
-  <p class="about">
-    Pangaea is <a href="https://adampang.com/">Adam Pang</a>'s independent personal
-    publication: a body of work made in public and kept on an owned URL. Four
-    pillars hold a thousand pieces each: the written word, the built word, the
-    spoken word, and the governed word. Songs live at
-    <a href="https://strummer.fun">strummer.fun</a>. What gets measured gets managed.
-  </p>
-
-  <section class="publication" aria-labelledby="publication-title">
-    <h2 class="sec" id="publication-title">The publication</h2>
-    <p>
-      Pangaea brings essays, software, recorded conversations, and city-state
-      experiments onto one map. The common thread is worldbuilding: each entry
-      begins with a claim, a working artifact, or a conversation worth keeping,
-      then points to the other pieces that make the idea more useful.
-    </p>
-    <p>
-      Every published article is free to read. Pangaea has no paid plan,
-      subscription, trial, or paywall, and the site does not sell access to the
-      archive. Readers can browse the work, follow the RSS feed, or use Adam's
-      public contact path for corrections and questions about the publication.
-    </p>
-    <p>
-      The homepage is a working ledger, not a claim that every slot is finished.
-      Public counts show what has shipped; the in-hand counts show unfinished
-      material without presenting it as published work. Start with the essays
-      for the written side, or open the Pilot for the spoken side.
-    </p>
-    <p class="publication-actions">
-      <a href="/posts/">Start reading the essays</a>
-      <span aria-hidden="true">·</span>
-      <a href="/contact/">Contact Adam about Pangaea</a>
-    </p>
-  </section>
-
-  <!-- THE LEDGER: the counter. Shipped is what is public; in hand is the pile. -->
-  <h2 class="sec">The ledger</h2>
-
-  <table class="ledger">
-    <tbody>
-      {pillars.map((p) => (
-        <tr>
-          <th scope="row"><a href={p.href}>{p.label}</a></th>
-          <td class="num">{p.live}</td>
-          <td class="of">/ 1,000</td>
-          <td class="bar">
-            <span class="fill" style={`width:${Math.max(pct(p.live, 1000), p.live > 0 ? 1 : 0)}%`}></span>
-          </td>
-          <td class="wip">{p.wip > 0 ? `+${p.wip} in hand` : ''}</td>
-        </tr>
-      ))}
-      <tr class="total">
-        <th scope="row">Shipped</th>
-        <td class="num">{shipped}</td>
-        <td class="of">/ 5,000</td>
-        <td class="bar"></td>
-        <td class="wip">{inHand} in hand</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- THE PARTS: every piece is a stack. These say what is missing. -->
-  <h2 class="sec">The parts</h2>
-  <p class="note">
-    A piece is a stack, not a single artifact. These count the layers that
-    exist across every entry, finished or not.
-  </p>
-
-  {parts.map((p) => (
-    <table class="parts">
-      <caption>{p.label} <span class="cap-total">{p.total} entries</span></caption>
-      <tbody>
-        {p.legos.map((l) => (
-          <tr>
-            <th scope="row">{l.n}</th>
-            <td class="pnum">{l.v}</td>
-            <td class="bar">
-              <span class="fill" style={`width:${pct(l.v, p.total)}%`}></span>
-            </td>
-            <td class="ppct">{pct(l.v, p.total)}%</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  ))}
-
-  <h2 class="sec">The work</h2>
-  <ul class="projects">
-    <li>
-      <a class="project-title" href="/work/">The field</a>
-      <span class="project-meta">all 5,000 slots</span>
-    </li>
-    <li>
-      <a class="project-title" href="/archive/">Archive</a>
-      <span class="project-meta">everything shipped</span>
-    </li>
-    <li>
-      <a class="project-title" href="/pilot/">Pangaea Pilot &middot; Season 1</a>
-      <span class="project-meta">May 2026</span>
-    </li>
-    <li>
-      <a class="project-title" href="/start/">Start here</a>
-      <span class="project-meta">the guided path</span>
-    </li>
-  </ul>
-
-  <nav class="trust-links" aria-label="Publication information">
-    <a href="/about/">About</a>
-    <span aria-hidden="true">·</span>
-    <a href="/contact/">Contact</a>
-    <span aria-hidden="true">·</span>
-    <a href="/privacy/">Privacy</a>
-    <span aria-hidden="true">·</span>
-    <a href="/rss.xml">RSS</a>
+  <nav class="entryways" aria-label="Enter Pangaea">
+    <a href="/posts/">
+      <span class="entry-verb">Read</span>
+      <span class="entry-title">Essays</span>
+      <span class="entry-description">The written record.</span>
+    </a>
+    <a href="/podcast/">
+      <span class="entry-verb">Listen</span>
+      <span class="entry-title">Pangaea Pod</span>
+      <span class="entry-description">Conversations and audio essays.</span>
+    </a>
   </nav>
+
+  <footer class="home-footer">
+    <a href="/rss.xml">Essay RSS</a>
+    <span aria-hidden="true">/</span>
+    <a href="/podcast.xml">Podcast RSS</a>
+    <span aria-hidden="true">/</span>
+    <a href="/about/">About</a>
+    <span aria-hidden="true">/</span>
+    <a href="/contact/">Contact</a>
+    <span aria-hidden="true">/</span>
+    <a href="/privacy/">Privacy</a>
+  </footer>
 </PilotLayout>
 
 <style>
-  .sec {
-    font-family: var(--serif);
-    font-size: 0.95rem;
-    font-weight: normal;
-    font-style: italic;
-    margin: 3rem 0 0.75rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid var(--rule);
+  .home-masthead {
+    text-align: center;
+    margin: 10vh 0 4.5rem;
   }
-  .note { font-size: 0.85rem; color: var(--muted); margin: 0 0 1.25rem; }
-  .publication p { font-size: 0.95rem; }
-  .publication-actions { display: flex; flex-wrap: wrap; gap: 0.35rem 0.65rem; }
-  .trust-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.35rem 0.65rem;
-    margin-top: 3rem;
-    padding-top: 1rem;
+
+  .wordmark {
+    margin-bottom: 1.75rem;
+  }
+
+  .publication-promise {
+    font-size: clamp(1.35rem, 1.15rem + 1vw, 1.75rem);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .publication-byline {
+    color: var(--ink-mute);
+    font-style: italic;
+    margin-top: 0.4rem;
+  }
+
+  .entryways {
     border-top: 1px solid var(--rule);
-    color: var(--muted);
-    font-size: 0.85rem;
   }
 
-  table { width: 100%; border-collapse: collapse; font-family: var(--serif); }
-
-  /* The ledger */
-  .ledger th, .ledger td { padding: 0.45rem 0; vertical-align: baseline; text-align: left; }
-  .ledger th { font-weight: normal; width: 8.5rem; }
-  .ledger th a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
-  .ledger th a:hover { color: var(--accent); }
-  .ledger .num { font-size: 1.5rem; text-align: right; width: 3.5rem; }
-  .ledger .of { color: var(--muted); font-size: 0.8rem; padding-left: 0.3rem; width: 3.5rem; }
-  .ledger .wip { color: var(--accent); font-size: 0.78rem; text-align: right; white-space: nowrap; }
-  .ledger .total { border-top: 1px solid var(--rule); }
-  .ledger .total th { font-style: italic; }
-
-  /* Hairline bars. Static, no animation, black on white with a terracotta fill. */
-  .bar {
-    width: 100%;
-    min-width: 4rem;
-    padding: 0 0.6rem !important;
-  }
-  .bar::after {
-    content: '';
-    display: block;
-    height: 1px;
-    background: var(--rule);
-    opacity: 0.25;
-  }
-  .bar { position: relative; }
-  .fill {
-    position: absolute;
-    left: 0.6rem;
-    right: auto;
-    bottom: 0.45rem;
-    height: 3px;
-    background: var(--accent);
-    max-width: calc(100% - 1.2rem);
-  }
-
-  /* The parts */
-  .parts { margin: 0 0 1.75rem; }
-  .parts caption {
-    text-align: left;
-    font-style: italic;
-    padding-bottom: 0.35rem;
+  .entryways a {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: baseline;
+    min-height: 4.5rem;
+    padding: 1.25rem 0;
     border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    text-decoration: none;
   }
-  .parts .cap-total { color: var(--muted); font-style: normal; font-size: 0.78rem; }
-  .parts th, .parts td { padding: 0.3rem 0; vertical-align: baseline; text-align: left; }
-  .parts th { font-weight: normal; width: 9.5rem; font-size: 0.9rem; }
-  .parts .pnum { text-align: right; width: 3rem; font-size: 0.95rem; }
-  .parts .ppct { text-align: right; width: 3rem; color: var(--muted); font-size: 0.78rem; }
 
-  @media (max-width: 560px) {
-    .ledger th { width: 6.5rem; font-size: 0.9rem; }
-    .ledger .num { font-size: 1.2rem; }
-    .bar { display: none; }
-    .parts th { width: 8rem; }
+  .entryways a:hover .entry-title,
+  .entryways a:focus-visible .entry-title {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .entry-verb,
+  .entry-description {
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+
+  .entry-title {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 520;
+  }
+
+  .entry-description {
+    font-size: 0.9rem;
+    text-align: right;
+  }
+
+  .home-footer {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 4rem;
+    color: var(--ink-mute);
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 540px) {
+    .home-masthead {
+      margin-top: 5vh;
+    }
+
+    .entryways a {
+      grid-template-columns: 3.75rem 1fr;
+      gap: 0.75rem;
+    }
+
+    .entry-description {
+      grid-column: 2;
+      text-align: left;
+    }
+
+    .home-footer {
+      flex-wrap: wrap;
+    }
   }
 </style>

@@ -1,0 +1,27 @@
+---
+interface Chapter {
+  timestamp: string;
+  title: string;
+}
+
+interface Props {
+  chapters: Chapter[];
+  verified?: boolean;
+}
+
+const { chapters, verified = false } = Astro.props;
+---
+
+<section class="episode-section" aria-labelledby="chapters-title">
+  <h2 id="chapters-title">Chapters</h2>
+  {!verified && <p class="section-note">Chapter times are approximate.</p>}
+  <ol class="episode-chapters">
+    {chapters.map((chapter) => (
+      <li>
+        <span class="chapter-time">{chapter.timestamp}</span>
+        <span>{chapter.title}</span>
+      </li>
+    ))}
+  </ol>
+</section>
+

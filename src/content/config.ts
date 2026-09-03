@@ -60,22 +60,80 @@ const inbox = defineCollection({
   }),
 });
 
-// Episodes: the spoken-word side of Pangaea. Each episode is a markdown/MDX
-// file in src/content/episodes/. The `youtube` field (a video ID) drives the
-// auto-embed on the /podcast list and the episode page; the body is show notes
-// (topics, links, timestamps), and can use <YouTube> for clips referenced.
+// Episodes: one Pangaea Pod feed with three formats. Format numbers are local
+// to SUMMON, LIVING, or ESSAY. feed_number is the single cross-format sequence
+// used by podcast clients. The body is the liner notes and show notes.
 const episodes = defineCollection({
   type: 'content',
-  schema: z.object({
-    title: z.string(),
-    date: z.coerce.date(),
-    episode: z.number().int().nonnegative().optional(),
-    youtube: z.string().optional(), // YouTube video ID, e.g. "dQw4w9WgXcQ"
-    blurb: z.string().optional(),
-    guest: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    draft: z.boolean().default(true),
-  }),
+  schema: z
+    .object({
+      title: z.string(),
+      date: z.coerce.date(),
+      recorded_date: z.coerce.date().optional(),
+      format: z.enum(['summon', 'living', 'essay']),
+      format_number: z.number().int().positive(),
+      feed_number: z.number().int().positive().optional(),
+      series: z.string().optional(),
+      youtube: z.string().optional(),
+      audio_url: z.string().url().optional(),
+      audio_bytes: z.number().int().positive().optional(),
+      audio_type: z.enum(['audio/mpeg', 'audio/mp4', 'audio/x-m4a']).default('audio/mpeg'),
+      transcript_url: z.string().url().optional(),
+      duration: z.string().optional(),
+      blurb: z.string().optional(),
+      guest: z.string().optional(),
+      signature_quote: z.string().optional(),
+      quote_attribution: z.string().optional(),
+      chapters: z
+        .array(z.object({ timestamp: z.string(), title: z.string() }))
+        .optional(),
+      chapters_verified: z.boolean().default(false),
+      sources: z
+        .array(
+          z.object({
+            kind: z.enum(['quotation', 'fact', 'interpretation']),
+            label: z.string(),
+            url: z.string().url().optional(),
+            note: z.string().optional(),
+          })
+        )
+        .optional(),
+      summon_subject: z.string().optional(),
+      summon_url: z.string().url().optional(),
+      explicit: z.boolean().default(false),
+      tags: z.array(z.string()).optional(),
+      draft: z.boolean().default(true),
+    })
+    .superRefine((episode, context) => {
+      if (Boolean(episode.audio_url) !== Boolean(episode.audio_bytes)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'audio_url and audio_bytes must be provided together',
+        });
+      }
+
+      if (episode.audio_url && !episode.feed_number) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Episodes with direct audio require feed_number',
+        });
+      }
+
+      if (episode.format === 'summon' && !episode.draft) {
+        if (!episode.summon_subject || !episode.summon_url) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Published SUMMON episodes require summon_subject and summon_url',
+          });
+        }
+        if (!episode.sources?.length) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Published SUMMON episodes require source notes',
+          });
+        }
+      }
+    }),
 });
 
 // Vlogs: the watched side of Pangaea. Visual essays + YouTube-hosted videos.
@@ -109,10 +167,9 @@ const vlogs = defineCollection({
   }),
 });
 
-// Pilot: Pangaea's audio publication, Season 1. Different lane from /podcast
-// (which is the YouTube-embed long-form). Pilot is monastic: serif-only
-// pages at /pilot/{track}, self-hosted MP3 via <audio>, big pull quote per
-// episode, chapter timestamps in frontmatter.
+// Pilot: private migration archive for the original Season 1 plan. Public
+// audio now lives only in the episodes collection as Pangaea Pod. The /pilot
+// routes redirect to /podcast so this collection cannot become a second feed.
 const pilot = defineCollection({
   type: 'content',
   schema: z.object({

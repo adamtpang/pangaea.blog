@@ -159,6 +159,12 @@ For Listen + Watch: the `youtube` field is a video ID like `dQw4w9WgXcQ`. The li
 
 Episodes are markdown/MDX files in `src/content/episodes/`. Empty frontmatter fields must be **omitted entirely**, not left blank (Astro/Zod parses blank values as null and rejects them). `/podcast` shows a "coming soon" empty state until at least one episode has `draft: false`.
 
+Pangaea owns the approved public episode pages and show notes. Time Capsule raw
+media, cuts, transcripts, consent gates, final QA, and delivery packages are owned
+by `footage.center`; its canonical private record is
+`productions/time-capsule/README.md` in that repository. Route production work
+through the verified repos.chat relationship instead of rebuilding it here.
+
 ## Vlogs (`/vlog`)
 
 Mirrors `/podcast` exactly, with `vlog: N` instead of `episode: N`. Same empty-frontmatter rule. Same YouTube-thumbnail card list, full-embed detail page.
