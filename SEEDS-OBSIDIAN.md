@@ -35,8 +35,6 @@ crushing under duress · we so wil wil wil · aphex jungle · Avicii - The Night
 (cover) · NewJeans lab · eyeland battle music (frozen mountain / cave funky /
 tropical beach)
 
-Plus podcast audio sessions: POD, maans pod yay.
-
 ## App seeds — from `8020.best/💡 C Ideas & Someday.md`
 
 optimism.fund (capital-allocation) · book.movie · advice.guru · legends.guide ·
