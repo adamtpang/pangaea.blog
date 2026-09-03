@@ -8,6 +8,11 @@
       "statusCode": 301
     },
     {
+      "source": "/pilot/",
+      "destination": "/podcast/",
+      "statusCode": 301
+    },
+    {
       "source": "/pilot/:path*",
       "destination": "/podcast/",
       "statusCode": 301
