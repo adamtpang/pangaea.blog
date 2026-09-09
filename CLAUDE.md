@@ -262,3 +262,11 @@ live.
 - Don't revert the AbletonMCP remote-script security fixes (loopback-only
   bind, telemetry disabled) if reinstalling or upgrading — see
   `scripts/README-ableton-mcp.md`.
+
+## Elemental palette, 2026-09-09
+
+Adam assigned Pangaea green/earth/philosophy, Pele red/fire/business, Pacifica blue/water/music. ELEMENTAL-DESIGN.md is the shared contract. This supersedes earlier terracotta/gold and blue-marble UI guidance. Updated tokens, standalone share palette and graph identity locally; preserved all content/workshop work. Reciprocal repos.chat kin and manual audit recipes configured, none dispatched. No deployment.
+
+## Standing goal, 2026-09-09
+
+Adam's goal for pangaea.blog is 1,000 essays. Identity: green, earth. This is a target, not a verified current count. Read ELEMENTAL-DESIGN.md for the three sibling goals.

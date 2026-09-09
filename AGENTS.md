@@ -140,3 +140,11 @@ Palette is Earth seen from space. Tokens in `src/styles/global.css` `:root` (the
 - Don't bring back the "rift" name or the forced 1-app/1-essay/1-song schema.
 - Don't reintroduce em dashes anywhere in public-facing copy.
 - Don't render the `inbox` collection on the public site.
+
+## Elemental sibling contract, 2026-09-09
+
+Adam assigned Pele red/fire/business, Pangaea green/earth/philosophy, and Pacifica blue/water/music. Read ELEMENTAL-DESIGN.md for the shared token interface and reciprocal repos.chat kin. This current palette direction supersedes earlier terracotta/gold Pangaea or red Pacifica UI guidance. Keep existing typography, content, artwork, and private work intact. Connections and audit recipes are configured; no exchanges or watchers were started.
+
+## Standing goal, 2026-09-09
+
+Adam's goal for pangaea.blog is 1,000 essays. Identity: green, earth. This is a target, not a verified current count. Read ELEMENTAL-DESIGN.md for the three sibling goals.

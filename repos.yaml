@@ -1,10 +1,13 @@
 # repos.yaml v0 — see github.com/adamtpang/repo-connect
 repo: pangaea.blog
-is: Personal essay site and hub for the life loop. Two pillars live here directly (1000 essays via ESSAYS-1000.md, 1000 apps via src/content/apps/); songs and games each spun out into their own repo.
+is: Personal essay site and hub for the life loop. Two pillars live here directly (1000 essays via ESSAYS-1000.md, 1000 apps via src/content/apps/); songs and games each spun out into their own repo. Long-term goal is 1000 essays.
 cluster: 1000-life-loop
 canon: ECOSYSTEM.md
 
 provides:
+  - id: elemental-design
+    what: Shared elemental token interface and red green blue sibling contract
+    at: ELEMENTAL-DESIGN.md
   - id: apps-pillar
     what: The "1000 apps" content collection, already a working home for every app/project Adam has shipped or is building, no separate repo needed for this pillar
     at: src/content/config.ts
@@ -18,6 +21,10 @@ provides:
 stack: [astro, typescript]
 
 kin:
+  - repo: pele.business
+    why: Jointly maintains the ELEMENTAL-DESIGN.md contract and shared CSS token interface, with a distinct assigned elemental palette.
+  - repo: pacifica.surf
+    why: Jointly maintains the ELEMENTAL-DESIGN.md contract and shared CSS token interface, with a distinct assigned elemental palette.
   - repo: strummer.fun
     why: The songs pillar of the same three-pillar life loop (essays and apps live here, songs lives there). Migrated out to strummer.fun-songs on 2026-08-08 so the songs pipeline could ship as its own site, then folded into strummer.fun/songs/ on 2026-08-09 when strummer.fun-songs was retired.
   - repo: thedojo.fun
@@ -34,6 +41,22 @@ kin:
     why: pokedex.life's own CLAUDE.md names this site directly as the vehicle for its "hunt" mode ("The vehicle is pangaea.blog (remote podcasts - interview your way up; each guest is a warm-intro node toward the next tier)", see pokedex.life/docs/the-hunt.md). pokedex.life's targeting engine decides WHO to reach (the greatest living humans, laddered bottom-up via warm-intro paths); /podcast here is HOW that reach actually happens, one interview at a time. The footage.center edge above owns production; this edge is about who gets invited on.
 
 exchanges:
+  - id: audit-pele-design
+    with: pele.business
+    trigger: manual
+    asks: inspect the sibling elemental token contract and actual palette implementation without changing files
+    returns: file-backed token and palette drift findings with proposed corrections
+    permission: read-only
+    approval: human-required
+    at: ELEMENTAL-DESIGN.md
+  - id: audit-pacifica-design
+    with: pacifica.surf
+    trigger: manual
+    asks: inspect the sibling elemental token contract and actual palette implementation without changing files
+    returns: file-backed token and palette drift findings with proposed corrections
+    permission: read-only
+    approval: human-required
+    at: ELEMENTAL-DESIGN.md
   - id: package-reviewed-episode
     with: footage.center
     trigger: manual

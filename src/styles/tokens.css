@@ -1,14 +1,14 @@
 /* ============================================================
-   Pangaea — the design system. ONE system, whole site.
-   "The daily page": warm paper, ink, one terracotta accent.
+   Pangaea: the design system. ONE system, whole site.
+   "The daily page": warm paper, ink, one green accent.
 
    Imported by BOTH stylesheets, so /posts and / are one family:
      - global.css  (Base.astro: essays, apps, daily, graph...)
      - pilot.css   (PilotLayout.astro: homepage, /pilot)
 
    It is the writing surface made into a website. Paper you want to
-   write on, ink you can read for an hour, one warm accent that means
-   "this is a link", and a gold that means "this is ours".
+   write on, ink you can read for an hour, one green accent that means
+   "this is a link", and an earth tone that means "this is ours".
 
    The work spans three threads, one voice:
      MUSIC · PHILOSOPHY · TECH & BUSINESS
@@ -16,9 +16,9 @@
    Usage discipline (do not blur these):
    - PAPER  (--paper / --surface): the page. Background, breathing room.
    - INK    (--ink): all body copy and every heading. Never color a heading.
-   - TERRACOTTA (--accent): interaction ONLY. Links, focus rings, the
+   - green (--accent): interaction ONLY. Links, focus rings, the
      reading-flow accent bar, the active state.
-   - GOLD   (--gold): identity ONLY, never interaction. Issue numbers,
+   - EARTH   (--gold): identity ONLY, never interaction. Issue numbers,
      the brand dot, the /share masthead stripe, progress marks.
    - Color is never the only affordance: links stay underlined.
    - Type: Fraunces (display) over Newsreader (body). Serif throughout,
@@ -49,14 +49,14 @@
   --ink-soft: #403a34; /* secondary prose (~9.8:1) */
   --ink-mute: #6b625a; /* meta, timestamps, captions (~5.4:1 AA) */
 
-  /* --- Terracotta: interaction ---------------------------- */
-  --accent: #b34a2f; /* links, focus, active (~5.0:1 AA) */
-  --accent-deep: #8f3721; /* hover / pressed */
-  --accent-tint: #e8cfc3; /* decorative rules, selection */
+  /* --- Green: interaction ---------------------------- */
+  --accent: #2f6b4f; /* links, focus, active (AA on paper) */
+  --accent-deep: #24533d; /* hover / pressed */
+  --accent-tint: #e4eee6; /* decorative rules, selection */
 
-  /* --- Gold: identity, never interaction ------------------ */
-  --gold: #8a6d34; /* issue numbers, brand mark (~5.1:1 AA) */
-  --gold-soft: #c9b183; /* decorative only, never text */
+  /* --- Earth: identity, never interaction ------------------ */
+  --gold: #2f6b4f; /* issue numbers, brand mark (AA on paper) */
+  --gold-soft: #8fb6a1; /* decorative only, never text */
 
   /* --- Hairlines ------------------------------------------ */
   --rule: #d9cfbe;
@@ -65,18 +65,18 @@
   /* --- Page texture ---------------------------------------- */
   /* Two warm washes; pulled out as tokens so the dark theme can dim
      them instead of leaving a light-theme glow on a dark ground. */
-  --wash-1: rgba(179, 74, 47, 0.035);
-  --wash-2: rgba(138, 109, 52, 0.045);
-  --tint-gold: rgba(138, 109, 52, 0.05); /* the cadence band */
+  --wash-1: rgba(47, 107, 79, 0.035);
+  --wash-2: rgba(47, 107, 79, 0.045);
+  --tint-gold: rgba(47, 107, 79, 0.05); /* the cadence band */
   --tint-ink: rgba(0, 0, 0, 0.04); /* code and pre backgrounds */
 
   /* --- The three threads ---------------------------------- */
   /* Topic markers ONLY (tag chips, thread labels). Never body text,
      never a heading, never a link. Muted on purpose: the system is
      one voice, and these are just the room it is spoken in. */
-  --music: #6d5580; /* plum */
+  --music: #176079; /* water */
   --philosophy: #4f6656; /* moss */
-  --tech: #3f6070; /* slate blue */
+  --tech: #b83224; /* fire */
 
   /* --- Legacy aliases -------------------------------------- */
   /* Kept so existing rules keep resolving. --bg/--muted/--land are
@@ -152,9 +152,7 @@
    which is what makes every existing rule in global.css and pilot.css
    follow along without being touched.
 
-   Every value below was checked against the #14110f ground:
-   ink 15.87:1, ink-soft 11.84:1, ink-mute 6.62:1, accent 6.03:1,
-   gold 8.65:1. All clear WCAG AA.
+   Dark text and accent colors are verified against the #14110f ground.
    ============================================================ */
 
 @media (prefers-color-scheme: dark) {
@@ -168,26 +166,26 @@
     --ink-soft: #d6ccbc;
     --ink-mute: #a2988a;
 
-    /* Terracotta and gold both lift on a dark ground: the light-theme
+    /* green and earth both lift on a dark ground: the light-theme
        values sink to roughly 2:1 there and stop being readable. */
-    --accent: #dd7551;
-    --accent-deep: #ea8b68;
-    --accent-tint: #4a2a1d;
+    --accent: #8fc9a7;
+    --accent-deep: #b1dfc3;
+    --accent-tint: #203d2d;
 
-    --gold: #cfab63;
-    --gold-soft: #8a7444;
+    --gold: #8fc9a7;
+    --gold-soft: #597d65;
 
     --rule: #332b25;
     --rule-soft: #292118;
 
-    --wash-1: rgba(221, 117, 81, 0.05);
-    --wash-2: rgba(207, 171, 99, 0.045);
-    --tint-gold: rgba(207, 171, 99, 0.07);
+    --wash-1: rgba(143, 201, 167, 0.05);
+    --wash-2: rgba(143, 201, 167, 0.045);
+    --tint-gold: rgba(143, 201, 167, 0.07);
     --tint-ink: rgba(255, 255, 255, 0.055);
 
-    --music: #a98cbd;
+    --music: #83bdd2;
     --philosophy: #86a894;
-    --tech: #7fa3b5;
+    --tech: #e69a90;
 
     --primary-foreground: #14110f;
     --destructive: #e2705a;
@@ -207,24 +205,24 @@
   --ink-soft: #d6ccbc;
   --ink-mute: #a2988a;
 
-  --accent: #dd7551;
-  --accent-deep: #ea8b68;
-  --accent-tint: #4a2a1d;
+  --accent: #8fc9a7;
+  --accent-deep: #b1dfc3;
+  --accent-tint: #203d2d;
 
-  --gold: #cfab63;
-  --gold-soft: #8a7444;
+  --gold: #8fc9a7;
+  --gold-soft: #597d65;
 
   --rule: #332b25;
   --rule-soft: #292118;
 
-  --wash-1: rgba(221, 117, 81, 0.05);
-  --wash-2: rgba(207, 171, 99, 0.045);
-  --tint-gold: rgba(207, 171, 99, 0.07);
+  --wash-1: rgba(143, 201, 167, 0.05);
+  --wash-2: rgba(143, 201, 167, 0.045);
+  --tint-gold: rgba(143, 201, 167, 0.07);
   --tint-ink: rgba(255, 255, 255, 0.055);
 
-  --music: #a98cbd;
+  --music: #83bdd2;
   --philosophy: #86a894;
-  --tech: #7fa3b5;
+  --tech: #e69a90;
 
   --primary-foreground: #14110f;
   --destructive: #e2705a;
@@ -270,3 +268,6 @@ time,
     scroll-behavior: auto !important;
   }
 }
+
+/* Stable aliases across the three elemental siblings. */
+:root { --brand-accent: var(--accent); --brand-accent-hover: var(--accent-deep); --brand-accent-quiet: var(--accent-tint); --brand-paper: var(--paper); --brand-ink: var(--ink); }

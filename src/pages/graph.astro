@@ -228,7 +228,7 @@ const enoughForGraph = nodes.length >= 2;
         for (const n of nodes) {
           ctx.beginPath();
           ctx.arc(n.x, n.y, 7, 0, Math.PI * 2);
-          ctx.fillStyle = '#8a6d34'; /* gold: a post is identity, not a link */
+          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--gold').trim(); /* Earth identity follows the active theme. */
           ctx.fill();
           ctx.fillStyle = '#1c1917';
           ctx.font = '12px Newsreader, Iowan Old Style, Georgia, serif';
