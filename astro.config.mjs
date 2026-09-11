@@ -19,9 +19,7 @@ const wikiLink = [
 export default defineConfig({
   site: 'https://pangaea.blog',
   output: 'hybrid',
-  adapter: vercel({
-    webAnalytics: { enabled: true },
-  }),
+  adapter: vercel(),
   integrations: [mdx({ remarkPlugins: [wikiLink] })],
   build: {
     format: 'directory',
