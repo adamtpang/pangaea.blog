@@ -12,7 +12,7 @@ duration: "1:01:19"
 blurb: Your work works on you more than you work on it. A descent through systems, language, religion, and geometry.
 signature_quote: Your work works on you more than you work on it.
 quote_attribution: Hormozi, via Braxton
-chapters_verified: false
+chapters_verified: true
 chapters:
   - timestamp: "00:00"
     title: 4 Types of Knowing (Vervaeke)
