@@ -13,7 +13,7 @@ import { authorizeDailyRequest } from '../../../lib/dailyAuth';
   way: no ANTHROPIC_API_KEY, no polish.
 
   This never runs automatically. /daily calls it only when Adam taps "Polish"
-  after reaching 300 words; the raw page is always saved regardless of whether
+  after reaching 150 words (the polish gate; the daily goal stays 300); the raw page is always saved regardless of whether
   this succeeds.
 */
 
@@ -21,7 +21,7 @@ export const prerender = false;
 
 const MODEL = 'claude-opus-5';
 // Spoken rambling can run long; cap what we send so cost and latency stay
-// bounded regardless of how far past 300 words the session went.
+// bounded regardless of how far past the gate the session went.
 const MAX_INPUT_CHARS = 6000;
 
 const SYSTEM = `You polish a rough, spoken-out-loud daily page into a tight Pangaea essay.

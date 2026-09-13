@@ -80,7 +80,8 @@ one codebase and one design system.
   because disabling thinking on a forced `tool_choice` call risks the model
   writing the tool call as plain text instead of a real `tool_use` block. Never
   runs automatically; only on the "Polish into an essay" tap, which appears
-  once the page reaches 300 words and sync is authorized (same gate as seeds).
+  once the page reaches 150 words (the polish gate, deliberately below the
+  300-word daily goal) and sync is authorized (same gate as seeds).
   The result is local-only (`w300.polish.v1` in `localStorage`), never synced;
   "Send to /write" prefers a polish for the viewed day when one exists, with a
   "send raw instead" escape hatch.

@@ -201,7 +201,7 @@ import Base from '../layouts/Base.astro';
 
     <p class="tip">
       Speak with <a href="https://handy.computer" rel="noopener" target="_blank">Handy</a>
-      or the mic, reach 300, shape the draft, then ship it to Pangaea.
+      or the mic, reach 150 to shape the draft, 300 to finish the day, then ship it to Pangaea.
     </p>
 
     <p class="warn" id="storageWarn">
@@ -817,6 +817,11 @@ import Base from '../layouts/Base.astro';
     'use strict';
 
     var GOAL = 300;
+    // The polish gate sits below the daily goal on purpose. The real drafts
+    // here have a median of about 185 words and the house form runs 150 to
+    // 400, so asking for 300 before shaping meant asking for padding. 150
+    // marks the floor of an honest essay; 300 stays the day's target.
+    var POLISH_MIN = 150;
     var KEY = 'w300.entries.v1';
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -935,7 +940,7 @@ import Base from '../layouts/Base.astro';
     }
 
     function renderCraftStage() {
-      var stage = lastWords === 0 ? 'seed' : lastWords < GOAL ? 'draft' : 'shape';
+      var stage = lastWords === 0 ? 'seed' : lastWords < POLISH_MIN ? 'draft' : 'shape';
       if (typeof polishMap !== 'undefined' && polishMap && polishMap[viewK]) stage = 'ship';
       Array.prototype.forEach.call(document.querySelectorAll('.craft-stages li'), function (item) {
         item.classList.toggle('active', item.getAttribute('data-stage') === stage);
@@ -1392,7 +1397,7 @@ import Base from '../layouts/Base.astro';
       // Polish costs a real API call, so only offer it once there is enough
       // to work with, and only when sync/auth confirms the endpoint can
       // actually authorize the request (it is gated the same way as sync).
-      polishBtn.hidden = !(typeof syncOn === 'function' && syncOn() && lastWords >= GOAL);
+      polishBtn.hidden = !(typeof syncOn === 'function' && syncOn() && lastWords >= POLISH_MIN);
       researchBtn.hidden = !(viewK === todayK && typeof syncOn === 'function' && syncOn());
     }
 
