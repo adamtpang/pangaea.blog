@@ -1,6 +1,6 @@
 ---
 title: The Ceiling Is Human
-date: 2026-08-19
+date: 2026-09-13
 number: 436
 blurb: Whatever you are looking up at was built by a body running the same equipment as yours.
 cover: /covers/the-ceiling-is-human.svg
@@ -18,7 +18,7 @@ pull_quote: The ceiling is not superhuman. It is human.
 
 The man who cracked open the Dutch spice trade was not good at his job.
 
-Cornelis de Houtman left Amsterdam in 1595 with four ships and roughly 250 men. Scurvy broke out within weeks. He was undiplomatic enough that one ruler refused to deal with him at all, so he could not buy the spices he had crossed the world for. Fewer than 90 men came home, too weak to moor their own ships.
+Cornelis de Houtman left Amsterdam in 1595 with four ships and roughly 250 men. Scurvy broke out within weeks. He was undiplomatic enough at Banten that he left without buying the spices he had crossed the world for. Fewer than 90 men came home, too weak to moor their own ships.
 
 Within five years, 65 more Dutch ships had sailed that route. Within seven, the VOC existed.
 
@@ -33,3 +33,5 @@ Read a real biography instead of a summary and this collapses fast. They were yo
 The ceiling is not superhuman. It is human, which means it is a height a human has already stood at, which means the question was never whether it can be reached.
 
 Go badly, first.
+
+Sources: Wikipedia, Cornelis de Houtman (four ships on 2 April 1595; 249 crew; scurvy within weeks; turned away at Banten without buying spices; 87 returned, too weak to moor their ships; 65 more Dutch ships within five years), and First Dutch Expedition to the East Indies (248 crew; no purchase at Banten). VOC founded 20 March 1602, per Wikipedia, Dutch East India Company. Checked 2026-09-13.
