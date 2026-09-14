@@ -6,7 +6,7 @@ blurb: Whatever you are looking up at was built by a body running the same equip
 cover: /covers/the-ceiling-is-human.svg
 tags: [agency, heroes, self-doubt]
 status: seedling
-draft: true
+draft: false
 video_ready: true
 spoken_seconds: 105
 beats:
