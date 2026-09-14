@@ -16,6 +16,21 @@
       "source": "/pilot/:path*",
       "destination": "/podcast/",
       "statusCode": 301
+    },
+    {
+      "source": "/posts/2026-09-08-deathmoney",
+      "destination": "/posts/deathmoney/",
+      "statusCode": 301
+    },
+    {
+      "source": "/posts/2026-09-08-deathmoney/",
+      "destination": "/posts/deathmoney/",
+      "statusCode": 301
+    },
+    {
+      "source": "/share/2026-09-08-deathmoney/:path*",
+      "destination": "/share/deathmoney/",
+      "statusCode": 301
     }
   ],
   "headers": [
