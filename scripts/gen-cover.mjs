@@ -11,9 +11,9 @@ import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 
 const PAPER = '#fbf7f0';
-const ACCENT = '#b34a2f';
-const ACCENT_DEEP = '#8f3721';
-const GOLD = '#8a6d34';
+const ACCENT = '#2f6b4f';
+const ACCENT_DEEP = '#24533d';
+const GOLD = '#2f6b4f';
 const RULE = '#d9cfbe';
 
 function hashSlug(slug) {
