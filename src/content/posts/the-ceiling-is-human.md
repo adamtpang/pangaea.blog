@@ -1,7 +1,7 @@
 ---
 title: The Ceiling Is Human
 date: 2026-09-13
-number: 436
+number: 2
 blurb: Whatever you are looking up at was built by a body running the same equipment as yours.
 cover: /covers/the-ceiling-is-human.svg
 tags: [agency, heroes, self-doubt]

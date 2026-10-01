@@ -39,9 +39,9 @@
 
 :root {
   /* --- Paper: the page ------------------------------------ */
-  --paper: #fbf7f0; /* warm sheet, the default background */
-  --paper-2: #f5efe4; /* inset bands, alternating sections */
-  --paper-3: #efe7d8; /* pressed state, meter troughs */
+  --paper: #ffffff; /* plain white, the default background */
+  --paper-2: #f6f6f4; /* inset bands, alternating sections */
+  --paper-3: #ededea; /* pressed state, meter troughs */
   --surface: #ffffff; /* true white for inputs and the share frame */
 
   /* --- Ink: the writing ----------------------------------- */
@@ -59,14 +59,14 @@
   --gold-soft: #8fb6a1; /* decorative only, never text */
 
   /* --- Hairlines ------------------------------------------ */
-  --rule: #d9cfbe;
-  --rule-soft: #e7decf;
+  --rule: #e3e3de;
+  --rule-soft: #efefeb;
 
   /* --- Page texture ---------------------------------------- */
   /* Two warm washes; pulled out as tokens so the dark theme can dim
      them instead of leaving a light-theme glow on a dark ground. */
-  --wash-1: rgba(47, 107, 79, 0.035);
-  --wash-2: rgba(47, 107, 79, 0.045);
+  --wash-1: transparent;
+  --wash-2: transparent;
   --tint-gold: rgba(47, 107, 79, 0.05); /* the cadence band */
   --tint-ink: rgba(0, 0, 0, 0.04); /* code and pre backgrounds */
 

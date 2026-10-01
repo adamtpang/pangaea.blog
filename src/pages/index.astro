@@ -1,129 +1,88 @@
 ---
 import PilotLayout from '../layouts/PilotLayout.astro';
 import { PODCAST_PROMISE } from '../lib/podcast';
+import { NEWSLETTER_URL } from '../lib/newsletter';
 ---
 
 <PilotLayout title="Pangaea" description={PODCAST_PROMISE + ' By Adam Pang.'}>
-  <header class="home-masthead">
+  <main class="home">
+    <span class="earth-mark" role="img" aria-label="Earth">🌍</span>
     <h1 class="wordmark">PANGAEA</h1>
-    <p class="publication-promise">{PODCAST_PROMISE}</p>
-    <p class="publication-byline">By Adam Pang.</p>
-  </header>
+    <p class="promise">An essay, a picture, a song.</p>
 
-  <nav class="entryways" aria-label="Enter Pangaea">
-    <a href="/posts/">
-      <span class="entry-verb">Read</span>
-      <span class="entry-title">Essays</span>
-      <span class="entry-description">The written record.</span>
-    </a>
-    <a href="/podcast/">
-      <span class="entry-verb">Listen</span>
-      <span class="entry-title">Pangaea Pod</span>
-      <span class="entry-description">Conversations and audio essays.</span>
-    </a>
-  </nav>
+    <nav class="entryways" aria-label="Enter Pangaea">
+      <a href="/posts/">Read</a>
+      <a href="/podcast/">Listen</a>
+    </nav>
+  </main>
 
   <footer class="home-footer">
-    <a href="/rss.xml">Essay RSS</a>
-    <span aria-hidden="true">/</span>
-    <a href="/podcast.xml">Podcast RSS</a>
-    <span aria-hidden="true">/</span>
     <a href="/about/">About</a>
-    <span aria-hidden="true">/</span>
-    <a href="/contact/">Contact</a>
-    <span aria-hidden="true">/</span>
-    <a href="/privacy/">Privacy</a>
+    <a href={NEWSLETTER_URL}>Email</a>
+    <a href="/rss.xml">RSS</a>
   </footer>
 </PilotLayout>
 
 <style>
-  .home-masthead {
+  .home {
     text-align: center;
-    margin: 10vh 0 4.5rem;
+    margin-top: 16vh;
+  }
+
+  .earth-mark {
+    display: block;
+    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji';
+    font-size: 3.5rem;
+    line-height: 1;
+    margin-bottom: 1.25rem;
   }
 
   .wordmark {
-    margin-bottom: 1.75rem;
+    margin: 0 0 0.75rem;
   }
 
-  .publication-promise {
-    font-size: clamp(1.35rem, 1.15rem + 1vw, 1.75rem);
-    line-height: 1.35;
-    margin: 0;
-  }
-
-  .publication-byline {
+  .promise {
     color: var(--ink-mute);
     font-style: italic;
-    margin-top: 0.4rem;
+    margin: 0 0 3rem;
   }
 
   .entryways {
-    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
   }
 
   .entryways a {
-    display: grid;
-    grid-template-columns: 4.5rem minmax(0, 1fr) auto;
-    gap: 1rem;
-    align-items: baseline;
-    min-height: 4.5rem;
-    padding: 1.25rem 0;
-    border-bottom: 1px solid var(--rule);
-    color: var(--ink);
-    text-decoration: none;
-  }
-
-  .entryways a:hover .entry-title,
-  .entryways a:focus-visible .entry-title {
-    color: var(--accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .entry-verb,
-  .entry-description {
-    color: var(--ink-mute);
-    font-style: italic;
-  }
-
-  .entry-title {
     font-family: var(--display);
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     font-weight: 520;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
   }
 
-  .entry-description {
-    font-size: 0.9rem;
-    text-align: right;
+  .entryways a:hover,
+  .entryways a:focus-visible {
+    color: var(--accent);
   }
 
   .home-footer {
     display: flex;
     justify-content: center;
-    gap: 0.75rem;
-    margin-top: 4rem;
-    color: var(--ink-mute);
+    gap: 1.5rem;
+    margin-top: 22vh;
     font-size: 0.82rem;
   }
 
-  @media (max-width: 540px) {
-    .home-masthead {
-      margin-top: 5vh;
-    }
+  .home-footer a {
+    color: var(--ink-mute);
+    text-decoration: none;
+  }
 
-    .entryways a {
-      grid-template-columns: 3.75rem 1fr;
-      gap: 0.75rem;
-    }
-
-    .entry-description {
-      grid-column: 2;
-      text-align: left;
-    }
-
-    .home-footer {
-      flex-wrap: wrap;
-    }
+  .home-footer a:hover {
+    color: var(--accent);
   }
 </style>

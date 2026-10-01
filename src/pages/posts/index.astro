@@ -23,7 +23,10 @@ const posts = (
       {posts.map((p) => (
         <li>
           <a href={`/posts/${p.slug}/`}>
-            <span class="title">{p.data.title}</span>
+            <span class="title">
+              {p.data.number !== undefined && <span class="num">{p.data.number}</span>}
+              {p.data.title}
+            </span>
           </a>
         </li>
       ))}

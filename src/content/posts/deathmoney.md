@@ -1,6 +1,7 @@
 ---
 title: 'Deathmoney'
 date: 2026-09-08
+number: 1
 tags: [mortality, sufficiency]
 draft: false
 ---
