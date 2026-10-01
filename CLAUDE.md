@@ -172,9 +172,13 @@ Mirrors `/podcast` exactly, with `vlog: N` instead of `episode: N`. Same empty-f
 
 ## Screenshot essays for social (`/share/[slug]`)
 
-Every published post auto-generates a screenshot-optimized view at `/share/{slug}/`. The frame is fixed **1080 × 2160** (canonical 1:2 for X / IG / threads): supercontinent stripe at the top, Pangaea masthead + № + date, big serif headline, italic blurb with ocean-accent rule, full body (including all MDX embeds), optional 3-column takeaway grid (Codia-template style; opt-in via a `bullets:` array in post frontmatter), colophon with `pangaea.blog/posts/{slug}` URL.
+Every published post auto-generates a screenshot-optimized view at `/share/{slug}/`. The frame is exactly **1080 × 2160** (1:2, the screenshotessays.com single-screenshot format): supercontinent stripe, mark + headline on one row, full body (including MDX embeds and Markdown tables), optional 3-column takeaway grid (opt-in via a `bullets:` array in post frontmatter), one small footer line with № and `pangaea.blog/posts/{slug}`. The blurb and date are not shown in the frame.
 
-To post on X / IG: visit the share URL, screenshot the frame (Cmd+Shift+4 on Mac · Win+Shift+S on Windows), upload. Append `?guide=1` to the URL to see exactly where the 1080×2160 cut lands so a square-ish screenshot captures a complete frame.
+Nothing overflows: an inline script sizes the body text (24 to 46px) so it fills the frame. Everything inside `.prose` is in em so it scales together. If an essay cannot fit at 24px the help line above the frame says it is too long; cut the essay. The page's `<style>` is `is:global` because scoped styles never reach `<Content />`.
+
+Markdown tables are styled (white cells, hairline rules, tinted header, 0.64em). Charts have no component yet: use a static image or SVG through `Figure`.
+
+To post on X / IG: visit the share URL, screenshot the frame (Cmd+Shift+4 on Mac · Win+Shift+S on Windows), upload.
 
 No image-generation deps, no Figma required. A "Screenshot for X / IG →" link is wired into every post detail page. The share view inherits a self-contained stylesheet (not Base.astro) so it can be designed for the screenshot context independently.
 
