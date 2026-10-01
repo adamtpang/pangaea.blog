@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/fix-vercel-runtime.mjs",
     "test": "npm run build && node --test test/*.test.mjs",
     "preview": "astro preview",
     "astro": "astro"
