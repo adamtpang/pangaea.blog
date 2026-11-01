@@ -31,7 +31,7 @@ function flattenSchema(value) {
   return [value, ...(Array.isArray(value['@graph']) ? value['@graph'].flatMap(flattenSchema) : [])];
 }
 
-test('homepage is the minimal masthead: metadata, identity schema, two entryways, and trust links', async () => {
+test('homepage keeps the masthead and server-renders the published essays and episodes', async () => {
   const html = await read('.vercel/output/static/index.html');
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1] ?? '';
   const description = metaContent(html, 'description');
@@ -39,32 +39,39 @@ test('homepage is the minimal masthead: metadata, identity schema, two entryways
   const h1Count = (html.match(/<h1[ >]/gi) ?? []).length;
   const visibleText = textFromHtml(html);
 
-  // The homepage is deliberately a masthead, not an essay. The site name is the
-  // whole title; the promise line and byline carry the description.
-  assert.equal(title, 'Pangaea');
-  assert.match(description, /Essays and conversations across time\./);
-  assert.match(description, /By Adam Pang\./);
-  assert.ok(description.length >= 20 && description.length <= 170, `description length was ${description.length}`);
+  // The masthead still comes first: wordmark, promise line, two entryways.
+  assert.ok(title.length >= 20 && title.length <= 65, `title length was ${title.length}`);
+  assert.match(title, /^Pangaea/);
+  assert.match(description, /Adam Pang/);
+  assert.ok(description.length >= 70 && description.length <= 170, `description length was ${description.length}`);
   assert.equal(canonical, 'https://pangaea.blog/');
   assert.equal(h1Count, 1);
-  assert.match(visibleText, /PANGAEA Essays and conversations across time\. By Adam Pang\./);
-  assert.ok(words(visibleText).length <= 80, `homepage grew to ${words(visibleText).length} visible words; it is meant to stay a masthead`);
+  assert.match(visibleText, /PANGAEA An essay, a picture, a song\. Read Listen/);
 
-  // Exactly two entryways: read the essays, listen to the pod.
   const entryways = [...html.matchAll(/<nav[^>]+class="entryways"[^>]*>([^]*?)<\/nav>/gi)];
   assert.equal(entryways.length, 1, 'one entryways nav');
   const entryLinks = [...entryways[0][1].matchAll(/<a [^>]*href="([^"]+)"/gi)].map((match) => match[1]);
   assert.deepEqual(entryLinks, ['/posts/', '/podcast/']);
-  assert.match(visibleText, /Read Essays/);
-  assert.match(visibleText, /Listen Pangaea Pod/);
+
+  // Published essays are in the raw HTML, so crawlers without JavaScript see them.
+  for (const path of ['/posts/deathmoney/', '/posts/the-ceiling-is-human/', '/podcast/001-braxton/']) {
+    assert.ok(html.includes(`href="${path}"`), `missing published entry ${path}`);
+  }
+  assert.match(visibleText, /Deathmoney/);
+  assert.match(visibleText, /The Ceiling Is Human/);
+  assert.ok(words(visibleText).length >= 250, `homepage has ${words(visibleText).length} visible words`);
+
+  // Unpublished drafts never leak onto the homepage.
+  assert.ok(!html.includes('href="/posts/agency-is-the-only-skill/"'), 'draft essay linked from homepage');
 
   // Trust links and both feeds stay reachable from the home footer.
   for (const path of ['/about/', '/contact/', '/privacy/', '/rss.xml', '/podcast.xml']) {
     assert.ok(html.includes(`href="${path}"`), `missing link to ${path}`);
   }
 
-  // The page makes no commercial claims it cannot back.
-  assert.doesNotMatch(visibleText, /subscribe|subscription|paywall|pricing|sign up/i);
+  // The page makes no commercial claims it cannot back: no prices, no paid tier.
+  assert.doesNotMatch(visibleText, /[$€£]\s?\d|per month|free trial|pricing/i);
+  assert.ok(html.includes('href="https://adampang.substack.com/subscribe"'));
 
   const jsonLd = [...html.matchAll(/<script[^>]+type="application\/ld\+json"[^>]*>([^]*?)<\/script>/gi)]
     .flatMap((match) => flattenSchema(JSON.parse(match[1])));
@@ -87,7 +94,7 @@ test('trust routes are built, identify the operator, and disclose actual site be
   assert.ok(words(textFromHtml(privacy)).length >= 350);
   assert.match(textFromHtml(about), /personal publication of Adam Pang/i);
   assert.match(contact, /https:\/\/adampang\.com\/about#how-to-reach-me/);
-  for (const term of ['Vercel Web Analytics', 'Google Fonts', 'YouTube', 'Spotify', 'SoundCloud', 'localStorage', 'GitHub', 'session cookie']) {
+  for (const term of ['PostHog', 'Substack', 'Google Fonts', 'YouTube', 'Spotify', 'SoundCloud', 'localStorage', 'GitHub', 'session cookie']) {
     assert.match(textFromHtml(privacy), new RegExp(term, 'i'));
   }
 });
@@ -122,5 +129,7 @@ test('production header configuration enforces CSP and MIME protections', async 
   assert.match(csp, /frame-ancestors 'none'/);
   assert.match(csp, /fonts\.googleapis\.com/);
   assert.match(csp, /www\.youtube-nocookie\.com/);
+  assert.match(csp, /script-src[^;]*https:\/\/us-assets\.i\.posthog\.com/);
+  assert.match(csp, /connect-src[^;]*https:\/\/us\.i\.posthog\.com/);
   assert.doesNotMatch(csp, /\*/);
 });

@@ -4,11 +4,11 @@ import Base from '../layouts/Base.astro';
 
 <Base
   title="Privacy Policy · Pangaea"
-  description="How Pangaea handles analytics, fonts, embeds, cookies, local writing data, feeds, forms, and links to external services."
+  description="How Pangaea handles PostHog analytics, fonts, embeds, cookies, local writing data, feeds, the Substack newsletter, and links to external services."
 >
   <h1>Privacy</h1>
 
-  <p class="meta">Last updated: 29 August 2026.</p>
+  <p class="meta">Last updated: 1 November 2026.</p>
 
   <p>
     Pangaea is Adam Pang's personal publication. This policy describes the data behavior of
@@ -19,19 +19,31 @@ import Base from '../layouts/Base.astro';
 
   <h2>Public reading</h2>
   <p>
-    Public pages do not provide reader accounts, comments, newsletter signup, an on-site contact
-    form, advertising pixels, or a paid subscription. The initial public response does not set a
-    Pangaea cookie. Vercel hosts the site and processes ordinary request information needed to
-    serve pages, protect the service, and operate its infrastructure.
+    Public pages do not provide reader accounts, comments, an on-site newsletter signup form, an
+    on-site contact form, advertising pixels, or a paid subscription. The initial public response
+    does not set a Pangaea cookie. Vercel hosts the site and processes ordinary request information
+    needed to serve pages, protect the service, and operate its infrastructure.
+  </p>
+
+  <h2>Email newsletter</h2>
+  <p>
+    The Email and newsletter links lead to Adam Pang's newsletter on Substack
+    (adampang.substack.com). Pangaea does not collect email addresses itself. Anyone who subscribes
+    does so on Substack, and Substack's own terms and privacy policy apply to that signup.
   </p>
 
   <h2>Analytics</h2>
   <p>
-    Pangaea uses Vercel Web Analytics for aggregate page views and basic traffic information such
-    as page path, referrer, country, device type, operating system, and browser. Vercel states that
-    Web Analytics uses no cookies, stores anonymized data, and resets its request-derived visitor
-    hash after 24 hours. Pangaea does not define custom analytics events in this repository. See
-    <a href="https://vercel.com/docs/analytics/privacy-policy">Vercel's analytics privacy documentation</a>.
+    Pangaea uses PostHog (US cloud, us.i.posthog.com) for product analytics. The script records
+    page views and page leaves, with the page URL, referrer, and the site hostname attached.
+    General click autocapture, session recording, and surveys are switched off in the site code,
+    and the site does not identify readers or create person profiles. The PostHog project settings
+    also enable two optional measurements: page performance timings (Core Web Vitals) and dead-click
+    events, which note a click that produced no visible change on the page. PostHog receives the request IP address and
+    browser details that come with each event, and its script stores a random anonymous identifier
+    in a first-party cookie and browser storage so repeat visits can be counted. Pangaea does not
+    use Vercel Web Analytics and does not define custom analytics events. See
+    <a href="https://posthog.com/privacy">PostHog's privacy policy</a>.
   </p>
 
   <h2>Fonts, media, and embeds</h2>

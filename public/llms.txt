@@ -2,19 +2,18 @@
 
 > Adam Pang's personal publication for essays, apps, podcasts, and city-state projects.
 
-Pangaea is an independent body of work made in public and kept on an owned URL. Published articles are free to read. There is no paid plan, subscription, or paywall. The homepage is a working ledger that separates shipped work from unfinished material.
+Pangaea is an independent body of work made in public and kept on an owned URL. Published articles are free to read. There is no paid plan, subscription, or paywall. The homepage lists the published essays and Pangaea Pod episodes in server-rendered HTML. Unfinished drafts are not public.
 
 Use Pangaea to read Adam Pang's published essays, inspect his public software and city-state projects, or find the spoken work. The site is built with Astro and deployed on Vercel. The git repository is the content system.
 
 ## Key links
-- [Home](https://pangaea.blog/): the publication ledger and guided entry points.
-- [Pilot](https://pangaea.blog/pilot/): the audio-first Season 1 album page: tracklist, liner notes, pull quote.
-- [Posts](https://pangaea.blog/posts/): the essays index with client-side search, sort, and tag filtering.
+- [Home](https://pangaea.blog/): the masthead plus every published essay and episode with dates and excerpts.
+- [Posts](https://pangaea.blog/posts/): the essays index, titles only, newest first.
 - [Graph](https://pangaea.blog/graph/): a force-directed network of all posts and their wiki-links.
-- [Podcast](https://pangaea.blog/podcast/): the spoken lane, YouTube-hosted episodes.
+- [Podcast](https://pangaea.blog/podcast/): Pangaea Pod, YouTube-hosted episodes; feed at https://pangaea.blog/podcast.xml.
 - [About](https://pangaea.blog/about/): who operates Pangaea and why it exists.
 - [Contact](https://pangaea.blog/contact/): the real contact path for corrections and questions.
-- [Privacy](https://pangaea.blog/privacy/): analytics, fonts, embeds, cookies, local storage, and external services.
+- [Privacy](https://pangaea.blog/privacy/): PostHog analytics, fonts, embeds, cookies, local storage, and external services.
 
 ## About
 - Pangaea is operated by Adam Pang.

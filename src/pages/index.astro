@@ -1,11 +1,60 @@
 ---
 import PilotLayout from '../layouts/PilotLayout.astro';
-import { PODCAST_PROMISE } from '../lib/podcast';
+import { getCollection } from 'astro:content';
+import { episodeCode, FORMAT_META, PODCAST_TITLE } from '../lib/podcast';
 import { NEWSLETTER_URL } from '../lib/newsletter';
+
+// The masthead stays first and stays minimal. Below it, the homepage lists the
+// essays and episodes that are already public, server-rendered, so a reader or
+// crawler without JavaScript still sees what Pangaea actually contains. Nothing
+// here is written for the homepage: titles, dates and excerpts come from the
+// published entries themselves.
+const epoch = new Date('1971-01-01').valueOf();
+const posts = (
+  await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch)
+).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const episodes = (await getCollection('episodes', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+// Plain-text opening of an essay: strip Markdown, take whole paragraphs until
+// about 45 words, and never cut mid-sentence.
+function excerpt(body: string, minWords = 45, maxWords = 95) {
+  const paragraphs = body
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter((block) => block && !/^(#|>|!\[|\||<|import |export |-{3,}|\* \* \*)/.test(block))
+    .map((block) =>
+      block
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/\[\[([^\]|]+)\|?([^\]]*)\]\]/g, (_, a, b) => b || a)
+        .replace(/[*_`]+/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+    );
+  const out: string[] = [];
+  let count = 0;
+  for (const paragraph of paragraphs) {
+    const words = paragraph.split(' ').length;
+    if (count > 0 && count + words > maxWords) break;
+    out.push(paragraph);
+    count += words;
+    if (count >= minWords) break;
+  }
+  return out.join(' ');
+}
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+const isoDate = (date: Date) => date.toISOString().slice(0, 10);
+const pad = (n: number) => String(n).padStart(3, '0');
+
+const description =
+  "Pangaea is Adam Pang's personal publication of numbered essays and Pangaea Pod conversations, free to read with no paywall, reader account, or paid plan.";
 ---
 
-<PilotLayout title="Pangaea" description={PODCAST_PROMISE + ' By Adam Pang.'}>
-  <main class="home">
+<PilotLayout title="Pangaea: Essays and Conversations by Adam Pang" description={description}>
+  <div class="home">
     <span class="earth-mark" role="img" aria-label="Earth">🌍</span>
     <h1 class="wordmark">PANGAEA</h1>
     <p class="promise">An essay, a picture, a song.</p>
@@ -14,12 +63,94 @@ import { NEWSLETTER_URL } from '../lib/newsletter';
       <a href="/posts/">Read</a>
       <a href="/podcast/">Listen</a>
     </nav>
-  </main>
+  </div>
+
+  <section class="ledger" aria-labelledby="about-heading">
+    <h2 id="about-heading">What Pangaea is</h2>
+    <p>
+      Pangaea is the personal publication of <a href="https://adampang.com/about">Adam Pang</a>,
+      a builder, writer, and musician. It is an independent home for his numbered essays and the
+      {PODCAST_TITLE}, kept on an owned URL. Published articles are free to read, with no
+      subscription, paid plan, reader account, or paywall.
+    </p>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="ledger" aria-labelledby="essays-heading">
+      <h2 id="essays-heading">Essays</h2>
+      <ol class="entries">
+        {posts.map((post) => (
+          <li>
+            <h3>
+              <a href={`/posts/${post.slug}/`}>
+                {post.data.number !== undefined && <span class="num">{pad(post.data.number)}</span>}
+                {post.data.title}
+              </a>
+            </h3>
+            <div class="entry-meta">
+              Essay {post.data.number !== undefined ? pad(post.data.number) : ''} by Adam Pang,{' '}
+              <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+            </div>
+            <p>{excerpt(post.body)}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="more">
+        <a href="/posts/">Start reading the full essay index</a>
+      </p>
+    </section>
+  )}
+
+  {episodes.length > 0 && (
+    <section class="ledger" aria-labelledby="pod-heading">
+      <h2 id="pod-heading">{PODCAST_TITLE}</h2>
+      <ol class="entries">
+        {episodes.map((episode) => (
+          <li>
+            <h3>
+              <a href={`/podcast/${episode.slug}/`}>
+                <span class="num">{episodeCode(episode.data.format, episode.data.format_number)}</span>
+                {episode.data.title}
+              </a>
+            </h3>
+            <div class="entry-meta">
+              {FORMAT_META[episode.data.format].label} episode,{' '}
+              <time datetime={isoDate(episode.data.date)}>{formatDate(episode.data.date)}</time>
+            </div>
+            {episode.data.blurb && (
+              <p>
+                {PODCAST_TITLE} episode {episodeCode(episode.data.format, episode.data.format_number)},{' '}
+                {episode.data.title}, was published on {formatDate(episode.data.date)}
+                {episode.data.duration && <> and runs {episode.data.duration}</>}. {episode.data.blurb}
+              </p>
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  <section class="ledger" aria-labelledby="follow-heading">
+    <h2 id="follow-heading">Follow along</h2>
+    <p>
+      New Pangaea essays and episodes arrive by <a href="/rss.xml">essay RSS</a>,{' '}
+      <a href="/podcast.xml">podcast RSS</a>, or Adam Pang's email newsletter on Substack. Corrections and questions about a published piece go through the Pangaea contact
+      page, which points to Adam's public contact details.
+    </p>
+    <p class="actions">
+      <a class="action" href="/posts/">Start reading</a>
+      <a class="action" href={NEWSLETTER_URL}>Join the email newsletter</a>
+      <a class="action" href="/contact/">Contact Adam</a>
+    </p>
+  </section>
 
   <footer class="home-footer">
     <a href="/about/">About</a>
+    <a href="/contact/">Contact</a>
+    <a href="/privacy/">Privacy</a>
     <a href={NEWSLETTER_URL}>Email</a>
     <a href="/rss.xml">RSS</a>
+    <a href="/podcast.xml">Podcast RSS</a>
   </footer>
 </PilotLayout>
 
@@ -69,11 +200,88 @@ import { NEWSLETTER_URL } from '../lib/newsletter';
     color: var(--accent);
   }
 
+  .ledger {
+    margin-top: 5rem;
+  }
+
+  .home + .ledger {
+    margin-top: 22vh;
+  }
+
+  .ledger h2 {
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0 0 1.25rem;
+  }
+
+  .entries {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .entries li + li {
+    margin-top: 2.25rem;
+  }
+
+  .entries h3 {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 520;
+    margin: 0 0 0.25rem;
+  }
+
+  .entries h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .entries h3 a:hover,
+  .entries h3 a:focus-visible {
+    color: var(--accent);
+  }
+
+  .num {
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    margin-right: 0.6rem;
+  }
+
+  .entry-meta {
+    color: var(--ink-mute);
+    font-size: 0.85rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .entries p {
+    margin: 0;
+  }
+
+  .more {
+    margin-top: 1.75rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .action {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 4px;
+  }
+
   .home-footer {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 1.5rem;
-    margin-top: 22vh;
+    gap: 0.75rem 1.5rem;
+    margin: 5rem 0 2rem;
     font-size: 0.82rem;
   }
 
