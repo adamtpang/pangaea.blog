@@ -13,10 +13,10 @@ const posts = await getCollection(
 const slugify = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
-const slugSet = new Set(posts.map((p) => p.slug));
+const slugSet = new Set(posts.map((p) => p.id));
 
 const nodes = posts.map((p) => ({
-  id: p.slug,
+  id: p.id,
   label: p.data.title,
 }));
 
@@ -25,8 +25,8 @@ for (const p of posts) {
   const wikiLinks = p.body.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g);
   for (const match of wikiLinks) {
     const target = slugify(match[1]);
-    if (slugSet.has(target) && target !== p.slug) {
-      edges.push({ from: p.slug, to: target });
+    if (slugSet.has(target) && target !== p.id) {
+      edges.push({ from: p.id, to: target });
     }
   }
 }

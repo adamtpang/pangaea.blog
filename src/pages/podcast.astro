@@ -52,7 +52,7 @@ const fmt = (date: Date) =>
           <ol class="episode-list">
             {entries.map((episode) => (
               <li>
-                <a href={'/podcast/' + episode.slug + '/'}>
+                <a href={'/podcast/' + episode.id + '/'}>
                   <EpisodeLabel
                     format={episode.data.format}
                     number={episode.data.format_number}

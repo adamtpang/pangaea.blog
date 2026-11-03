@@ -35,7 +35,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   <ul class="fav-grid">
     {favorites.map((f) => (
       <li>
-        <a class="fav-card" href={`/favorites/${f.slug}/`}>
+        <a class="fav-card" href={`/favorites/${f.id}/`}>
           {f.data.cover && (
             <div class="fav-thumb"><img src={f.data.cover} alt={f.data.title} loading="lazy" /></div>
           )}

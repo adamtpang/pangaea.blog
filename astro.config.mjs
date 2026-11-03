@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
+import { unified } from '@astrojs/markdown-remark';
 import wikiLinkPlugin from 'remark-wiki-link';
 
 // Wiki-link config: turn [[Some Post]] into a real link to /posts/some-post/
@@ -18,14 +19,22 @@ const wikiLink = [
 
 export default defineConfig({
   site: 'https://pangaea.blog',
-  output: 'hybrid',
+  // Astro 5 removed output: 'hybrid'. Static output plus prerender = false
+  // on the server routes is the same split.
+  output: 'static',
   adapter: vercel(),
-  integrations: [mdx({ remarkPlugins: [wikiLink] })],
+  // Keep the pre-v7 HTML whitespace rules so inline text does not collapse.
+  compressHTML: true,
+  legacy: {
+    // Keeps the collection schema at src/content/config.ts.
+    collectionsBackwardsCompat: true,
+  },
+  integrations: [mdx()],
   build: {
     format: 'directory',
   },
   markdown: {
-    remarkPlugins: [wikiLink],
+    processor: unified({ remarkPlugins: [wikiLink] }),
     shikiConfig: {
       theme: 'github-light',
     },

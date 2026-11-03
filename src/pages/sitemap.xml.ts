@@ -47,11 +47,11 @@ export const GET: APIRoute = async () => {
   ]);
 
   const contentPaths = [
-    ...posts.map((entry) => `/posts/${entry.slug}/`),
-    ...episodes.map((entry) => `/podcast/${entry.slug}/`),
-    ...vlogs.map((entry) => `/vlog/${entry.slug}/`),
-    ...favorites.map((entry) => `/favorites/${entry.slug}/`),
-    ...reels.map((entry) => `/reels/${entry.slug}/`),
+    ...posts.map((entry) => `/posts/${entry.id}/`),
+    ...episodes.map((entry) => `/podcast/${entry.id}/`),
+    ...vlogs.map((entry) => `/vlog/${entry.id}/`),
+    ...favorites.map((entry) => `/favorites/${entry.id}/`),
+    ...reels.map((entry) => `/reels/${entry.id}/`),
   ];
 
   const paths = Array.from(new Set([...staticPaths, ...contentPaths])).sort();

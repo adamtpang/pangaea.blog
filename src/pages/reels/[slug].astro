@@ -1,10 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const reels = await getCollection('reels', ({ data }) => !data.draft && data.rendered);
-  return reels.map((r) => ({ params: { slug: r.slug }, props: { reel: r } }));
+  return reels.map((r) => ({ params: { slug: r.id }, props: { reel: r } }));
 }
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { reel } = Astro.props;
-const { Content } = await reel.render();
+const { Content } = await render(reel);
 const { data } = reel;
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });

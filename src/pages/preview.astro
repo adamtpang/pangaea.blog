@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 // SSR: renders unpublished drafts, so this must never be a static file on the
 // public CDN. Same gate as /studio, on purpose: reuses the same cookie, so
@@ -27,7 +27,7 @@ if (authed) {
   const all = await getCollection('posts', ({ data, body }) => data.draft && !body.includes(STUB));
   drafts = all.sort((a, b) => (a.data.number ?? 999999) - (b.data.number ?? 999999));
   rendered = await Promise.all(
-    drafts.map(async (entry) => ({ entry, Content: (await entry.render()).Content }))
+    drafts.map(async (entry) => ({ entry, Content: (await render(entry)).Content }))
   );
 }
 
@@ -71,7 +71,7 @@ const fmt = (d: Date) =>
         <ol>
           {drafts.map((d) => (
             <li>
-              <a href={`#p${d.data.number ?? d.slug}`}>
+              <a href={`#p${d.data.number ?? d.id}`}>
                 {d.data.number !== undefined && <span class="num">{String(d.data.number).padStart(3, '0')}</span>}
                 {d.data.title}
               </a>
@@ -81,7 +81,7 @@ const fmt = (d: Date) =>
       </nav>
 
       {rendered.map(({ entry, Content }) => (
-        <article class="post preview-post" id={`p${entry.data.number ?? entry.slug}`}>
+        <article class="post preview-post" id={`p${entry.data.number ?? entry.id}`}>
           <header>
             <h1>{entry.data.title}</h1>
             <p class="post-meta">

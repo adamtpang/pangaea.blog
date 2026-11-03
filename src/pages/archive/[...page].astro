@@ -32,7 +32,7 @@ const fmt = (d: Date) =>
   <ol class="arch">
     {page.data.map((p: any) => (
       <li class="arch-row">
-        <a class="arch-link" href={`/posts/${p.slug}/`}>
+        <a class="arch-link" href={`/posts/${p.id}/`}>
           <span class="arch-num">
             {p.data.number !== undefined ? `${String(p.data.number).padStart(3, '0')}` : '·'}
           </span>

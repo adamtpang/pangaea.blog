@@ -22,7 +22,7 @@ const posts = (
     <ul class="post-list">
       {posts.map((p) => (
         <li>
-          <a href={`/posts/${p.slug}/`}>
+          <a href={`/posts/${p.id}/`}>
             <span class="title">
               {p.data.number !== undefined && <span class="num">{p.data.number}</span>}
               {p.data.title}

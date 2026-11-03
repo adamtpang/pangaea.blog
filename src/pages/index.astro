@@ -82,7 +82,7 @@ const description =
         {posts.map((post) => (
           <li>
             <h3>
-              <a href={`/posts/${post.slug}/`}>
+              <a href={`/posts/${post.id}/`}>
                 {post.data.number !== undefined && <span class="num">{pad(post.data.number)}</span>}
                 {post.data.title}
               </a>
@@ -108,7 +108,7 @@ const description =
         {episodes.map((episode) => (
           <li>
             <h3>
-              <a href={`/podcast/${episode.slug}/`}>
+              <a href={`/podcast/${episode.id}/`}>
                 <span class="num">{episodeCode(episode.data.format, episode.data.format_number)}</span>
                 {episode.data.title}
               </a>

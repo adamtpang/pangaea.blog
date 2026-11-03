@@ -28,7 +28,7 @@ const drafts = authed ? await getCollection('posts', ({ data }) => data.draft) :
 const payload = drafts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .map((d) => ({
-    slug: d.slug,
+    slug: d.id,
     title: d.data.title,
     blurb: d.data.blurb ?? '',
     date: d.data.date.toISOString().slice(0, 10),

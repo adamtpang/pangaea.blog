@@ -5,7 +5,7 @@ import EpisodeDisclosure from '../../components/podcast/EpisodeDisclosure.astro'
 import EpisodeLabel from '../../components/podcast/EpisodeLabel.astro';
 import EpisodeMedia from '../../components/podcast/EpisodeMedia.astro';
 import EpisodeSources from '../../components/podcast/EpisodeSources.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { episodeDisplayTitle, PODCAST_TITLE } from '../../lib/podcast';
 
 export async function getStaticPaths() {
@@ -14,7 +14,7 @@ export async function getStaticPaths() {
   );
 
   return episodes.map((episode, index) => ({
-    params: { slug: episode.slug },
+    params: { slug: episode.id },
     props: {
       episode,
       previous: index > 0 ? episodes[index - 1] : null,
@@ -30,7 +30,7 @@ interface Props {
 }
 
 const { episode, previous, next } = Astro.props;
-const { Content } = await episode.render();
+const { Content } = await render(episode);
 const { data } = episode;
 const displayTitle = episodeDisplayTitle(data);
 const fmt = (date: Date) =>
@@ -98,7 +98,7 @@ const fmt = (date: Date) =>
 
     <nav class="episode-adjacent" aria-label="Episode navigation">
       {previous ? (
-        <a href={'/podcast/' + previous.slug + '/'}>
+        <a href={'/podcast/' + previous.id + '/'}>
           <span>Previous</span>
           {episodeDisplayTitle(previous.data)}
         </a>
@@ -106,7 +106,7 @@ const fmt = (date: Date) =>
         <span></span>
       )}
       {next ? (
-        <a href={'/podcast/' + next.slug + '/'}>
+        <a href={'/podcast/' + next.id + '/'}>
           <span>Next</span>
           {episodeDisplayTitle(next.data)}
         </a>
