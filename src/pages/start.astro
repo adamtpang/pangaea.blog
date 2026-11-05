@@ -13,11 +13,11 @@ const order = [
   '2026-05-08-pangaea-girls',
 ];
 
-const bySlug = new Map(posts.map((p) => [p.slug, p]));
+const bySlug = new Map(posts.map((p) => [p.id, p]));
 const sequenced = [
   ...order.map((s) => bySlug.get(s)).filter(Boolean),
   ...posts
-    .filter((p) => !order.includes(p.slug))
+    .filter((p) => !order.includes(p.id))
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
 ];
 
@@ -34,7 +34,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month:
 
   {ifYouReadOne && (
     <p class="start-one">
-      <a href={`/posts/${ifYouReadOne.slug}/`}>{ifYouReadOne.data.title}</a>
+      <a href={`/posts/${ifYouReadOne.id}/`}>{ifYouReadOne.data.title}</a>
       {ifYouReadOne.data.blurb && <span class="start-one-blurb">{ifYouReadOne.data.blurb}</span>}
     </p>
   )}
@@ -44,7 +44,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month:
   <ol class="start-path">
     {sequenced.map((p) => (
       <li>
-        <a href={`/posts/${p.slug}/`}>{p.data.title}</a>
+        <a href={`/posts/${p.id}/`}>{p.data.title}</a>
         {p.data.blurb && <span class="start-blurb">{p.data.blurb}</span>}
         <span class="start-date">{fmt(p.data.date)}</span>
       </li>

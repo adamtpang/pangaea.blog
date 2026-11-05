@@ -32,7 +32,7 @@ const inProduction = reels.filter((r) => !r.data.rendered);
       <ul class="media-grid">
         {rendered.map((r) => (
           <li>
-            <a href={`/reels/${r.slug}/`} class="media-card">
+            <a href={`/reels/${r.id}/`} class="media-card">
               {r.data.poster && (
                 <div class="media-thumb">
                   <img src={r.data.poster} alt={r.data.title} loading="lazy" />

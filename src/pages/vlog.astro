@@ -36,7 +36,7 @@ const thumb = (id: string) =>
       <ul class="media-grid">
         {vlogs.map((v) => (
           <li>
-            <a href={`/vlog/${v.slug}/`} class="media-card">
+            <a href={`/vlog/${v.id}/`} class="media-card">
               {v.data.youtube && (
                 <div class="media-thumb">
                   <img src={thumb(v.data.youtube)} alt={v.data.title} loading="lazy" />

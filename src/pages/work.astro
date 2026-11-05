@@ -27,11 +27,11 @@ function mapByNumber(
   return m;
 }
 
-const essays = mapByNumber(postItems, (i) => `/posts/${i.slug}/`);
+const essays = mapByNumber(postItems, (i) => `/posts/${i.id}/`);
 const apps = mapByNumber(appItems, (i) => i.data.url ?? '/apps/');
-const pods = mapByNumber(podItems, (i) => `/podcast/${i.slug}/`, (i) => i.data.episode);
+const pods = mapByNumber(podItems, (i) => `/podcast/${i.id}/`, (i) => i.data.episode);
 const cities = mapByNumber(cityItems, (i) => i.data.url ?? '/cities/');
-const vlogs = mapByNumber(vlogItems, (i) => `/vlog/${i.slug}/`, (i) => i.data.vlog);
+const vlogs = mapByNumber(vlogItems, (i) => `/vlog/${i.id}/`, (i) => i.data.vlog);
 
 const pillars = [
   { key: 'essays', label: 'Essays', href: '/posts/', map: essays, line: 'The written word.' },

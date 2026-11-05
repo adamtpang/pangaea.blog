@@ -1,11 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const favorites = await getCollection('favorites', ({ data }) => !data.draft);
   return favorites.map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry },
   }));
 }
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 const { data } = entry;
 
 const CATEGORY_LABEL: Record<string, string> = {

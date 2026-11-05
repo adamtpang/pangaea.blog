@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export const prerender = true;
 
@@ -9,7 +9,7 @@ export async function getStaticPaths() {
     'posts',
     ({ data }) => !data.draft && data.date.valueOf() >= epoch
   );
-  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 const { data } = post;
 ---
 
@@ -309,7 +309,7 @@ const { data } = post;
       Screenshot the framed essay (Cmd+Shift+4 on Mac · Win+Shift+S on Windows) and post to X / IG.
       The frame is exactly <code>1080 × 2160</code> and the text is sized to fill it.
       <span class="too-long">This essay is too long for one frame at a readable size. Cut it down.</span>
-      <a href={`/posts/${post.slug}/`}>back to the post</a>
+      <a href={`/posts/${post.id}/`}>back to the post</a>
     </p>
 
     <article class="share-frame">
@@ -332,7 +332,7 @@ const { data } = post;
       )}
 
       <footer class="colophon">
-        {data.number !== undefined && `№ ${String(data.number).padStart(3, '0')} · `}pangaea.blog/posts/{post.slug}
+        {data.number !== undefined && `№ ${String(data.number).padStart(3, '0')} · `}pangaea.blog/posts/{post.id}
       </footer>
     </article>
 

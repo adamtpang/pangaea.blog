@@ -4,6 +4,8 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://adamanack.com',
   output: 'static',
+  // Keep the pre-v7 HTML whitespace rules.
+  compressHTML: true,
   build: {
     format: 'directory',
   },

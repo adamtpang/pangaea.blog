@@ -55,7 +55,7 @@ export async function GET(context: APIContext) {
         title: episodeDisplayTitle(episode.data),
         pubDate: episode.data.date,
         description,
-        link: '/podcast/' + episode.slug + '/',
+        link: '/podcast/' + episode.id + '/',
         categories: [
           episode.data.format.toUpperCase(),
           ...(episode.data.tags ?? []),

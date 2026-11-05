@@ -1,11 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { YouTube } from '../../components/embeds';
 
 export async function getStaticPaths() {
   const vlogs = await getCollection('vlogs', ({ data }) => !data.draft);
-  return vlogs.map((v) => ({ params: { slug: v.slug }, props: { vlog: v } }));
+  return vlogs.map((v) => ({ params: { slug: v.id }, props: { vlog: v } }));
 }
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const { vlog } = Astro.props;
-const { Content } = await vlog.render();
+const { Content } = await render(vlog);
 const { data } = vlog;
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });

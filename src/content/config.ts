@@ -1,7 +1,8 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const posts = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/posts', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     // Date is optional so legacy imports (no front-matter date) still validate.
@@ -51,7 +52,7 @@ const posts = defineCollection({
 // render publicly; promote one by moving the file into src/content/posts/
 // (with date and draft: false) once it's polished.
 const inbox = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/inbox', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date().optional(),
@@ -64,7 +65,7 @@ const inbox = defineCollection({
 // to SUMMON, LIVING, or ESSAY. feed_number is the single cross-format sequence
 // used by podcast clients. The body is the liner notes and show notes.
 const episodes = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/episodes', pattern: '**/*.{md,mdx}' }),
   schema: z
     .object({
       title: z.string(),
@@ -139,7 +140,7 @@ const episodes = defineCollection({
 // Vlogs: the watched side of Pangaea. Visual essays + YouTube-hosted videos.
 // Same shape as episodes but a distinct lane in the hub (/vlog).
 const vlogs = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/vlogs', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date().default(new Date('1970-01-01')),
@@ -171,7 +172,7 @@ const vlogs = defineCollection({
 // audio now lives only in the episodes collection as Pangaea Pod. The /pilot
 // routes redirect to /podcast so this collection cannot become a second feed.
 const pilot = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/pilot', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     track: z.number().int().positive(),
@@ -207,7 +208,7 @@ const pilot = defineCollection({
 // essay. `rendered: false` reels show as "in production" — a real, honest
 // state, not a placeholder pretending to be ready.
 const reels = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/reels', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date().default(new Date('1970-01-01')),
@@ -228,7 +229,7 @@ const reels = defineCollection({
 // with a live url, a screenshot (cover), and a one-line thesis. The body is
 // optional build-log notes. `number` is the odometer toward 1,000.
 const apps = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/apps', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date().default(new Date('1970-01-01')),
@@ -247,7 +248,7 @@ const apps = defineCollection({
 // about how a group of people should live and govern together. `number` is the
 // odometer toward 1,000.
 const cities = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/cities', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date().default(new Date('1970-01-01')),
@@ -271,7 +272,7 @@ const cities = defineCollection({
 // (YouTube for a channel, Spotify for an artist) when there's something to
 // embed, or just be Adam's own writeup when there isn't.
 const favorites = defineCollection({
-  type: 'content',
+  loader: glob({ base: './src/content/favorites', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
     title: z.string(), // the thing or person's name, e.g. "Aphex Twin"
     date: z.coerce.date().default(new Date('1970-01-01')), // when added
