@@ -65,13 +65,51 @@ function parseCounts(result: unknown) {
   return views;
 }
 
+async function analyticsCounts(ids: Set<string>) {
+  const token = process.env.VERCEL_ACCESS_TOKEN || process.env.VERCEL_TOKEN;
+  if (!token) return {} as Record<string, number>;
+  const projectId = process.env.VERCEL_PROJECT_ID || 'prj_yQJ2HJwnMKK8Lf1xb1Fu1vExprA9';
+  const teamId = process.env.VERCEL_TEAM_ID || 'team_94z2L2r0X8hywHS0hi2ahkW7';
+  const until = Date.now();
+  const since = until - 366 * 24 * 60 * 60 * 1000;
+  const url = new URL('https://api.vercel.com/v1/query/web-analytics/visits/aggregate');
+  url.searchParams.set('projectId', projectId);
+  url.searchParams.set('teamId', teamId);
+  url.searchParams.set('since', String(since));
+  url.searchParams.set('until', String(until));
+  url.searchParams.append('by', 'requestPath');
+  url.searchParams.set('limit', '250');
+  try {
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) return {};
+    const body = (await res.json()) as { data?: unknown };
+    const rows = Array.isArray(body.data) ? body.data : [];
+    const counts: Record<string, number> = {};
+    for (const row of rows) {
+      if (!row || typeof row !== 'object') continue;
+      const record = row as Record<string, unknown>;
+      const path = String(record.requestPath || record.route || '');
+      const match = path.match(/^\/posts\/([a-z0-9-]+)\/?$/);
+      if (!match || !ids.has(match[1])) continue;
+      const count = Number(record.count ?? record.total ?? record.value ?? record.visits ?? 0);
+      if (Number.isFinite(count)) counts[match[1]] = (counts[match[1]] || 0) + count;
+    }
+    return counts;
+  } catch {
+    return {};
+  }
+}
+
 export const GET: APIRoute = async () => {
-  if (!redisEnv()) return json({ enabled: false, views: {} });
   try {
     const ids = await publishedIds();
+    const redisOn = Boolean(redisEnv());
+    const stored = redisOn ? parseCounts(await command(['HGETALL', HASH])) : {};
+    const analytics = await analyticsCounts(ids);
+    if (!redisOn && Object.keys(analytics).length === 0) return json({ enabled: false, views: {} });
     const views: Record<string, number> = {};
-    for (const [slug, count] of Object.entries(parseCounts(await command(['HGETALL', HASH])))) {
-      if (ids.has(slug)) views[slug] = count;
+    for (const id of ids) {
+      views[id] = Math.max(Number(stored[id] || 0), Number(analytics[id] || 0));
     }
     return json({ enabled: true, views });
   } catch {

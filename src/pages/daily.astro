@@ -454,7 +454,7 @@ import Base from '../layouts/Base.astro';
   /* --- the sheet --------------------------------------------------- */
   .sheet {
     position: relative;
-    background: linear-gradient(180deg, #fff, #fcf9f2);
+    background: linear-gradient(180deg, var(--surface), var(--paper-3));
     border: 1px solid var(--rule);
     border-radius: 4px;
     box-shadow: 0 1px 0 rgba(28, 25, 23, 0.04), 0 18px 40px -24px rgba(28, 25, 23, 0.28);
@@ -589,7 +589,7 @@ import Base from '../layouts/Base.astro';
   #micBtn[aria-pressed='true'] {
     background: var(--accent);
     border-color: var(--accent-deep);
-    color: #fff;
+    color: var(--surface);
   }
   #micBtn[aria-pressed='true'] .recdot { animation: pulse 1.4s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: 0.25; } }

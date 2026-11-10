@@ -47,7 +47,12 @@ test('homepage is an essay directory with the thousand-essay bar', async () => {
   assert.equal(h1Count, 1);
   assert.match(visibleText, /Essays/);
   assert.match(visibleText, /Deathmoney/);
-  assert.match(visibleText, /Sep 8, 2026/);
+  assert.match(visibleText, /Updated/);
+  assert.match(html, /data-created="2026-09-08"/);
+  assert.match(html, /data-sort="latest"/);
+  assert.match(html, /data-sort="popular"/);
+  assert.match(html, /loading="lazy"/);
+  assert.match(html, /\/images\/thumbs\/deathmoney\.webp/);
   assert.match(html, /href="\/posts\/deathmoney\/"/);
   assert.doesNotMatch(visibleText, /The Ceiling Is Human/);
   assert.doesNotMatch(html, /\/podcast/);

@@ -1,151 +1,101 @@
-# Pangaea — design brief
+# Pangaea design
 
-Paste this into any design prompt (claude.ai/design, v0, a human designer) to build on-brand Pangaea screens. Values are the real tokens from `src/styles/tokens.css`, the single source both stylesheets import.
+Calm editorial pages. A spring-green ground, a terracotta line, and a white highlight, set in Fraunces and Newsreader with room to breathe. The reference is a two-color risograph (soft green field, rust drawing, white paper showing through) and the quiet pace of brunellocucinelli.ai.
 
-**Identity:** A hub for the spoken & the written word. Quiet, considered, built to last. Whole Earth Catalog meets sive.rs. The bareness is the message.
+Source of truth: `src/styles/tokens.css`. `global.css` and `pilot.css` import it. Do not paste colors, fonts, or radii into a page. The `/share` frame keeps a copied set of the same values because that page cannot import a stylesheet.
 
-## Universal principles (both modes)
+Per-essay pages may override the color tokens. They do not invent a second type system, spacing scale, or motion.
 
-- **Serif-forward.** Single narrow column, ~640px (`38rem`) max reading width. Generous whitespace.
-- **1px hairline rules**, used sparingly. **No drop shadows. No gradients** (flat fields only). Rounded corners 0–2px max.
-- **Color is never the only affordance** — links stay underlined. All text clears WCAG AA.
-- **No ad-era cruft:** no popups, no cookie banners, no newsletter modals, no social-share buttons, no "related posts," no visible analytics.
-- **Punctuation:** no em dashes (—) or en dashes (–) in any copy. Use commas, colons, semicolons, periods, parentheses.
-- **Motion:** none beyond simple opacity fades. Honor `prefers-reduced-motion`.
+## Color
 
-Pangaea has **one palette** (below) and **two layout modes** on top of it. The
-palette never changes between them.
+Light theme, the default.
 
-## The palette — "the daily page"
+| Token | Value | Role |
+| --- | --- | --- |
+| `--paper` | `#c3d398` | Spring green ground. Page background. |
+| `--paper-2` | `#d5e4b8` | Lifted green for bands. |
+| `--paper-3` | `#e7ecd6` | Pale green, pressed and inset. |
+| `--surface` | `#f7f4ea` | White highlight. Inputs, thumbnail wells, meter track. |
+| `--ink` | `#2c241c` | Body text and headings. About 9.5:1 on `--paper`. |
+| `--ink-soft` | `#3f3228` | Secondary prose. |
+| `--ink-mute` | `#5c4034` | Dates, counts, captions. About 5.8:1 on `--paper`. |
+| `--accent` | `#8f3d2c` | Terracotta line. Links, focus, the progress fill, the active sort. 4.5:1 on `--paper`. |
+| `--accent-deep` | `#6e2e22` | Pressed terracotta. |
+| `--accent-tint` | `#ead9cf` | Terracotta wash. Selection. |
+| `--rule` | `#c9b39a` | Hairline. |
+| `--rule-soft` | `#d7c7b4` | Quieter hairline. |
 
-It came from the writing surface at `/daily`, and the whole site now wears it:
-paper you want to write on, ink you can read for an hour, one warm accent that
-means "link", and a gold that means "ours". One voice across all three threads:
-**music, philosophy, tech & business.**
+`--gold` matches `--accent` on purpose. Identity marks (issue numbers, the progress fill) are the same terracotta line as links. Underline still tells a link from a number.
 
-Real tokens live in `src/styles/tokens.css`, imported by both stylesheets.
+Neutrals for topic chips only, never for body text or links: `--music`, `--philosophy`, `--tech`.
 
-| Token | Hex | Role |
-|---|---|---|
-| Paper | `#fbf7f0` | warm sheet, the default background |
-| Paper 2 / 3 | `#f5efe4` / `#efe7d8` | inset bands, pressed states, meter troughs |
-| Surface | `#ffffff` | inputs, the share frame |
-| Ink | `#1c1917` | body text and every heading |
-| Ink soft | `#403a34` | secondary prose |
-| Ink mute | `#6b625a` | meta, timestamps, captions |
-| **Terracotta** | `#b34a2f` | **interaction only**: links, focus rings, reading-flow accent bars, active state |
-| Terracotta deep | `#8f3721` | hover / pressed |
-| Terracotta tint | `#e8cfc3` | decorative rules, selection |
-| **Gold** | `#8a6d34` | **identity only**: brand mark, № issue badges, /share masthead stripe, graph nodes, progress. Never links/interaction. |
-| Gold soft | `#c9b183` | decorative only, never text |
-| Hairline | `#d9cfbe` / `#e7decf` | rules, borders |
+Dark theme keeps the same roles on a deep moss ground (`--paper: #1c2618`) with a light terracotta line (`--accent: #e7b5a6`). It follows `prefers-color-scheme` unless `data-theme` is set.
 
-**The three threads** — `--music #6d5580` plum, `--philosophy #4f6656` moss,
-`--tech #3f6070` slate — are for **topic markers only** (tag chips, thread
-labels). Never body text, never a heading, never a link.
+`--bg`, `--muted`, and `--land` are aliases. New rules use the names above.
 
-**Discipline:** terracotta = things you click; gold = who it is; paper = the
-page. Headings stay `ink`, never colored. The body carries a faint two-wash plus
-fractal-noise grain: texture, not pattern.
+## Type
 
-**Type:** **Fraunces** for display (headings, wordmarks) over **Newsreader** for
-body. Serif throughout, no sans anywhere (`--sans` deliberately resolves to the
-body serif). Mono (`"IBM Plex Mono", Menlo, Consolas`) only for issue numbers
-and code.
+| Token | Face |
+| --- | --- |
+| `--display` | Fraunces. Wordmark, headings, essay titles. |
+| `--serif` | Newsreader. Body, navigation, dates. |
+| `--sans` | Alias of `--serif`. There is no sans. |
+| `--mono` | IBM Plex Mono. Code, and any figure that must line up in columns. |
 
-## Mode A — the hub (essays, lists, daily, podcast, graph)
+Scale:
 
-Calm, legible, built for long reading. Header with wordmark + nav, footer,
-`36rem` measure, post lists and media grids. Uses `Base.astro` + `global.css`.
+| Token | Size |
+| --- | --- |
+| `--text-sm` | `0.85rem` |
+| `--text-base` | `1rem` |
+| `--text-lg` | `1.2rem` |
+| `--text-xl` | `clamp(1.7rem, 1.4rem + 1vw, 2.4rem)` |
 
-## Mode B — the monastery (the front door, Pilot)
+Body size on the page is `clamp(17px, 16.1px + 0.25vw, 19px)`. Line height for reading is 1.66. The essay world tightens that so a short essay can sit beside its picture. Headings stay `--ink`. Do not color a heading.
 
-Austere, audio-first, maximum restraint. Single 640px column, **no nav**, no
-CTAs, no "subscribe": it assumes the reader already knows why they are here. No
-imagery except album covers and pull-quotes, set **huge**
-(`clamp(2.2rem, 6vw, 4.5rem)`), italic, attributed in small caps. Uses
-`PilotLayout.astro` + `pilot.css`.
+## Space
 
-Mode B is a *layout* discipline, not a separate color scheme. It shares the
-palette above; do not give it a local `:root`.
+A single step, then doubles. Use these instead of one-off margins.
 
-## Choosing a mode
+| Token | Size |
+| --- | --- |
+| `--space-1` | `0.25rem` |
+| `--space-2` | `0.5rem` |
+| `--space-3` | `0.75rem` |
+| `--space-4` | `1rem` |
+| `--space-5` | `1.5rem` |
+| `--space-6` | `2.25rem` |
+| `--space-7` | `3.5rem` |
+| `--space-8` | `5.5rem` |
 
-- Reading / browsing / writing surface (essays, lists, `/daily`, podcast, graph) → **Mode A**.
-- A single audio work, or the front door, where stillness is the point → **Mode B**.
+`--measure` is `36rem`. Do not push a reading line past about 38rem. The directory and the header share that width. An essay world may grow wider so the picture can sit beside the text. The text column itself stays at `--measure`.
 
-When unsure: serif, warm paper, one terracotta accent, narrow column, hairlines,
-no shadows. That is always Pangaea.
+## Radius and borders
 
----
+Flat. `--radius` is `2px`. The scale (`--radius-sm` through `--radius-xl`) stays inside 1px to 4px. No shadows. Borders are `1px solid var(--rule)`.
 
-## The token architecture (added 2026-08-24)
+## Links and hover
 
-`tokens.css` now carries **shadcn/ui's token architecture with Pangaea's own
-values**. Three things came from shadcn, one deliberately did not.
+Links are `--accent`, underlined, offset about 3px. Hover and current links use `--accent-deep` or keep `--accent` with a thicker underline. Color is never the only affordance.
 
-**Adopted:**
+The wordmark is `--ink` and not underlined at rest. Hover turns it terracotta and underlines it.
 
-- **Semantic pairs**, so a shadcn-shaped component or snippet is on-brand the
-  moment it lands: `--background/--foreground`, `--card/--card-foreground`,
-  `--popover/--popover-foreground`, `--primary/--primary-foreground`,
-  `--secondary`, `--muted-bg/--muted-foreground`, `--accent-bg/--accent-foreground`,
-  `--destructive`, `--border`, `--input`, `--ring`, `--chart-1..5`. Every one is
-  an alias onto an existing Pangaea token, so the brand cannot drift.
-- **A radius scale derived from one source** (`--radius`, then `-sm/-md/-lg/-xl`).
-- **The three-state theme pattern**, which is how dark mode finally arrived.
+The sort control is quiet: uppercase, `--text-sm`, tracked. The active choice is `--ink`. The other choice is `--ink-mute`, still underlined.
 
-**Not adopted:** shadcn's `0.625rem` radius and its card shadow. This file says
-flat, 0-2px corners, and a reading page is not a dashboard. `--radius` is `2px`.
+## Motion
 
-**No React, no Tailwind, no build step was added.** The stack is Astro with
-hand-written CSS; installing shadcn's CLI would have meant importing a whole
-React toolchain to style a text site that ships almost no JS on purpose.
+| Token | Value |
+| --- | --- |
+| `--ease` | `cubic-bezier(0.2, 0.6, 0.2, 1)` |
+| `--duration` | `180ms` |
+| `--duration-slow` | `420ms` |
 
-## Dark mode
+Directory thumbnails fade in over `--duration-slow` when they load. `prefers-reduced-motion: reduce` disables that fade and every other transition. Do not add looping motion.
 
-The site was light-only until now. Dark redefines the **base** tokens (not just
-the shadcn aliases), which is why every existing rule in `global.css` and
-`pilot.css` follows along untouched.
+## Per-essay palettes
 
-Three states, because the viewer has three: an explicit `data-theme="dark"`
-stamp, an explicit `data-theme="light"` stamp, and the default "system" with no
-stamp at all, where only `prefers-color-scheme` decides.
+`src/lib/palette.ts` reads the essay image at build time, quantizes it, and writes the color tokens above (`--paper`, `--ink`, `--accent`, `--surface`, `--rule`, and the aliases). Text and link colors are moved along the sampled hue until they clear WCAG AA (4.5:1, 7:1 for body). No image, or a file sharp cannot read, leaves the site palette in place.
 
-| Token | Light | Dark |
-|---|---|---|
-| `--paper` | `#fbf7f0` | `#14110f` |
-| `--paper-2` | `#f5efe4` | `#1b1714` |
-| `--paper-3` | `#efe7d8` | `#221d19` |
-| `--surface` | `#ffffff` | `#1b1714` |
-| `--ink` | `#1c1917` | `#f2ebdf` |
-| `--ink-soft` | `#403a34` | `#d6ccbc` |
-| `--ink-mute` | `#6b625a` | `#a2988a` |
-| `--accent` | `#b34a2f` | `#dd7551` |
-| `--gold` | `#8a6d34` | `#cfab63` |
-| `--rule` | `#d9cfbe` | `#332b25` |
+Type, space, radius, and motion do not change on an essay page. Only the color tokens are replaced, on the `<html>` element, so the header and the page move together.
 
-Terracotta and gold both **lift** on the dark ground; the light values sink to
-roughly 2:1 there and stop being readable. The threads lift too.
-
-## Verified, and not verified
-
-**Verified.** Contrast on the dark ground `#14110f`, computed from the real hex
-values: ink 15.87:1, ink-soft 11.84:1, ink-mute 6.62:1, accent 6.03:1, gold
-8.65:1. All clear WCAG AA. The full build passes. A grep confirms zero
-hardcoded colors remain in `global.css` or `pilot.css`; the page washes, the
-cadence band, and code backgrounds are all tokens now, so none of them leave a
-light-theme glow sitting on a dark ground.
-
-**Not verified.** Nothing was checked against rendered pixels. The browser pane
-would not composite frames (it reports `clientWidth: 0`), so screenshots were
-unavailable and the one in-page measurement returned empty custom properties
-and a fake 1.00 contrast, which is the known artifact of measuring a hidden
-pane rather than a real failure. **Open the site in a real browser and toggle
-the OS theme before trusting the dark pass.** Contrast is sound by arithmetic;
-what has not been seen is layout and feel.
-
-**Colours were converted, never re-picked.** OKLCH values for the exact
-palette, via `~/.claude/skills/beautify/scripts/hex_to_oklch.py`:
-paper `oklch(0.9773 0.0102 81.80)`, ink `oklch(0.2161 0.0061 56.04)`,
-terracotta `oklch(0.5432 0.1432 35.49)`, gold `oklch(0.5512 0.0835 82.37)`.
+The Spotify player sits on `--player`, a slight mix of the sampled paper and ink. The embed theme follows that surface: light paper gets the light player.

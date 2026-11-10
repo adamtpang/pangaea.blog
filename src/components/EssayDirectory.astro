@@ -1,8 +1,23 @@
 ---
 import { publishedPosts } from '../lib/posts';
+import { createdAt, postFile, thumbSrc, updatedAt } from '../lib/essayMeta';
 import EssayProgress from './EssayProgress.astro';
 
 const posts = await publishedPosts();
+const rows = await Promise.all(
+  posts.map(async (post) => {
+    const file = postFile(post.id, post.filePath);
+    const image = post.data.image || post.data.cover;
+    return {
+      post,
+      created: createdAt(post.data.date, file),
+      updated: updatedAt(post.data.date, post.data.updated, file),
+      thumb: await thumbSrc(image),
+    };
+  }),
+);
+rows.sort((a, b) => b.created.valueOf() - a.created.valueOf());
+
 const formatDate = (date: Date) =>
   date.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -17,18 +32,37 @@ const pad = (n: number) => String(n).padStart(3, '0');
 <h1>Essays</h1>
 <EssayProgress placement="index" />
 
-{posts.length === 0 && <p class="meta">No essays are public yet.</p>}
+<nav class="sort" aria-label="Sort essays">
+  <a href="./" data-sort="latest" aria-current="true">Latest</a>
+  <a href="?sort=popular" data-sort="popular" hidden>Popular</a>
+</nav>
 
-{posts.length > 0 && (
+{rows.length === 0 && <p class="meta">No essays are public yet.</p>}
+
+{rows.length > 0 && (
   <ol class="directory">
-    {posts.map((post) => (
-      <li>
+    {rows.map(({ post, created, updated, thumb }) => (
+      <li data-slug={post.id} data-created={isoDate(created)}>
         <a href={`/posts/${post.id}/`}>
-          <span class="num">{post.data.number !== undefined ? pad(post.data.number) : ''}</span>
-          <span class="title">{post.data.title}</span>
-          <span class="row-meta">
-            <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
-            <span class="views" data-view-slug={post.id} hidden></span>
+          <span class="thumb">
+            {thumb && (
+              <img
+                src={thumb}
+                alt=""
+                width="160"
+                height="208"
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+          </span>
+          <span class="copy">
+            {post.data.number !== undefined && <span class="num">{pad(post.data.number)}</span>}
+            <span class="title">{post.data.title}</span>
+            <span class="row-meta">
+              <time datetime={isoDate(updated)}>Updated {formatDate(updated)}</time>
+              <span class="views" data-view-slug={post.id} hidden></span>
+            </span>
           </span>
         </a>
       </li>
@@ -37,18 +71,64 @@ const pad = (n: number) => String(n).padStart(3, '0');
 )}
 
 <script is:inline>
-  fetch('/api/views')
-    .then((res) => (res.ok ? res.json() : null))
-    .then((data) => {
-      if (!data || !data.enabled || !data.views) return;
-      document.querySelectorAll('[data-view-slug]').forEach((el) => {
-        const slug = el.getAttribute('data-view-slug') || '';
-        const count = Number(data.views[slug] || 0);
-        const label = count.toLocaleString('en-US');
-        el.textContent = label;
-        el.setAttribute('aria-label', label + ' views');
-        el.removeAttribute('hidden');
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      document.querySelectorAll('.directory img').forEach(function (img) {
+        img.classList.add('will-fade');
+        var show = function () { img.classList.add('is-in'); };
+        if (img.complete && img.naturalWidth) show();
+        else img.addEventListener('load', show, { once: true });
       });
-    })
-    .catch(() => {});
+    }
+
+    var list = document.querySelector('.directory');
+    var latest = document.querySelector('[data-sort="latest"]');
+    var popular = document.querySelector('[data-sort="popular"]');
+    var params = new URLSearchParams(location.search);
+    var want = params.get('sort') === 'popular' ? 'popular' : 'latest';
+
+    function mark(which) {
+      if (!latest || !popular) return;
+      if (which === 'popular') {
+        latest.removeAttribute('aria-current');
+        popular.setAttribute('aria-current', 'true');
+      } else {
+        popular.removeAttribute('aria-current');
+        latest.setAttribute('aria-current', 'true');
+      }
+    }
+
+    fetch('/api/views')
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) {
+        if (!data || !data.enabled || !data.views) {
+          if (want === 'popular') history.replaceState(null, '', location.pathname);
+          return;
+        }
+        if (popular) popular.hidden = false;
+        document.querySelectorAll('[data-view-slug]').forEach(function (el) {
+          var slug = el.getAttribute('data-view-slug') || '';
+          var count = Number(data.views[slug] || 0);
+          var label = count.toLocaleString('en-US');
+          el.textContent = label;
+          el.setAttribute('aria-label', label + ' views');
+          el.hidden = false;
+        });
+        if (want === 'popular' && list) {
+          var items = Array.prototype.slice.call(list.children);
+          items.sort(function (a, b) {
+            var va = Number(data.views[a.getAttribute('data-slug')] || 0);
+            var vb = Number(data.views[b.getAttribute('data-slug')] || 0);
+            if (vb !== va) return vb - va;
+            return String(b.getAttribute('data-created')).localeCompare(String(a.getAttribute('data-created')));
+          });
+          items.forEach(function (el) { list.appendChild(el); });
+          mark('popular');
+        }
+      })
+      .catch(function () {
+        if (want === 'popular') history.replaceState(null, '', location.pathname);
+      });
+  })();
 </script>
