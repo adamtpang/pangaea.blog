@@ -3,6 +3,9 @@ title: 'Deathmoney'
 date: 2026-09-08
 number: 1
 tags: [mortality, sufficiency]
+image: /images/deathmoney.webp
+imageAlt: 'Grainy black and white photograph of a skull holding a fan of hundred-dollar bills.'
+song: 'https://open.spotify.com/track/781V2Y5LPtcpgONEOadadE'
 draft: false
 ---
 

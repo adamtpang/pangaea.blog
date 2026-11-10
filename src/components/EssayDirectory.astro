@@ -1,0 +1,54 @@
+---
+import { publishedPosts } from '../lib/posts';
+import EssayProgress from './EssayProgress.astro';
+
+const posts = await publishedPosts();
+const formatDate = (date: Date) =>
+  date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+const isoDate = (date: Date) => date.toISOString().slice(0, 10);
+const pad = (n: number) => String(n).padStart(3, '0');
+---
+
+<h1>Essays</h1>
+<EssayProgress placement="index" />
+
+{posts.length === 0 && <p class="meta">No essays are public yet.</p>}
+
+{posts.length > 0 && (
+  <ol class="directory">
+    {posts.map((post) => (
+      <li>
+        <a href={`/posts/${post.id}/`}>
+          <span class="num">{post.data.number !== undefined ? pad(post.data.number) : ''}</span>
+          <span class="title">{post.data.title}</span>
+          <span class="row-meta">
+            <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+            <span class="views" data-view-slug={post.id} hidden></span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ol>
+)}
+
+<script is:inline>
+  fetch('/api/views')
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+      if (!data || !data.enabled || !data.views) return;
+      document.querySelectorAll('[data-view-slug]').forEach((el) => {
+        const slug = el.getAttribute('data-view-slug') || '';
+        const count = Number(data.views[slug] || 0);
+        const label = count.toLocaleString('en-US');
+        el.textContent = label;
+        el.setAttribute('aria-label', label + ' views');
+        el.removeAttribute('hidden');
+      });
+    })
+    .catch(() => {});
+</script>

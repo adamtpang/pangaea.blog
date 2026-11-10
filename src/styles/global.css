@@ -47,7 +47,19 @@ body {
 main {
   max-width: var(--measure);
   margin: 0 auto;
-  padding: 3rem 1.5rem 6rem;
+  padding: 2.75rem 1.5rem 5rem;
+}
+body.world header.site,
+body.world main,
+body.world footer.site {
+  max-width: 68rem;
+}
+body.world header.site {
+  padding-top: 0.85rem;
+}
+body.world main {
+  padding-top: 0.65rem;
+  padding-bottom: 1.25rem;
 }
 
 a {
@@ -149,46 +161,48 @@ li {
 header.site {
   max-width: var(--measure);
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 0;
+  padding: 4.25rem 1.5rem 0;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1rem 2rem;
   flex-wrap: wrap;
 }
 header.site .brand {
-  font-weight: 600;
-  font-size: 1.15rem;
-  letter-spacing: 0.02em;
+  font-family: var(--display);
+  font-weight: 460;
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   text-decoration: none;
   color: var(--ink);
 }
-header.site .brand .dot {
-  color: var(--land); /* the supercontinent: identity, not a link */
+header.site .brand:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 5px;
 }
 header.site nav {
-  font-family: var(--sans);
-  font-size: 0.9rem;
+  font-family: var(--serif);
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 header.site nav a {
-  margin-left: 1.1rem;
-  text-decoration: none;
-  color: var(--muted);
+  margin-left: 1.25rem;
+  color: var(--ink-soft);
+  text-underline-offset: 4px;
 }
-header.site nav a:hover {
-  color: var(--accent);
-}
+header.site nav a:hover,
 header.site nav a[aria-current='page'] {
-  color: var(--ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--accent);
 }
 
 /* --- Footer --- */
 footer.site {
   max-width: var(--measure);
   margin: 0 auto;
-  padding: 2rem 1.5rem 3rem;
+  padding: 3.5rem 1.5rem 4rem;
   border-top: 1px solid var(--rule);
   font-family: var(--sans);
   font-size: 0.82rem;
@@ -204,8 +218,8 @@ footer.site .footer-mark {
   gap: 0.5rem;
 }
 footer.site a {
-  color: var(--muted);
-  text-decoration: none;
+  color: var(--ink-mute);
+  text-underline-offset: 3px;
 }
 footer.site a:hover {
   color: var(--accent);
@@ -907,6 +921,75 @@ article.post .post-song {
   max-width: 22rem;
 }
 
+/* An essay as one world: picture, song, and the writing. */
+article.post.world header h1 {
+  font-size: clamp(1.7rem, 1.35rem + 1.1vw, 2.15rem);
+  margin-bottom: 0.1rem;
+}
+article.post.world .post-meta {
+  margin-bottom: 0.7rem;
+}
+.world-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.world-media {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+article.post.world .post-cover {
+  margin: 0;
+  background: var(--player, var(--surface));
+}
+article.post.world .post-cover img {
+  width: 100%;
+  max-height: 62vh;
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: 0;
+}
+.world-player {
+  background: var(--player, var(--surface));
+  padding: 0.45rem;
+}
+.world-copy > :first-child {
+  margin-top: 0;
+}
+article.post .back {
+  margin-top: 0.85rem;
+  margin-bottom: 0;
+}
+@media (min-width: 960px) {
+  .world-stage {
+    display: grid;
+    grid-template-columns: minmax(16rem, 22rem) minmax(0, var(--measure));
+    gap: 1.75rem 2.25rem;
+    align-items: start;
+  }
+  article.post.world .post-cover img {
+    height: min(54vh, 30rem);
+    max-height: none;
+  }
+  .world-copy {
+    font-size: 0.98rem;
+    line-height: 1.4;
+  }
+  .world-copy p {
+    margin-bottom: 0.42rem;
+  }
+}
+@media (max-width: 640px) {
+  article.post.world .post-cover img {
+    max-height: 48vh;
+  }
+  .world-copy {
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+}
+
 /* --- Prose (markdown body) --- */
 .prose > :first-child {
   margin-top: 0;
@@ -936,7 +1019,13 @@ article.post .post-song {
 }
 .embed-spotify iframe {
   height: 152px;
-  border-radius: 12px;
+  border-radius: 2px;
+}
+.embed-spotify.is-compact {
+  margin: 0;
+}
+.embed-spotify.is-compact iframe {
+  height: 80px;
 }
 .embed-soundcloud iframe {
   height: 166px;
@@ -1103,6 +1192,68 @@ article.post .post-song {
   font-size: 0.78rem;
 }
 
+/* Essay directory. Number, title, date, and a view count when the
+   counter store is configured. The count stays hidden otherwise. */
+.directory {
+  list-style: none;
+  padding: 0;
+  margin: 2.25rem 0 0;
+}
+.directory a {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  gap: 0.2rem 1rem;
+  align-items: baseline;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  text-decoration: none;
+}
+.directory .num {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+.directory .title {
+  font-family: var(--display);
+  font-size: 1.28rem;
+  font-weight: 500;
+  line-height: 1.25;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.directory a:hover .title {
+  color: var(--accent);
+}
+.directory .row-meta {
+  display: flex;
+  gap: 1.1rem;
+  justify-content: flex-end;
+  color: var(--ink-mute);
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+.directory .views {
+  min-width: 2.5rem;
+  text-align: right;
+}
+@media (max-width: 640px) {
+  .directory a {
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+  }
+  .directory .num {
+    grid-row: 1 / span 2;
+  }
+  .directory .row-meta {
+    grid-column: 2;
+    justify-content: flex-start;
+    font-size: 0.95rem;
+  }
+}
+
 @media (max-width: 540px) {
   body {
     font-size: 17px;
@@ -1111,9 +1262,12 @@ article.post .post-song {
     font-size: 1.8rem;
   }
   header.site {
-    padding-top: 1.5rem;
+    padding-top: 2rem;
   }
   header.site nav a {
     margin-left: 0.7rem;
+  }
+  body.world header.site {
+    padding-top: 1.25rem;
   }
 }

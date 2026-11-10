@@ -8,7 +8,7 @@ import Base from '../layouts/Base.astro';
 >
   <h1>Privacy</h1>
 
-  <p class="meta">Last updated: 1 November 2026.</p>
+  <p class="meta">Last updated: 10 November 2026.</p>
 
   <p>
     Pangaea is Adam Pang's personal publication. This policy describes the data behavior of
@@ -41,18 +41,26 @@ import Base from '../layouts/Base.astro';
     also enable two optional measurements: page performance timings (Core Web Vitals) and dead-click
     events, which note a click that produced no visible change on the page. PostHog receives the request IP address and
     browser details that come with each event, and its script stores a random anonymous identifier
-    in a first-party cookie and browser storage so repeat visits can be counted. Pangaea does not
-    use Vercel Web Analytics and does not define custom analytics events. See
-    <a href="https://posthog.com/privacy">PostHog's privacy policy</a>.
+    in a first-party cookie and browser storage so repeat visits can be counted. Pangaea also loads
+    Vercel Web Analytics, which is cookieless. Vercel receives the page URL, referrer, and coarse
+    device information for a page view. It does not set a Pangaea cookie. See
+    <a href="https://posthog.com/privacy">PostHog's privacy policy</a> and
+    <a href="https://vercel.com/legal/privacy-policy">Vercel's privacy policy</a>.
+  </p>
+  <p>
+    Essay pages can report a view to Pangaea's own counter. The server stores an aggregate count
+    per essay only when a Redis store is configured. It does not store the raw IP address. It keeps
+    a short-lived hash so the same visitor is counted once per day, then the hash expires. When the
+    store is not configured, the server saves nothing and the directory does not show counts.
   </p>
 
   <h2>Fonts, media, and embeds</h2>
   <p>
     Pages load Fraunces and Newsreader from Google Fonts, so a browser connects to
     fonts.googleapis.com and fonts.gstatic.com and sends the technical request information needed
-    to return those files. Some essays or episode pages contain lazy-loaded YouTube, Spotify, or
-    SoundCloud players. Those services receive a request only when a page containing their player
-    loads, and their own terms and privacy policies apply. YouTube players use the
+    to return those files. Some essays contain a lazy-loaded Spotify player. YouTube and SoundCloud
+    players can also appear. Those services receive a request only when a page containing their
+    player loads, and their own terms and privacy policies apply. YouTube players use the
     youtube-nocookie.com embed domain.
   </p>
 

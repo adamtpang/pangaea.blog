@@ -1,14 +1,23 @@
 ---
+import { spotifyEmbed } from '../../lib/spotify';
+
 interface Props {
-  /** Spotify URI or ID, e.g. "track/0NeJjNlprGfZpeX2LQuN6c" or "playlist/..." or "album/..." */
+  /** Track URL, spotify:track URI, track/<id>, or a bare track id. */
   uri: string;
+  theme?: 0 | 1;
 }
 
-const { uri } = Astro.props;
-const cleaned = uri.replace(/^spotify:/, '').replace(/:/g, '/');
-const src = `https://open.spotify.com/embed/${cleaned}`;
+const { uri, theme } = Astro.props;
+const embed = spotifyEmbed(uri, theme);
 ---
 
-<div class="embed embed-spotify">
-  <iframe src={src} loading="lazy" allow="encrypted-media"></iframe>
-</div>
+{embed && (
+  <div class:list={['embed', 'embed-spotify', { 'is-compact': embed.track }]}>
+    <iframe
+      src={embed.src}
+      title="Spotify player"
+      loading="lazy"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    ></iframe>
+  </div>
+)}

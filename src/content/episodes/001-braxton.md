@@ -31,7 +31,7 @@ chapters:
   - timestamp: "52:26"
     title: Stillness as Freedom of Action
 tags: [podcast, philosophy, craft]
-draft: false
+draft: true
 ---
 
 ## Liner notes

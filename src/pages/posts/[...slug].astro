@@ -1,14 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { render, type CollectionEntry } from 'astro:content';
 import { Spotify } from '../../components/embeds';
+import { publishedPosts } from '../../lib/posts';
+import { paletteForPublicImage, paletteStyle } from '../../lib/palette';
 
 export async function getStaticPaths() {
-  const epoch = new Date('1971-01-01').valueOf();
-  const posts = await getCollection(
-    'posts',
-    ({ data }) => !data.draft && data.date.valueOf() >= epoch
-  );
+  const posts = await publishedPosts();
   return posts.map((post) => ({
     params: { slug: post.id },
     props: { post },
@@ -22,44 +20,74 @@ interface Props {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const { data } = post;
+const image = data.image || data.cover;
+const palette = image ? await paletteForPublicImage(image) : null;
+const world = Boolean(image || data.song);
 
 const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 ---
 
-<Base title={`${data.title} · Pangaea`} description={data.blurb}>
-  <article class="post">
+<Base
+  title={`${data.title} · Pangaea`}
+  description={data.blurb}
+  world={world}
+  palette={palette ? paletteStyle(palette) : undefined}
+>
+  <article class:list={['post', { world }]}>
     <header>
       <h1>{data.title}</h1>
       <p class="post-meta">
         {data.number !== undefined && (
           <span class="num">{String(data.number).padStart(3, '0')}</span>
         )}
-        {fmt(data.date)}
+        <time datetime={data.date.toISOString().slice(0, 10)}>{fmt(data.date)}</time>
       </p>
     </header>
 
     {data.blurb && <p class="prose blurb-line"><em>{data.blurb}</em></p>}
 
-    {data.cover && (
-      <figure class="post-cover">
-        <img src={data.cover} alt="" loading="lazy" />
-      </figure>
-    )}
-
-    {data.song && (
-      <div class="post-song">
-        <Spotify uri={data.song} />
+    {world ? (
+      <div class="world-stage">
+        <div class="world-media">
+          {image && (
+            <figure class="post-cover">
+              <img src={image} alt={data.imageAlt || data.title} decoding="async" />
+            </figure>
+          )}
+          {data.song && (
+            <div class="world-player">
+              <Spotify uri={data.song} theme={palette?.spotifyTheme} />
+            </div>
+          )}
+        </div>
+        <div class="prose world-copy">
+          <Content />
+        </div>
+      </div>
+    ) : (
+      <div class="prose">
+        <Content />
       </div>
     )}
 
-    <div class="prose">
-      <Content />
-    </div>
-
-    <hr />
-    <p class="meta">
-      <a href="/posts/">&larr; All essays</a>
+    <p class="meta back">
+      <a href="/">All essays</a>
     </p>
   </article>
+  {world && (
+    <script is:inline define:vars={{ slug: post.id }}>
+      try {
+        var key = 'pangaea-viewed-' + slug;
+        if (!sessionStorage.getItem(key)) {
+          sessionStorage.setItem(key, '1');
+          fetch('/api/views', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ slug: slug }),
+          }).catch(function () {});
+        }
+      } catch (e) {}
+    </script>
+  )}
 </Base>

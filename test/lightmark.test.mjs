@@ -31,7 +31,7 @@ function flattenSchema(value) {
   return [value, ...(Array.isArray(value['@graph']) ? value['@graph'].flatMap(flattenSchema) : [])];
 }
 
-test('homepage keeps the masthead and server-renders the published essays and episodes', async () => {
+test('homepage is an essay directory with the thousand-essay bar', async () => {
   const html = await read('.vercel/output/static/index.html');
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1] ?? '';
   const description = metaContent(html, 'description');
@@ -39,33 +39,29 @@ test('homepage keeps the masthead and server-renders the published essays and ep
   const h1Count = (html.match(/<h1[ >]/gi) ?? []).length;
   const visibleText = textFromHtml(html);
 
-  // The masthead still comes first: wordmark, promise line, two entryways.
   assert.ok(title.length >= 20 && title.length <= 65, `title length was ${title.length}`);
   assert.match(title, /^Pangaea/);
   assert.match(description, /Adam Pang/);
   assert.ok(description.length >= 70 && description.length <= 170, `description length was ${description.length}`);
   assert.equal(canonical, 'https://pangaea.blog/');
   assert.equal(h1Count, 1);
-  assert.match(visibleText, /PANGAEA An essay, a picture, a song\. Read Listen/);
-
-  const entryways = [...html.matchAll(/<nav[^>]+class="entryways"[^>]*>([^]*?)<\/nav>/gi)];
-  assert.equal(entryways.length, 1, 'one entryways nav');
-  const entryLinks = [...entryways[0][1].matchAll(/<a [^>]*href="([^"]+)"/gi)].map((match) => match[1]);
-  assert.deepEqual(entryLinks, ['/posts/', '/podcast/']);
-
-  // Published essays are in the raw HTML, so crawlers without JavaScript see them.
-  for (const path of ['/posts/deathmoney/', '/posts/the-ceiling-is-human/', '/podcast/001-braxton/']) {
-    assert.ok(html.includes(`href="${path}"`), `missing published entry ${path}`);
-  }
+  assert.match(visibleText, /Essays/);
   assert.match(visibleText, /Deathmoney/);
-  assert.match(visibleText, /The Ceiling Is Human/);
-  assert.ok(words(visibleText).length >= 250, `homepage has ${words(visibleText).length} visible words`);
+  assert.match(visibleText, /Sep 8, 2026/);
+  assert.match(html, /href="\/posts\/deathmoney\/"/);
+  assert.doesNotMatch(visibleText, /The Ceiling Is Human/);
+  assert.doesNotMatch(html, /\/podcast/);
+  assert.ok(!html.includes('/posts/the-ceiling-is-human'), 'unpublished essay still on the homepage');
+  assert.match(visibleText, /1 \/ 1000 essays/);
+  assert.match(html, /role="progressbar"/);
+  assert.match(html, /aria-valuenow="1"/);
+  assert.match(html, /aria-valuemin="0"/);
+  assert.match(html, /aria-valuemax="1000"/);
 
   // Unpublished drafts never leak onto the homepage.
   assert.ok(!html.includes('href="/posts/agency-is-the-only-skill/"'), 'draft essay linked from homepage');
 
-  // Trust links and both feeds stay reachable from the home footer.
-  for (const path of ['/about/', '/contact/', '/privacy/', '/rss.xml', '/podcast.xml']) {
+  for (const path of ['/about/', '/contact/', '/privacy/', '/rss.xml']) {
     assert.ok(html.includes(`href="${path}"`), `missing link to ${path}`);
   }
 
@@ -116,6 +112,74 @@ test('discovery files expose a valid sitemap and truthful agent guidance', async
   }
   assert.match(llms, /operated by Adam Pang/i);
   assert.match(llms, /no paid plan, subscription, or paywall/i);
+  assert.match(sitemap, /<loc>https:\/\/pangaea\.blog\/posts\/deathmoney\/<\/loc>/);
+  assert.doesNotMatch(sitemap, /the-ceiling-is-human/);
+  assert.doesNotMatch(sitemap, /\/podcast/);
+});
+
+test('essay 002 stays in the repo but leaves the public site, and the goal counts published essays', async () => {
+  const [source, indexHtml, rss] = await Promise.all([
+    read('src/content/posts/the-ceiling-is-human.md'),
+    read('.vercel/output/static/posts/index.html'),
+    read('.vercel/output/static/rss.xml'),
+  ]);
+
+  assert.match(source, /^draft: true$/m);
+  assert.match(source, /The Ceiling Is Human/);
+  assert.match(indexHtml, /1 \/ 1000 essays/);
+  assert.match(indexHtml, /role="progressbar"/);
+  assert.match(indexHtml, /aria-valuenow="1"/);
+  assert.match(indexHtml, /href="\/posts\/deathmoney\/"/);
+  assert.doesNotMatch(indexHtml, /the-ceiling-is-human/);
+  assert.doesNotMatch(indexHtml, /\/podcast/);
+  assert.match(rss, /deathmoney/);
+  assert.doesNotMatch(rss, /the-ceiling-is-human/);
+  assert.doesNotMatch(rss, /The Ceiling Is Human/);
+
+  await assert.rejects(read('.vercel/output/static/posts/the-ceiling-is-human/index.html'));
+  await assert.rejects(read('.vercel/output/static/share/the-ceiling-is-human/index.html'));
+  const deathmoney = await read('.vercel/output/static/posts/deathmoney/index.html');
+  assert.match(deathmoney, /Deathmoney/);
+});
+
+test('the podcast is unpublished and its routes are not built', async () => {
+  const episode = await read('src/content/episodes/001-braxton.md');
+  assert.match(episode, /^draft: true$/m);
+  assert.match(episode, /title: Braxton/);
+  await assert.rejects(read('.vercel/output/static/podcast/index.html'));
+  await assert.rejects(read('.vercel/output/static/podcast/001-braxton/index.html'));
+  await assert.rejects(read('.vercel/output/static/podcast.xml'));
+});
+
+test('Deathmoney is one world: picture, song, and a palette from the picture', async () => {
+  const html = await read('.vercel/output/static/posts/deathmoney/index.html');
+  assert.match(html, /src="\/images\/deathmoney\.webp"/);
+  assert.match(html, /skull holding a fan of hundred-dollar bills/);
+  assert.match(html, /https:\/\/open\.spotify\.com\/embed\/track\/781V2Y5LPtcpgONEOadadE/);
+  assert.match(html, /--paper:#/);
+  assert.match(html, /--ink:#/);
+  assert.match(html, /--accent:#/);
+  const style = html.match(/style="([^"]*--paper:[^"]+)"/)?.[1] ?? '';
+  const color = (name) => style.match(new RegExp(`${name}:(#[0-9a-f]{6})`))?.[1];
+  const paper = color('--paper');
+  const ink = color('--ink');
+  const accent = color('--accent');
+  assert.ok(paper && ink && accent, style);
+  const lum = (hex) => {
+    const n = parseInt(hex.slice(1), 16);
+    const f = (v) => {
+      const s = v / 255;
+      return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    };
+    return 0.2126 * f((n >> 16) & 255) + 0.7152 * f((n >> 8) & 255) + 0.0722 * f(n & 255);
+  };
+  const ratio = (a, b) => {
+    const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+    return (hi + 0.05) / (lo + 0.05);
+  };
+  assert.ok(ratio(ink, paper) >= 4.5, `ink contrast ${ratio(ink, paper)}`);
+  assert.ok(ratio(accent, paper) >= 4.5, `accent contrast ${ratio(accent, paper)}`);
+  assert.doesNotMatch(textFromHtml(html), /—|–/);
 });
 
 test('production header configuration enforces CSP and MIME protections', async () => {
