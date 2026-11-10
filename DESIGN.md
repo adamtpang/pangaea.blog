@@ -1,37 +1,43 @@
-# Pangaea design
+# Pangaea design brief
 
-Calm editorial pages. A spring-green ground, a terracotta line, and a white highlight, set in Fraunces and Newsreader with room to breathe. The reference is a two-color risograph (soft green field, rust drawing, white paper showing through) and the quiet pace of brunellocucinelli.ai.
+Paste this into any design prompt to build on-brand Pangaea screens. Values are the real tokens from `src/styles/tokens.css`, the single source both stylesheets import. The `/share` frame keeps a copied set of the same values because that page cannot import a stylesheet.
 
-Source of truth: `src/styles/tokens.css`. `global.css` and `pilot.css` import it. Do not paste colors, fonts, or radii into a page. The `/share` frame keeps a copied set of the same values because that page cannot import a stylesheet.
+**Identity:** Adam Pang's essays. Quiet, considered, built to last. A risograph print (spring green ground, terracotta line, white paper showing through) with the slow whitespace of a quiet luxury house. The bareness is the message.
 
-Per-essay pages may override the color tokens. They do not invent a second type system, spacing scale, or motion.
+## Universal principles
+
+- Serif throughout. Reading width stays near `36rem` (`--measure`). Do not push a line past about 38rem. Generous whitespace.
+- 1px hairline rules, used sparingly. No drop shadows. No gradients on public pages (flat fields only). Corners stay at 0 to 2px. `--radius` is `2px`.
+- Color is never the only affordance. Links stay underlined. All text clears WCAG AA on `--paper`.
+- No ad-era cruft: no popups, no cookie banners, no newsletter modals, no social-share buttons.
+- Punctuation: do not use em dashes or en dashes in any copy. Use commas, colons, semicolons, periods, or parentheses.
+- Motion: none beyond a short opacity fade. Honor `prefers-reduced-motion`.
 
 ## Color
 
-Light theme, the default.
+Spring green is the ground. Terracotta is the line (links, the progress fill, issue numbers). White is the highlight (inputs, thumbnail wells, the meter track). Headings stay `--ink`. Never color a heading.
 
-| Token | Value | Role |
-| --- | --- | --- |
-| `--paper` | `#c3d398` | Spring green ground. Page background. |
-| `--paper-2` | `#d5e4b8` | Lifted green for bands. |
-| `--paper-3` | `#e7ecd6` | Pale green, pressed and inset. |
-| `--surface` | `#f7f4ea` | White highlight. Inputs, thumbnail wells, meter track. |
-| `--ink` | `#2c241c` | Body text and headings. About 9.5:1 on `--paper`. |
-| `--ink-soft` | `#3f3228` | Secondary prose. |
-| `--ink-mute` | `#5c4034` | Dates, counts, captions. About 5.8:1 on `--paper`. |
-| `--accent` | `#8f3d2c` | Terracotta line. Links, focus, the progress fill, the active sort. 4.5:1 on `--paper`. |
-| `--accent-deep` | `#6e2e22` | Pressed terracotta. |
-| `--accent-tint` | `#ead9cf` | Terracotta wash. Selection. |
-| `--rule` | `#c9b39a` | Hairline. |
-| `--rule-soft` | `#d7c7b4` | Quieter hairline. |
-
-`--gold` matches `--accent` on purpose. Identity marks (issue numbers, the progress fill) are the same terracotta line as links. Underline still tells a link from a number.
-
-Neutrals for topic chips only, never for body text or links: `--music`, `--philosophy`, `--tech`.
-
-Dark theme keeps the same roles on a deep moss ground (`--paper: #1c2618`) with a light terracotta line (`--accent: #e7b5a6`). It follows `prefers-color-scheme` unless `data-theme` is set.
+| Token | Light | Dark | Role |
+| --- | --- | --- | --- |
+| `--paper` | `#c3d398` | `#1c2618` | Ground. Page background. |
+| `--paper-2` | `#d5e4b8` | `#24301f` | Lifted band. |
+| `--paper-3` | `#e7ecd6` | `#2c3826` | Pressed, inset. |
+| `--surface` | `#f7f4ea` | `#263528` | White highlight. |
+| `--ink` | `#2c241c` | `#f4f1e6` | Body and headings. About 9.5:1 on light paper. |
+| `--ink-soft` | `#3f3228` | `#e4d8c8` | Secondary prose. |
+| `--ink-mute` | `#5c4034` | `#cbbba8` | Dates, counts, captions. About 5.8:1 on light paper. |
+| `--accent` | `#8f3d2c` | `#e7b5a6` | Terracotta line. Links, focus, active sort, progress fill. 4.5:1 on light paper. |
+| `--accent-deep` | `#6e2e22` | `#f3d2c6` | Pressed terracotta. |
+| `--accent-tint` | `#ead9cf` | `#3a2a24` | Wash, selection. |
+| `--gold` | `#8f3d2c` | `#e7b5a6` | Same line as `--accent`. Issue numbers and the progress fill. |
+| `--rule` | `#c9b39a` | `#3d4a34` | Hairline. |
+| `--rule-soft` | `#d7c7b4` | `#31402c` | Quieter hairline. |
 
 `--bg`, `--muted`, and `--land` are aliases. New rules use the names above.
+
+Neutrals for topic chips only, never body text or links: `--music`, `--philosophy`, `--tech`.
+
+Dark mode redefines the base tokens, so `global.css` and `pilot.css` follow without a second stylesheet. Three states: `data-theme="dark"`, `data-theme="light"`, and no stamp, where `prefers-color-scheme` decides.
 
 ## Type
 
@@ -40,9 +46,7 @@ Dark theme keeps the same roles on a deep moss ground (`--paper: #1c2618`) with 
 | `--display` | Fraunces. Wordmark, headings, essay titles. |
 | `--serif` | Newsreader. Body, navigation, dates. |
 | `--sans` | Alias of `--serif`. There is no sans. |
-| `--mono` | IBM Plex Mono. Code, and any figure that must line up in columns. |
-
-Scale:
+| `--mono` | IBM Plex Mono, Menlo, Consolas. Code, and figures that must line up. |
 
 | Token | Size |
 | --- | --- |
@@ -51,11 +55,9 @@ Scale:
 | `--text-lg` | `1.2rem` |
 | `--text-xl` | `clamp(1.7rem, 1.4rem + 1vw, 2.4rem)` |
 
-Body size on the page is `clamp(17px, 16.1px + 0.25vw, 19px)`. Line height for reading is 1.66. The essay world tightens that so a short essay can sit beside its picture. Headings stay `--ink`. Do not color a heading.
+Body size on the page is `clamp(17px, 16.1px + 0.25vw, 19px)`. Reading line height is 1.66. An essay world may tighten that so a short essay can sit beside its picture.
 
 ## Space
-
-A single step, then doubles. Use these instead of one-off margins.
 
 | Token | Size |
 | --- | --- |
@@ -68,21 +70,15 @@ A single step, then doubles. Use these instead of one-off margins.
 | `--space-7` | `3.5rem` |
 | `--space-8` | `5.5rem` |
 
-`--measure` is `36rem`. Do not push a reading line past about 38rem. The directory and the header share that width. An essay world may grow wider so the picture can sit beside the text. The text column itself stays at `--measure`.
+Use the scale for new layout. The directory, the header, and the footer share `--measure`.
 
-## Radius and borders
+## Radius, borders, links, motion
 
-Flat. `--radius` is `2px`. The scale (`--radius-sm` through `--radius-xl`) stays inside 1px to 4px. No shadows. Borders are `1px solid var(--rule)`.
+Borders are `1px solid var(--rule)`. The radius scale (`--radius-sm` through `--radius-xl`) stays inside 1px to 4px. No card shadow. shadcn's semantic pairs (`--background`, `--foreground`, `--card`, `--ring`, and the rest) alias these tokens. The stack stays Astro and hand-written CSS.
 
-## Links and hover
-
-Links are `--accent`, underlined, offset about 3px. Hover and current links use `--accent-deep` or keep `--accent` with a thicker underline. Color is never the only affordance.
-
-The wordmark is `--ink` and not underlined at rest. Hover turns it terracotta and underlines it.
+Links are `--accent`, underlined, offset about 3px. Hover may thicken the underline or move to `--accent-deep`. The wordmark is `--ink` and not underlined at rest. Hover turns it terracotta and underlines it.
 
 The sort control is quiet: uppercase, `--text-sm`, tracked. The active choice is `--ink`. The other choice is `--ink-mute`, still underlined.
-
-## Motion
 
 | Token | Value |
 | --- | --- |
@@ -90,12 +86,16 @@ The sort control is quiet: uppercase, `--text-sm`, tracked. The active choice is
 | `--duration` | `180ms` |
 | `--duration-slow` | `420ms` |
 
-Directory thumbnails fade in over `--duration-slow` when they load. `prefers-reduced-motion: reduce` disables that fade and every other transition. Do not add looping motion.
+Directory thumbnails fade in over `--duration-slow` when they finish loading. `prefers-reduced-motion: reduce` skips that fade and every other transition.
+
+## Two layouts, one palette
+
+**The directory and the essay** (`Base.astro`, `global.css`). Header, narrow column, the essay list, the essay world. This is the front door.
+
+**The still page** (`PilotLayout.astro`, `pilot.css`). A single column with no nav, for a page whose point is stillness. It is a layout, not a second palette. Do not give it a local `:root`.
 
 ## Per-essay palettes
 
-`src/lib/palette.ts` reads the essay image at build time, quantizes it, and writes the color tokens above (`--paper`, `--ink`, `--accent`, `--surface`, `--rule`, and the aliases). Text and link colors are moved along the sampled hue until they clear WCAG AA (4.5:1, 7:1 for body). No image, or a file sharp cannot read, leaves the site palette in place.
+`src/lib/palette.ts` reads an essay's image at build time, quantizes it, and replaces the color tokens (`--paper`, `--ink`, `--accent`, `--surface`, `--rule`, and the aliases) on that page's `<html>`. Text and link colors move along the sampled hue until they clear WCAG AA (4.5:1 for links and meta, 7:1 for body). No image, or a file that cannot be read, leaves the site palette in place.
 
-Type, space, radius, and motion do not change on an essay page. Only the color tokens are replaced, on the `<html>` element, so the header and the page move together.
-
-The Spotify player sits on `--player`, a slight mix of the sampled paper and ink. The embed theme follows that surface: light paper gets the light player.
+Type, space, radius, and motion do not change on an essay page. Only color is replaced, so the header and the page move together. The Spotify player sits on `--player`, a slight mix of the sampled paper and ink, and the embed theme follows that surface.
