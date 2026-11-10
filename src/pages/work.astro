@@ -6,7 +6,6 @@ const epoch = new Date('1971-01-01').valueOf();
 
 const postItems = await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch);
 const appItems = await getCollection('apps', ({ data }) => !data.draft);
-const podItems = await getCollection('episodes', ({ data }) => !data.draft);
 const cityItems = await getCollection('cities', ({ data }) => !data.draft);
 const vlogItems = await getCollection('vlogs', ({ data }) => !data.draft);
 
@@ -29,32 +28,30 @@ function mapByNumber(
 
 const essays = mapByNumber(postItems, (i) => `/posts/${i.id}/`);
 const apps = mapByNumber(appItems, (i) => i.data.url ?? '/apps/');
-const pods = mapByNumber(podItems, (i) => `/podcast/${i.id}/`, (i) => i.data.episode);
 const cities = mapByNumber(cityItems, (i) => i.data.url ?? '/cities/');
 const vlogs = mapByNumber(vlogItems, (i) => `/vlog/${i.id}/`, (i) => i.data.vlog);
 
 const pillars = [
   { key: 'essays', label: 'Essays', href: '/posts/', map: essays, line: 'The written word.' },
   { key: 'apps', label: 'Apps', href: '/apps/', map: apps, line: 'The built word.' },
-  { key: 'podcasts', label: 'Podcasts', href: '/podcast/', map: pods, line: 'The spoken word.' },
   { key: 'videos', label: 'Video essays', href: '/vlog/', map: vlogs, line: 'The shown word.' },
   { key: 'cities', label: 'City-states', href: '/cities/', map: cities, line: 'The governed word.' },
 ];
 
 const SLOTS = 1000;
-const total = essays.size + apps.size + pods.size + cities.size + vlogs.size;
+const total = essays.size + apps.size + cities.size + vlogs.size;
 const cells = Array.from({ length: SLOTS }, (_, n) => n);
 ---
 
-<Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 apps, 1,000 conversations, 1,000 videos, 1,000 city-states. Made in public.">
+<Base title="The Work · Pangaea" description="A body of work: 1,000 essays, 1,000 apps, 1,000 videos, 1,000 city-states. Made in public.">
   <h1>The Work</h1>
   <p class="hero">
-    One body of work, five pillars, five thousand pieces: a thousand essays, a
-    thousand apps, a thousand conversations, a thousand videos, a thousand
-    city-states. Made in public, owned forever. Every slot below is a piece
-    waiting to exist; the lit ones are done. Songs live at
+    One body of work, four pillars, four thousand pieces: a thousand essays, a
+    thousand apps, a thousand videos, a thousand city-states. Made in public,
+    owned forever. Every slot below is a piece waiting to exist; the lit ones
+    are done. Songs live at
     <a href="https://strummer.fun">strummer.fun</a> now. Toward
-    <strong>{total.toLocaleString()} / 5,000</strong>.
+    <strong>{total.toLocaleString()} / 4,000</strong>.
   </p>
 
   {pillars.map((p) => (
@@ -82,7 +79,7 @@ const cells = Array.from({ length: SLOTS }, (_, n) => n);
   ))}
 
   <p class="meta" style="margin-top:2.5rem;">
-    New here? <a href="/start/">Start here</a>. Also: <a href="/podcast/">the podcast</a>,
+    New here? <a href="/start/">Start here</a>. Also:
     <a href="/vlog/">the vlogs</a>, <a href="/graph/">the graph</a>.
   </p>
 </Base>

@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  placement?: 'masthead' | 'index';
+}
+
+const { placement = 'index' } = Astro.props;
+
+// Same gate as the homepage, /posts/, RSS, and the sitemap.
+const epoch = new Date('1971-01-01').valueOf();
+const published = await getCollection(
+  'posts',
+  ({ data }) => !data.draft && data.date.valueOf() >= epoch,
+);
+
+const goal = 1000;
+const count = published.length;
+const percent = Math.min(100, (count / goal) * 100);
+const label = `${count} / ${goal} essays`;
+---
+
+<div
+  class:list={['essay-progress', placement]}
+  role="progressbar"
+  aria-label="Published essays"
+  aria-valuemin={0}
+  aria-valuemax={goal}
+  aria-valuenow={count}
+  aria-valuetext={`${count} of ${goal} essays`}
+>
+  <p class="essay-progress-label">{label}</p>
+  <div class="essay-progress-track">
+    <span
+      class:list={['essay-progress-fill', { started: count > 0 }]}
+      style={`width: ${percent}%`}
+    ></span>
+  </div>
+</div>
+
+<style>
+  .essay-progress {
+    width: 100%;
+    max-width: 14rem;
+    margin: 0.35rem 0 0;
+  }
+
+  .essay-progress.masthead {
+    max-width: 14rem;
+    margin: 1.5rem auto 0;
+  }
+
+  .essay-progress-label {
+    margin: 0 0 0.5rem;
+    font-family: var(--serif);
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .masthead .essay-progress-label {
+    text-align: center;
+  }
+
+  .essay-progress-track {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .essay-progress-fill {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  /* One published essay is 0.1% of the goal. Keep a hair of fill
+     so the start of the bar is visible without changing the count. */
+  .essay-progress-fill.started {
+    min-width: 3px;
+  }
+
+  @media (max-width: 540px) {
+    .essay-progress.masthead {
+      max-width: none;
+      margin-top: 2.25rem;
+    }
+  }
+</style>

@@ -13,11 +13,12 @@ const posts = defineCollection({
     number: z.number().int().nonnegative().optional(),
     blurb: z.string().optional(),
     cover: z.string().optional(),
+    // The picture for this essay's page. A public path such as
+    // "/images/deathmoney.webp". The page derives its palette from it.
     image: z.string().optional(),
-    // The song attached to this essay: a Spotify URI, e.g. "track/0NeJj..."
-    // (same format Spotify.astro already takes). Every post is meant to
-    // eventually carry one picture (cover) and one song (song), the way a
-    // post on tynan.com carries a photo, three artifacts folded into one.
+    imageAlt: z.string().optional(),
+    // The song for this essay: a Spotify track URL, a spotify:track URI,
+    // "track/<id>", or a bare track id.
     song: z.string().optional(),
     tags: z.array(z.string()).optional(),
     // Optional 3-9 key-takeaway bullets that render as a boxed grid at the

@@ -38,29 +38,30 @@
    ============================================================ */
 
 :root {
-  /* --- Paper: the page ------------------------------------ */
-  --paper: #ffffff; /* plain white, the default background */
-  --paper-2: #f6f6f4; /* inset bands, alternating sections */
-  --paper-3: #ededea; /* pressed state, meter troughs */
-  --surface: #ffffff; /* true white for inputs and the share frame */
+  /* Sampled from the spring-green risograph ground, then lifted
+     just enough that a page of type can breathe. Terracotta is the
+     line work: links, numbers, the progress fill. White is the
+     highlight, used for the meter track and inset surfaces.
+     Text colors are the same brown family, darkened to clear WCAG AA
+     on this ground. Do not reintroduce a second accent. */
+  --paper: #c3d398;
+  --paper-2: #d5e4b8;
+  --paper-3: #e7ecd6;
+  --surface: #f7f4ea;
 
-  /* --- Ink: the writing ----------------------------------- */
-  --ink: #1c1917; /* near-black, warm undertone (~15:1 on paper) */
-  --ink-soft: #403a34; /* secondary prose (~9.8:1) */
-  --ink-mute: #6b625a; /* meta, timestamps, captions (~5.4:1 AA) */
+  --ink: #2c241c; /* 9.5:1 on paper */
+  --ink-soft: #3f3228; /* ~7.6:1 */
+  --ink-mute: #5c4034; /* 5.8:1, dates and counts */
 
-  /* --- Green: interaction ---------------------------- */
-  --accent: #2f6b4f; /* links, focus, active (AA on paper) */
-  --accent-deep: #24533d; /* hover / pressed */
-  --accent-tint: #e4eee6; /* decorative rules, selection */
+  --accent: #8f3d2c; /* terracotta line, 4.5:1 on paper */
+  --accent-deep: #6e2e22;
+  --accent-tint: #ead9cf;
 
-  /* --- Earth: identity, never interaction ------------------ */
-  --gold: #2f6b4f; /* issue numbers, brand mark (AA on paper) */
-  --gold-soft: #8fb6a1; /* decorative only, never text */
+  --gold: #8f3d2c;
+  --gold-soft: #c48978;
 
-  /* --- Hairlines ------------------------------------------ */
-  --rule: #e3e3de;
-  --rule-soft: #efefeb;
+  --rule: #c9b39a;
+  --rule-soft: #d7c7b4;
 
   /* --- Page texture ---------------------------------------- */
   /* Two warm washes; pulled out as tokens so the dark theme can dim
@@ -157,30 +158,28 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --paper: #14110f;
-    --paper-2: #1b1714;
-    --paper-3: #221d19;
-    --surface: #1b1714;
+    --paper: #1c2618;
+    --paper-2: #24301f;
+    --paper-3: #2c3826;
+    --surface: #263528;
 
-    --ink: #f2ebdf;
-    --ink-soft: #d6ccbc;
-    --ink-mute: #a2988a;
+    --ink: #f4f1e6;
+    --ink-soft: #e4d8c8;
+    --ink-mute: #cbbba8;
 
-    /* green and earth both lift on a dark ground: the light-theme
-       values sink to roughly 2:1 there and stop being readable. */
-    --accent: #8fc9a7;
-    --accent-deep: #b1dfc3;
-    --accent-tint: #203d2d;
+    --accent: #e7b5a6;
+    --accent-deep: #f3d2c6;
+    --accent-tint: #3a2a24;
 
-    --gold: #8fc9a7;
-    --gold-soft: #597d65;
+    --gold: #e7b5a6;
+    --gold-soft: #8a5a4c;
 
-    --rule: #332b25;
-    --rule-soft: #292118;
+    --rule: #3d4a34;
+    --rule-soft: #31402c;
 
-    --wash-1: rgba(143, 201, 167, 0.05);
-    --wash-2: rgba(143, 201, 167, 0.045);
-    --tint-gold: rgba(143, 201, 167, 0.07);
+    --wash-1: rgba(231, 181, 166, 0.05);
+    --wash-2: rgba(231, 181, 166, 0.04);
+    --tint-gold: rgba(231, 181, 166, 0.08);
     --tint-ink: rgba(255, 255, 255, 0.055);
 
     --music: #83bdd2;
@@ -196,28 +195,28 @@
 }
 
 :root[data-theme='dark'] {
-  --paper: #14110f;
-  --paper-2: #1b1714;
-  --paper-3: #221d19;
-  --surface: #1b1714;
+  --paper: #1c2618;
+  --paper-2: #24301f;
+  --paper-3: #2c3826;
+  --surface: #263528;
 
-  --ink: #f2ebdf;
-  --ink-soft: #d6ccbc;
-  --ink-mute: #a2988a;
+  --ink: #f4f1e6;
+  --ink-soft: #e4d8c8;
+  --ink-mute: #cbbba8;
 
-  --accent: #8fc9a7;
-  --accent-deep: #b1dfc3;
-  --accent-tint: #203d2d;
+  --accent: #e7b5a6;
+  --accent-deep: #f3d2c6;
+  --accent-tint: #3a2a24;
 
-  --gold: #8fc9a7;
-  --gold-soft: #597d65;
+  --gold: #e7b5a6;
+  --gold-soft: #8a5a4c;
 
-  --rule: #332b25;
-  --rule-soft: #292118;
+  --rule: #3d4a34;
+  --rule-soft: #31402c;
 
-  --wash-1: rgba(143, 201, 167, 0.05);
-  --wash-2: rgba(143, 201, 167, 0.045);
-  --tint-gold: rgba(143, 201, 167, 0.07);
+  --wash-1: rgba(231, 181, 166, 0.05);
+  --wash-2: rgba(231, 181, 166, 0.04);
+  --tint-gold: rgba(231, 181, 166, 0.08);
   --tint-ink: rgba(255, 255, 255, 0.055);
 
   --music: #83bdd2;

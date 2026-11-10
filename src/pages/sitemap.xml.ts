@@ -16,7 +16,6 @@ const staticPaths = [
   '/contact/',
   '/favorites/',
   '/graph/',
-  '/podcast/',
   '/posts/',
   '/privacy/',
   '/reels/',

@@ -1,35 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getCollection } from 'astro:content';
-
-// Titles only, newest first. The index is a list of links and nothing
-// else, the way paulgraham.com/articles.html is: no dates, no blurbs, no
-// thumbnails, no search, no sort, no tags, no cadence counter, no script.
-// Everything about an essay lives on the essay's own page.
-const epoch = new Date('1971-01-01').valueOf();
-const posts = (
-  await getCollection('posts', ({ data }) => !data.draft && data.date.valueOf() >= epoch)
-).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+import EssayDirectory from '../../components/EssayDirectory.astro';
 ---
 
-<Base title="Essays | Pangaea" description="Essays across time, by Adam Pang.">
-  <p class="section-kicker">Read</p>
-  <h1>Essays</h1>
-
-  {posts.length === 0 && <p class="meta">No essays are public yet.</p>}
-
-  {posts.length > 0 && (
-    <ul class="post-list">
-      {posts.map((p) => (
-        <li>
-          <a href={`/posts/${p.id}/`}>
-            <span class="title">
-              {p.data.number !== undefined && <span class="num">{p.data.number}</span>}
-              {p.data.title}
-            </span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )}
+<Base title="Essays | Pangaea" description="Essays by Adam Pang, newest first.">
+  <EssayDirectory />
 </Base>
