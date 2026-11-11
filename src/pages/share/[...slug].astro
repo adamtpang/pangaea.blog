@@ -40,23 +40,24 @@ const { data } = post;
       /* /share v2 — fixed-proportion screenshot essay for X / IG / threads.
          Frame is 1080 × 2160 (canonical 1:2). Take a browser screenshot of the
          framed area and post. */
-      /* Synced copy of src/styles/tokens.css ("the daily page"). This page
-         is deliberately self-contained so the screenshot frame can be
-         designed independently; keep these values in step with tokens.css. */
+      /* Synced copy of src/styles/tokens.css. This page is self-contained
+         so a screenshot does not depend on another stylesheet. Keep the
+         values in step with DESIGN.md. */
       :root {
-        --paper: #fbf7f0;
-        --paper-2: #f5efe4;
-        --bg: #fbf7f0;
-        --surface: #ffffff;
-        --ink: #1c1917;
-        --ink-soft: #403a34;
-        --muted: #6b625a;
-        --rule: #d9cfbe;
-        --rule-soft: #e7decf;
-        --accent: #2f6b4f;       /* green: interaction */
-        --accent-deep: #24533d;
-        --accent-soft: #e4eee6;
-        --land: #2f6b4f;         /* green: identity */
+        --paper: #c3d398;
+        --paper-2: #d5e4b8;
+        --paper-3: #e7ecd6;
+        --bg: #c3d398;
+        --surface: #f7f4ea;
+        --ink: #2c241c;
+        --ink-soft: #3f3228;
+        --muted: #5c4034;
+        --rule: #c9b39a;
+        --rule-soft: #d7c7b4;
+        --accent: #8f3d2c;
+        --accent-deep: #6e2e22;
+        --accent-soft: #ead9cf;
+        --land: #8f3d2c;
         --display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
         --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
         --sans: var(--serif);
@@ -65,7 +66,7 @@ const { data } = post;
       * { box-sizing: border-box; }
       html, body { margin: 0; padding: 0; font-family: var(--serif); }
       body {
-        background: #241e1a; /* warm dark surround, so the paper frame glows */
+        background: var(--ink);
         min-height: 100vh;
       }
       .help {
@@ -74,11 +75,11 @@ const { data } = post;
         padding: 0 20px;
         font-family: var(--sans);
         font-size: 13px;
-        color: #93aaa4;
+        color: var(--paper-3);
         text-align: center;
         line-height: 1.5;
       }
-      .help a { color: #ffffff; }
+      .help a { color: var(--surface); }
       .help code {
         background: rgba(255,255,255,0.08);
         padding: 1px 6px;
@@ -293,12 +294,12 @@ const { data } = post;
       }
 
       /* Shown above the frame when the essay cannot fit at a legible size. */
-      .too-long { display: none; color: #ffb4a2; font-weight: 600; }
+      .too-long { display: none; color: var(--accent-soft); font-weight: 600; }
       [data-overflow='1'] .too-long { display: block; }
 
       @media print {
         .help { display: none; }
-        body { background: #ffffff; }
+        body { background: var(--surface); }
         .share-frame { margin: 0; box-shadow: none; }
       }
     </style>

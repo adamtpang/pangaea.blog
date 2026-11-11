@@ -1192,32 +1192,79 @@ article.post .back {
   font-size: 0.78rem;
 }
 
-/* Essay directory. Number, title, date, and a view count when the
-   counter store is configured. The count stays hidden otherwise. */
+/* Essay directory. Thumbnail, title, last updated. View counts appear
+   only when the counter store or Web Analytics answers. */
+.sort {
+  display: flex;
+  gap: var(--space-4);
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sort a {
+  color: var(--ink-mute);
+  text-underline-offset: 4px;
+}
+.sort a[aria-current='true'] {
+  color: var(--ink);
+}
+.sort a:hover {
+  color: var(--accent);
+}
 .directory {
   list-style: none;
   padding: 0;
-  margin: 2.25rem 0 0;
+  margin: var(--space-4) 0 0;
 }
 .directory a {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
-  gap: 0.2rem 1rem;
-  align-items: baseline;
-  padding: 1.05rem 0;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  align-items: center;
+  padding: var(--space-4) 0;
   border-bottom: 1px solid var(--rule);
   color: var(--ink);
   text-decoration: none;
 }
+.directory .thumb {
+  grid-row: 1 / span 2;
+  width: 4.5rem;
+  height: 6rem;
+  background: var(--surface);
+  overflow: hidden;
+}
+.directory .thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .directory .thumb img.will-fade {
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease);
+  }
+  .directory .thumb img.will-fade.is-in {
+    opacity: 1;
+  }
+}
+.directory .copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-width: 0;
+}
 .directory .num {
   font-variant-numeric: tabular-nums;
   color: var(--accent);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   letter-spacing: 0.04em;
 }
 .directory .title {
   font-family: var(--display);
-  font-size: 1.28rem;
+  font-size: var(--text-lg);
   font-weight: 500;
   line-height: 1.25;
   text-decoration: underline;
@@ -1230,27 +1277,23 @@ article.post .back {
 }
 .directory .row-meta {
   display: flex;
-  gap: 1.1rem;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-3);
   color: var(--ink-mute);
-  font-size: 0.92rem;
+  font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;
-}
-.directory .views {
-  min-width: 2.5rem;
-  text-align: right;
 }
 @media (max-width: 640px) {
   .directory a {
-    grid-template-columns: 2.6rem minmax(0, 1fr);
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: var(--space-2) var(--space-3);
   }
-  .directory .num {
-    grid-row: 1 / span 2;
+  .directory .thumb {
+    width: 4rem;
+    height: 5.25rem;
   }
-  .directory .row-meta {
-    grid-column: 2;
-    justify-content: flex-start;
-    font-size: 0.95rem;
+  .directory .title {
+    font-size: 1.15rem;
   }
 }
 

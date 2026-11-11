@@ -216,7 +216,8 @@ const enoughForGraph = nodes.length >= 2;
       function draw() {
         ctx.clearRect(0, 0, W(), H());
         // edges (the hairline rule, drawn between nodes)
-        ctx.strokeStyle = '#d9cfbe';
+        const tone = getComputedStyle(document.documentElement);
+        ctx.strokeStyle = tone.getPropertyValue('--rule').trim();
         ctx.lineWidth = 1;
         for (const e of edges) {
           ctx.beginPath();
@@ -228,9 +229,9 @@ const enoughForGraph = nodes.length >= 2;
         for (const n of nodes) {
           ctx.beginPath();
           ctx.arc(n.x, n.y, 7, 0, Math.PI * 2);
-          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--gold').trim(); /* Earth identity follows the active theme. */
+          ctx.fillStyle = tone.getPropertyValue('--gold').trim();
           ctx.fill();
-          ctx.fillStyle = '#1c1917';
+          ctx.fillStyle = tone.getPropertyValue('--ink').trim();
           ctx.font = '12px Newsreader, Iowan Old Style, Georgia, serif';
           ctx.textAlign = 'center';
           ctx.fillText(n.label, n.x, n.y + 22);
